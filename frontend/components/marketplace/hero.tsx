@@ -46,56 +46,74 @@ export function Hero() {
   return (
     <section className="relative isolate overflow-hidden border-b border-brand-line bg-[linear-gradient(180deg,#ffffff_0%,#fbfaf8_58%,#ffffff_100%)]">
       <div className="absolute inset-x-0 top-0 -z-10 h-[620px] bg-[radial-gradient(circle_at_18%_20%,rgba(255,180,0,0.16),transparent_30rem),radial-gradient(circle_at_85%_16%,rgba(0,166,153,0.13),transparent_28rem)]" />
-      <div className="mx-auto max-w-[1500px] px-4 pb-8 pt-3 sm:px-6 sm:pb-12 lg:px-8">
-        <div className="mx-auto mb-5 flex max-w-3xl items-center justify-between gap-2 overflow-x-auto pb-1 sm:mb-8 sm:justify-center sm:gap-12">
+      <div className="mx-auto max-w-[1420px] px-4 pb-4 pt-1 sm:px-6 sm:pb-6 lg:px-8">
+        <div className="mx-auto mb-3 flex max-w-2xl items-center justify-between gap-2 overflow-x-auto pb-1 sm:mb-4 sm:justify-center sm:gap-8">
           {categoryTabs.map(({ key, Icon, active }) => (
             <button
               key={key}
               className={[
-                "focus-ring flex min-w-16 shrink-0 flex-col items-center gap-1 border-b-4 px-1 pb-2 text-xs font-semibold transition sm:min-w-20 sm:pb-3 sm:text-sm",
+                "focus-ring flex min-w-12 shrink-0 flex-col items-center gap-0.5 border-b-3 px-1 pb-1 text-[11px] font-semibold transition sm:min-w-16 sm:pb-1.5 sm:text-xs",
                 active
                   ? "border-brand-ink text-brand-ink"
                   : "border-transparent text-brand-muted hover:border-brand-line hover:text-brand-ink"
               ].join(" ")}
               type="button"
             >
-              <Icon size={24} aria-hidden className="sm:h-7 sm:w-7" />
+              <Icon size={18} aria-hidden className="sm:h-5 sm:w-5" />
               <span>{t(key)}</span>
             </button>
           ))}
         </div>
 
-        <div className="grid gap-5 lg:grid-cols-[0.92fr_1.08fr] lg:items-stretch">
-          <div className="relative overflow-hidden rounded-[34px] border border-white bg-brand-ivory p-5 shadow-luxe ring-1 ring-brand-line/70 sm:p-7 lg:min-h-[560px]">
-            <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-brand-gold/15 blur-3xl" />
-            <div className="relative z-10 flex h-full flex-col justify-between gap-8">
+        <div className="relative grid overflow-hidden rounded-[26px] border border-white bg-[#061c17] p-3 shadow-luxe ring-1 ring-brand-line/70 lg:grid-cols-[0.78fr_1.22fr] lg:items-stretch lg:p-4">
+          <button
+            aria-label="Previous featured stay"
+            className="focus-ring absolute left-3 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-white/20 bg-white/12 text-white shadow-pearl backdrop-blur-xl transition hover:bg-white/22 lg:grid"
+            onClick={() => goToSlide(activeSlide - 1)}
+            type="button"
+          >
+            <ChevronLeft size={18} aria-hidden />
+          </button>
+          <button
+            aria-label="Next featured stay"
+            className="focus-ring absolute right-3 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-white/20 bg-white/12 text-white shadow-pearl backdrop-blur-xl transition hover:bg-white/22 lg:grid"
+            onClick={() => goToSlide(activeSlide + 1)}
+            type="button"
+          >
+            <ChevronRight size={18} aria-hidden />
+          </button>
+
+          <div className="relative min-h-[300px] overflow-hidden rounded-[22px] p-4 text-white sm:p-5 lg:min-h-[330px]">
+            <div className="absolute -left-16 -top-20 h-80 w-80 rounded-full bg-brand-success/18 blur-3xl" />
+            <div className="absolute -bottom-24 right-0 h-80 w-80 rounded-full bg-brand-gold/12 blur-3xl" />
+            <div className="relative z-10 flex h-full flex-col justify-between gap-4">
               <div>
-                <div className="inline-flex items-center gap-2 rounded-full border border-brand-gold/25 bg-white/80 px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-brand-ink shadow-pearl">
-                  <Waves size={16} className="text-brand-success" aria-hidden />
+                <div className="inline-flex items-center gap-2 rounded-full border border-brand-gold/25 bg-white/10 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-brand-gold shadow-pearl backdrop-blur">
+                  <Waves size={14} aria-hidden />
                   Micasa coastal collection
                 </div>
-                <h1 className="mt-6 max-w-2xl text-4xl font-bold leading-[0.96] text-brand-ink sm:text-6xl lg:text-7xl">
-                  Silky Nyali stays with ocean energy.
+                <h1 className="mt-4 max-w-lg font-serif text-3xl font-bold leading-[0.98] tracking-normal text-white sm:text-4xl lg:text-5xl">
+                  Nyali stays. Sea views. Private comfort.
                 </h1>
-                <p className="mt-5 max-w-xl text-base leading-7 text-brand-muted sm:text-lg">
+                <p className="mt-3 max-w-lg text-xs leading-5 text-white/72 sm:text-sm">
                   Villas and apartments shaped for family holidays, business trips, group getaways, and calm coastal staycations near beaches, malls, pools, and secure parking.
                 </p>
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-3">
+              <div className="grid gap-2 sm:grid-cols-3">
                 {[
-                  ["2 min", "beach access"],
-                  ["4", "curated stays"],
-                  ["24/7", "manned security"]
+                  ["2 min", "beach"],
+                  ["4", "stays"],
+                  ["24/7", "security"]
                 ].map(([value, label]) => (
-                  <div key={label} className="rounded-2xl border border-white bg-white/74 p-4 shadow-pearl ring-1 ring-brand-line/60 backdrop-blur">
-                    <p className="text-2xl font-bold text-brand-ink">{value}</p>
-                    <p className="mt-1 text-xs font-semibold uppercase tracking-[0.1em] text-brand-muted">{label}</p>
+                  <div key={label} className="rounded-xl border border-white/12 bg-white/8 p-2.5 shadow-pearl backdrop-blur">
+                    <p className="text-lg font-bold text-white">{value}</p>
+                    <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/58">{label}</p>
                   </div>
                 ))}
               </div>
 
-              <div className="hidden max-w-[980px] md:block">
+              <div className="hidden max-w-[680px] rounded-full bg-white/95 p-1 shadow-luxe md:block">
                 <SearchBar />
               </div>
               <button
@@ -113,8 +131,8 @@ export function Hero() {
             </div>
           </div>
 
-          <div className="grid min-h-[540px] gap-4 sm:grid-cols-[1fr_0.62fr]">
-            <div className="relative overflow-hidden rounded-[34px] border border-white bg-brand-ink shadow-luxe ring-1 ring-brand-line/60">
+          <div className="grid min-h-[300px] gap-3 sm:grid-cols-[1fr_0.45fr] lg:min-h-[330px]">
+            <div className="relative overflow-hidden rounded-[22px] border border-white/10 bg-brand-ink shadow-luxe ring-1 ring-white/10">
               {carouselSlides.map((slide, index) => (
                 <div
                   key={`${slide.property.id}-${slide.image}`}
@@ -133,10 +151,10 @@ export function Hero() {
                 </div>
               ))}
               <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.04)_0%,rgba(0,0,0,0.12)_45%,rgba(0,0,0,0.62)_100%)]" />
-              <div className="absolute left-5 top-5 flex gap-2">
+              <div className="absolute left-3 top-3 flex gap-2 lg:hidden">
                 <button
                   aria-label="Previous featured stay"
-                  className="focus-ring grid h-10 w-10 place-items-center rounded-full border border-white/30 bg-white/18 text-white shadow-pearl backdrop-blur-xl transition hover:bg-white/28"
+                  className="focus-ring grid h-8 w-8 place-items-center rounded-full border border-white/30 bg-white/18 text-white shadow-pearl backdrop-blur-xl transition hover:bg-white/28"
                   onClick={() => goToSlide(activeSlide - 1)}
                   type="button"
                 >
@@ -144,30 +162,30 @@ export function Hero() {
                 </button>
                 <button
                   aria-label="Next featured stay"
-                  className="focus-ring grid h-10 w-10 place-items-center rounded-full border border-white/30 bg-white/18 text-white shadow-pearl backdrop-blur-xl transition hover:bg-white/28"
+                  className="focus-ring grid h-8 w-8 place-items-center rounded-full border border-white/30 bg-white/18 text-white shadow-pearl backdrop-blur-xl transition hover:bg-white/28"
                   onClick={() => goToSlide(activeSlide + 1)}
                   type="button"
                 >
                   <ChevronRight size={18} aria-hidden />
                 </button>
               </div>
-              <div className="absolute inset-x-0 bottom-0 p-5 text-white sm:p-7">
-                <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/18 px-4 py-2 text-xs font-bold backdrop-blur-xl">
-                  <ShieldCheck size={15} aria-hidden />
+              <div className="absolute inset-x-0 bottom-0 p-4 text-white sm:p-5">
+                <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/18 px-3 py-1.5 text-[11px] font-bold backdrop-blur-xl">
+                  <ShieldCheck size={13} aria-hidden />
                   {currentSlide.kicker}
                 </div>
-                <h2 className="max-w-md text-3xl font-bold leading-tight sm:text-5xl">{currentSlide.property.title}</h2>
-                <p className="mt-3 max-w-md text-sm leading-6 text-white/82">
+                <h2 className="max-w-sm text-xl font-bold leading-tight sm:text-2xl">{currentSlide.property.title}</h2>
+                <p className="mt-1.5 max-w-md text-xs leading-5 text-white/82">
                   {currentSlide.property.guests} guests - {currentSlide.property.bedrooms} bedrooms - pool - secure parking
                 </p>
-                <div className="mt-5 flex gap-2">
+                <div className="mt-3 flex gap-2">
                   {carouselSlides.map((slide, index) => (
                     <button
                       key={slide.property.id}
                       aria-label={`Show ${slide.property.title}`}
                       className={[
                         "h-1.5 rounded-full transition",
-                        index === activeSlide ? "w-10 bg-white" : "w-4 bg-white/42 hover:bg-white/70"
+                        index === activeSlide ? "w-8 bg-white" : "w-3 bg-white/42 hover:bg-white/70"
                       ].join(" ")}
                       onClick={() => goToSlide(index)}
                       type="button"
@@ -178,7 +196,12 @@ export function Hero() {
             </div>
             <div className="grid grid-rows-2 gap-4">
               {[nextSlide.image, followingSlide.image].map((image, index) => (
-                <div key={image} className="relative overflow-hidden rounded-[28px] border border-white bg-brand-soft shadow-pearl ring-1 ring-brand-line/60">
+                <button
+                  key={image}
+                  className="focus-ring relative overflow-hidden rounded-[18px] border border-white/12 bg-brand-soft text-left shadow-pearl ring-1 ring-white/10"
+                  onClick={() => goToSlide(activeSlide + index + 1)}
+                  type="button"
+                >
                   <Image
                     src={image}
                     alt={index === 0 ? nextSlide.property.title : followingSlide.property.title}
@@ -187,7 +210,7 @@ export function Hero() {
                     className="object-cover"
                   />
                   <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent,rgba(0,0,0,0.28))]" />
-                </div>
+                </button>
               ))}
             </div>
           </div>
