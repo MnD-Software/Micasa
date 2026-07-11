@@ -89,7 +89,7 @@ export function SiteHeader() {
   return (
     <>
     <header className="sticky top-0 z-40 border-b border-brand-line bg-brand-frost shadow-[0_1px_0_rgba(255,255,255,0.85)_inset] backdrop-blur-2xl">
-      <div className="mx-auto hidden h-[78px] max-w-[1820px] grid-cols-[auto_1fr_auto] items-center gap-3 px-6 lg:grid lg:px-10">
+      <div className="mx-auto hidden h-[78px] max-w-[1820px] grid-cols-[auto_minmax(340px,1fr)_auto] items-center gap-5 px-6 lg:grid lg:px-10">
         <Link className="flex min-w-0 items-center" href="/" aria-label="Micasa Staycations Nyali home">
           <span className="relative block h-10 w-[126px] shrink-0 overflow-hidden rounded-[12px] border border-brand-gold/30 bg-white shadow-pearl ring-1 ring-white/80 sm:h-12 sm:w-[158px]">
             <Image
@@ -119,11 +119,12 @@ export function SiteHeader() {
           </Link>
         </div>
 
-        <nav className="hidden items-center justify-end gap-5 text-sm font-semibold text-brand-muted lg:flex">
-          <Link className={pathname === "/" ? "text-brand-ink" : "transition hover:text-brand-ink"} href="/">
-            {t("all")}
-          </Link>
-          {links.map((link) => (
+        <div className="flex min-w-0 items-center justify-end gap-3">
+          <nav className="hidden items-center gap-4 text-sm font-semibold text-brand-muted xl:flex">
+            <Link className={pathname === "/" ? "text-brand-ink" : "transition hover:text-brand-ink"} href="/">
+              {t("all")}
+            </Link>
+            {links.map((link) => (
             <Link
               key={link.key}
               className={pathname === link.href ? "text-brand-ink" : "transition hover:text-brand-ink"}
@@ -131,11 +132,9 @@ export function SiteHeader() {
             >
               {t(link.key)}
             </Link>
-          ))}
-        </nav>
-
-        <div className="hidden items-center gap-3 md:flex">
-          <Link className="rounded-full px-3 py-2.5 text-sm font-semibold text-brand-ink transition hover:bg-white hover:shadow-pearl" href="/become-host">
+            ))}
+          </nav>
+          <Link className="hidden rounded-full px-3 py-2.5 text-sm font-semibold text-brand-ink transition hover:bg-white hover:shadow-pearl 2xl:inline-flex" href="/become-host">
             {t("becomeHost")}
           </Link>
           <Link
@@ -150,7 +149,9 @@ export function SiteHeader() {
               </span>
             ) : null}
           </Link>
-          {renderPreferenceControls("desktop")}
+          <div className="hidden 2xl:block">
+            {renderPreferenceControls("desktop")}
+          </div>
           <Link
             aria-label="Open guest dashboard"
             className="focus-ring grid h-12 w-12 place-items-center rounded-full border border-white bg-brand-ivory text-brand-ink shadow-pearl transition hover:border-brand-line"
@@ -159,15 +160,6 @@ export function SiteHeader() {
             <UserRound size={20} aria-hidden />
           </Link>
         </div>
-
-        <button
-          aria-label="Open mobile search"
-          className="focus-ring hidden h-11 w-11 place-items-center rounded-full border border-white bg-brand-ivory shadow-pearl"
-          onClick={() => setSearchOpen(true)}
-          type="button"
-        >
-          <Search size={20} aria-hidden />
-        </button>
       </div>
 
       <div className="lg:hidden">
@@ -260,7 +252,7 @@ export function SiteHeader() {
                   type="button"
                 >
                   <span className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl bg-brand-soft text-2xl">
-                    {title === "Nearby" ? "↗" : title.startsWith("Nyali") ? "⌂" : "≈"}
+                    {title === "Nearby" ? "N" : title.startsWith("Nyali") ? "M" : "KE"}
                   </span>
                   <span>
                     <span className="block text-lg font-bold text-brand-ink">{title}</span>
