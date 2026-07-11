@@ -73,8 +73,8 @@ export function HomeSections() {
   const flagship = properties[2] ?? properties[0];
 
   return (
-    <main className="mx-auto max-w-[1820px] px-4 pb-28 pt-3 sm:px-6 sm:py-5 lg:px-10">
-      <section className="mb-3 rounded-[20px] border border-white bg-brand-ivory p-4 shadow-pearl ring-1 ring-brand-line/70">
+    <main className="mx-auto max-w-[1820px] px-5 pb-28 pt-5 sm:px-6 sm:py-5 lg:px-10">
+      <section className="mb-3 hidden rounded-[20px] border border-white bg-brand-ivory p-4 shadow-pearl ring-1 ring-brand-line/70 sm:block">
         <p className="text-xs font-bold uppercase tracking-[0.12em] text-brand-strong">
           Live collection
         </p>
@@ -91,7 +91,7 @@ export function HomeSections() {
         </div>
       </section>
 
-      <section id="services" className="my-5 grid gap-4 overflow-hidden rounded-[24px] border border-white bg-brand-ink p-3 text-white shadow-luxe ring-1 ring-brand-line/70 lg:grid-cols-[1.05fr_0.95fr]">
+      <section id="services" className="my-5 hidden gap-4 overflow-hidden rounded-[24px] border border-white bg-brand-ink p-3 text-white shadow-luxe ring-1 ring-brand-line/70 sm:grid lg:grid-cols-[1.05fr_0.95fr]">
         <div className="relative min-h-[260px] overflow-hidden rounded-[20px] sm:min-h-[320px]">
           <Image
             src={flagship.images[0]}
@@ -138,8 +138,8 @@ export function HomeSections() {
         </div>
       </section>
 
-      <PropertyRail id="featured-stays" title={`Available stays in ${search.location || "Nyali, Mombasa"}`} items={availableHomes} />
-      <PropertyRail title="Fresh coastal picks for next month" items={nextMonthHomes} />
+      <PropertyRail id="featured-stays" title={`Popular homes in ${search.location.split(",")[0] || "Nyali"}`} items={availableHomes} />
+      <PropertyRail title={`Available next month in ${search.location.split(",")[0] || "Nyali"}`} items={nextMonthHomes} />
 
       <section className="my-8 grid gap-4 rounded-[32px] border border-white bg-brand-ivory p-5 shadow-pearl ring-1 ring-brand-line/70 sm:grid-cols-[1fr_1fr_1fr] sm:p-6">
         <div className="flex gap-3">

@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Globe2, Heart, Menu, Search, UserRound } from "lucide-react";
+import { ConciergeBell, Globe2, Heart, House, Search, SlidersHorizontal, Sparkles, UserRound, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { currencies, languages, usePreferences } from "@/components/marketplace/preferences-provider";
 import { FloatingWhatsAppButton } from "@/components/marketplace/whatsapp-button";
+import { useSearchStore } from "@/store/search-store";
 import { useSavedStore } from "@/store/saved-store";
 
 const links = [
@@ -16,11 +17,36 @@ const links = [
   { href: "/services", key: "services" }
 ] as const;
 
+const mobileTabs = [
+  { href: "/#featured-stays", label: "Homes", Icon: House, badge: null },
+  { href: "/experiences", label: "Experiences", Icon: Sparkles, badge: "NEW" },
+  { href: "/services", label: "Services", Icon: ConciergeBell, badge: "NEW" }
+] as const;
+
+const suggestions = [
+  ["Nearby", "Find stays around Nyali"],
+  ["Nyali, Mombasa", "Beach, malls, pool stays"],
+  ["Mombasa, Kenya", "For coastal family trips"]
+] as const;
+
 export function SiteHeader() {
-  const [open, setOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [mobileLocation, setMobileLocation] = useState("Nyali, Mombasa");
   const pathname = usePathname();
   const { currency, language, setCurrency, setLanguage, t } = usePreferences();
   const savedCount = useSavedStore((state) => state.savedIds.length);
+  const setSearch = useSearchStore((state) => state.setSearch);
+
+  function submitMobileSearch(location = mobileLocation) {
+    const target = location.trim() || "Nyali, Mombasa";
+    setSearch({ location: target });
+    setSearchOpen(false);
+    if (pathname !== "/") {
+      window.location.href = "/#featured-stays";
+      return;
+    }
+    document.getElementById("featured-stays")?.scrollIntoView({ behavior: "smooth" });
+  }
 
   const renderPreferenceControls = (idPrefix: string) => (
     <div className="flex items-center gap-2 rounded-full border border-white bg-brand-ivory p-1 shadow-pearl">
@@ -63,7 +89,7 @@ export function SiteHeader() {
   return (
     <>
     <header className="sticky top-0 z-40 border-b border-brand-line bg-brand-frost shadow-[0_1px_0_rgba(255,255,255,0.85)_inset] backdrop-blur-2xl">
-      <div className="mx-auto grid h-[68px] max-w-[1820px] grid-cols-[auto_1fr_auto] items-center gap-3 px-4 sm:h-[78px] sm:px-6 lg:px-10">
+      <div className="mx-auto hidden h-[78px] max-w-[1820px] grid-cols-[auto_1fr_auto] items-center gap-3 px-6 lg:grid lg:px-10">
         <Link className="flex min-w-0 items-center" href="/" aria-label="Micasa Staycations Nyali home">
           <span className="relative block h-10 w-[126px] shrink-0 overflow-hidden rounded-[12px] border border-brand-gold/30 bg-white shadow-pearl ring-1 ring-white/80 sm:h-12 sm:w-[158px]">
             <Image
@@ -135,42 +161,143 @@ export function SiteHeader() {
         </div>
 
         <button
-          aria-label="Open navigation"
-          className="focus-ring grid h-11 w-11 place-items-center rounded-full border border-white bg-brand-ivory shadow-pearl md:hidden"
-          onClick={() => setOpen((value) => !value)}
+          aria-label="Open mobile search"
+          className="focus-ring hidden h-11 w-11 place-items-center rounded-full border border-white bg-brand-ivory shadow-pearl"
+          onClick={() => setSearchOpen(true)}
           type="button"
         >
-          <Menu size={20} aria-hidden />
+          <Search size={20} aria-hidden />
         </button>
       </div>
 
-      <div
-        className={cn(
-          "border-t border-brand-line bg-brand-ivory px-4 py-4 shadow-pearl md:hidden",
-          open ? "block" : "hidden"
-        )}
-      >
-        <Link href="/#featured-stays" className="mb-4 flex items-center gap-3 rounded-full border border-brand-line bg-white px-4 py-3 text-sm text-brand-muted shadow-pearl" onClick={() => setOpen(false)}>
-          <Search size={18} aria-hidden />
-          {t("anywhereAnyWeek")}
-        </Link>
-        <div className="mb-4 flex items-center justify-between gap-3">
-          <Globe2 size={18} className="text-brand-muted" aria-hidden />
-          {renderPreferenceControls("mobile")}
+      <div className="lg:hidden">
+        <div className="px-5 pb-2 pt-5">
+          <button
+            className="focus-ring mx-auto flex h-[66px] w-full max-w-[630px] items-center justify-center gap-3 rounded-full border border-brand-line bg-white text-[19px] font-bold text-brand-ink shadow-[0_12px_34px_rgba(34,34,34,0.12)]"
+            onClick={() => setSearchOpen(true)}
+            type="button"
+          >
+            <Search size={22} aria-hidden />
+            Start your search
+          </button>
         </div>
-        <div className="grid gap-3 text-sm font-medium text-brand-ink">
-          <Link href="/" onClick={() => setOpen(false)}>{t("all")}</Link>
-          {links.map((link) => (
-            <Link key={link.key} href={link.href} onClick={() => setOpen(false)}>
-              {t(link.key)}
+        <nav className="grid grid-cols-3 border-b border-brand-line px-5 pt-3">
+          {mobileTabs.map(({ href, label, Icon, badge }) => {
+            const isActive = href === "/#featured-stays" ? pathname === "/" : pathname === href;
+            return (
+            <Link
+              key={href}
+              className={cn(
+                "relative flex flex-col items-center gap-1.5 border-b-3 px-2 pb-2 text-sm font-semibold",
+                isActive ? "border-brand-ink text-brand-ink" : "border-transparent text-brand-muted"
+              )}
+              href={href}
+            >
+              <span className="relative grid h-9 place-items-center">
+                <Icon size={28} aria-hidden />
+                {badge ? (
+                  <span className="absolute -right-7 -top-1 rounded-md bg-[#315073] px-1.5 py-0.5 text-[9px] font-bold text-white shadow-pearl">
+                    {badge}
+                  </span>
+                ) : null}
+              </span>
+              <span>{label}</span>
             </Link>
-          ))}
-          <Link href="/saved" onClick={() => setOpen(false)}>{t("saved")} {savedCount > 0 ? `(${savedCount})` : ""}</Link>
-          <Link href="/become-host" onClick={() => setOpen(false)}>{t("becomeHost")}</Link>
-          <Link href="/dashboard/guest" onClick={() => setOpen(false)}>{t("profile")}</Link>
-        </div>
+            );
+          })}
+        </nav>
       </div>
     </header>
+    {searchOpen ? (
+      <div className="fixed inset-0 z-50 overflow-y-auto bg-[#f7f7f7] px-5 pb-7 pt-5 lg:hidden">
+        <div className="mx-auto max-w-md">
+          <div className="mb-5 flex items-center justify-between">
+            <div className="flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-bold text-brand-ink shadow-pearl">
+              <SlidersHorizontal size={17} aria-hidden />
+              Micasa
+            </div>
+            <button
+              aria-label="Close search"
+              className="focus-ring grid h-12 w-12 place-items-center rounded-full bg-white text-brand-ink shadow-pearl"
+              onClick={() => setSearchOpen(false)}
+              type="button"
+            >
+              <X size={24} aria-hidden />
+            </button>
+          </div>
+
+          <nav className="mb-5 grid grid-cols-3">
+            {mobileTabs.map(({ href, label, Icon, badge }) => (
+              <Link key={href} className="relative flex flex-col items-center gap-1.5 text-sm font-semibold text-brand-muted" href={href}>
+                <span className="relative grid h-9 place-items-center">
+                  <Icon size={28} aria-hidden />
+                  {badge ? <span className="absolute -right-7 -top-1 rounded-md bg-[#315073] px-1.5 py-0.5 text-[9px] font-bold text-white">NEW</span> : null}
+                </span>
+                <span className={href === "/#featured-stays" ? "border-b-3 border-brand-ink pb-1 text-brand-ink" : "pb-1"}>{label}</span>
+              </Link>
+            ))}
+          </nav>
+
+          <section className="rounded-[30px] border border-brand-line bg-white p-6 shadow-luxe">
+            <h2 className="text-3xl font-bold text-brand-ink">Where?</h2>
+            <label className="mt-5 flex h-[72px] items-center gap-4 rounded-2xl border border-brand-muted/40 px-5">
+              <Search size={25} aria-hidden />
+              <input
+                className="min-w-0 flex-1 bg-transparent text-lg font-medium text-brand-ink outline-none placeholder:text-brand-muted"
+                onChange={(event) => setMobileLocation(event.target.value)}
+                placeholder="Search destinations"
+                value={mobileLocation}
+              />
+            </label>
+
+            <p className="mt-6 text-base font-semibold text-brand-ink">Suggested destinations</p>
+            <div className="mt-4 grid gap-4">
+              {suggestions.map(([title, text]) => (
+                <button
+                  key={title}
+                  className="focus-ring flex items-center gap-4 rounded-2xl text-left"
+                  onClick={() => submitMobileSearch(title === "Nearby" ? "Nyali, Mombasa" : title)}
+                  type="button"
+                >
+                  <span className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl bg-brand-soft text-2xl">
+                    {title === "Nearby" ? "↗" : title.startsWith("Nyali") ? "⌂" : "≈"}
+                  </span>
+                  <span>
+                    <span className="block text-lg font-bold text-brand-ink">{title}</span>
+                    <span className="text-base text-brand-muted">{text}</span>
+                  </span>
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <div className="mt-5 grid gap-4">
+            <button className="flex min-h-20 items-center justify-between rounded-3xl bg-white px-6 text-left text-lg font-bold shadow-pearl" type="button">
+              <span className="text-brand-muted">When</span>
+              <span className="text-brand-ink">Add dates</span>
+            </button>
+            <button className="flex min-h-20 items-center justify-between rounded-3xl bg-white px-6 text-left text-lg font-bold shadow-pearl" type="button">
+              <span className="text-brand-muted">Who</span>
+              <span className="text-brand-ink">Add guests</span>
+            </button>
+          </div>
+
+          <div className="mt-9 flex items-center justify-between">
+            <button className="text-lg font-bold text-brand-ink" onClick={() => setMobileLocation("")} type="button">
+              Clear all
+            </button>
+            <button
+              className="focus-ring inline-flex h-16 items-center gap-3 rounded-2xl bg-brand-strong px-8 text-lg font-bold text-white shadow-lift"
+              onClick={() => submitMobileSearch()}
+              type="button"
+            >
+              <Search size={24} aria-hidden />
+              Search
+            </button>
+          </div>
+        </div>
+      </div>
+    ) : null}
     <FloatingWhatsAppButton />
     </>
   );

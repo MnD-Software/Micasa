@@ -2,7 +2,7 @@
 
 import { MessageCircle } from "lucide-react";
 
-const fallbackWhatsappNumber = "254786969038";
+const fallbackWhatsappNumber = "254715410023";
 
 export function getBookingWhatsappNumber() {
   return (process.env.NEXT_PUBLIC_BOOKING_WHATSAPP || fallbackWhatsappNumber).replace(/\D/g, "");

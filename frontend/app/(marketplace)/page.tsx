@@ -8,7 +8,9 @@ export default function HomePage() {
   return (
     <>
       <SiteHeader />
-      <Hero />
+      <div className="hidden lg:block">
+        <Hero />
+      </div>
       <HomeSections />
       <FeeNoticeModal />
       <MobileTabBar />
