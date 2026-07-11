@@ -24,10 +24,11 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { properties } from "@/lib/marketplace-data";
 import { formatCurrency } from "@/lib/utils";
+import { getBookingWhatsappNumber } from "@/lib/whatsapp";
 
 const property = properties[0];
 const paybillConfigured = Boolean(process.env.NEXT_PUBLIC_MPESA_PAYBILL);
-const whatsappConfigured = Boolean(process.env.NEXT_PUBLIC_BOOKING_WHATSAPP);
+const whatsappNumber = getBookingWhatsappNumber();
 
 const bookings = [
   {
@@ -66,7 +67,7 @@ const checklist: Array<[label: string, status: string, Icon: LucideIcon]> = [
   ["Property listing", "Live", CheckCircle2],
   ["Availability and bedroom rate calculator", "Live", CalendarDays],
   ["M-Pesa PayBill instructions", paybillConfigured ? "Configured" : "Needs PayBill", Smartphone],
-  ["WhatsApp booking redirect", whatsappConfigured ? "Configured" : "Needs phone number", MessageCircle],
+  ["WhatsApp booking redirect", `Active: +${whatsappNumber}`, MessageCircle],
   ["Card collection", "Ready for launch", CreditCard],
   ["Owner marketplace onboarding", "Coming soon", Building2]
 ];
@@ -203,7 +204,7 @@ export default function AdminDashboardPage() {
             <MessageCircle className="text-brand-success" size={26} aria-hidden />
             <h2 className="mt-4 text-xl font-bold text-brand-ink">WhatsApp bookings</h2>
             <p className="mt-2 text-sm leading-6 text-brand-muted">
-              Add `NEXT_PUBLIC_BOOKING_WHATSAPP` to send guest dates, bedrooms, guest count, and rate estimate straight to WhatsApp.
+              Booking links send guest dates, bedrooms, guest count, and rate estimates to +{whatsappNumber}.
             </p>
           </Card>
           <Card className="p-5">

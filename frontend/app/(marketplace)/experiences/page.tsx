@@ -5,6 +5,7 @@ import { MobileTabBar } from "@/components/marketplace/mobile-tab-bar";
 import { SiteHeader } from "@/components/marketplace/site-header";
 import { marketplaceExperiences } from "@/lib/service-data";
 import { formatCurrency } from "@/lib/utils";
+import { createWhatsappHref } from "@/lib/whatsapp";
 
 function AppBanner() {
   return (
@@ -17,7 +18,7 @@ function AppBanner() {
         <p className="font-bold text-brand-ink">Get Micasa help</p>
         <p className="truncate text-sm text-brand-muted">Fastest way to confirm local experiences</p>
       </div>
-      <a className="rounded-full bg-[#2f8f5b] px-5 py-2.5 text-sm font-bold text-white" href="https://wa.me/254715410023" rel="noreferrer" target="_blank">
+      <a className="rounded-full bg-[#2f8f5b] px-5 py-2.5 text-sm font-bold text-white" href={createWhatsappHref("Hello Micasa, I want help booking an experience.")} rel="noreferrer" target="_blank">
         Use app
       </a>
     </section>

@@ -6,6 +6,7 @@ import { PropertyCard } from "@/components/marketplace/property-card";
 import { destinations, experiences, properties } from "@/lib/marketplace-data";
 import { usePreferences } from "@/components/marketplace/preferences-provider";
 import { nightsBetween } from "@/lib/utils";
+import { createWhatsappHref } from "@/lib/whatsapp";
 import { useSearchStore } from "@/store/search-store";
 
 const nextMonthHomes = properties;
@@ -175,7 +176,13 @@ export function HomeSections() {
         <RailHeader title="Guest favorite destinations" />
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {destinations.map((destination) => (
-            <article key={destination.city} className="overflow-hidden rounded-[28px] border border-white bg-brand-ivory shadow-pearl ring-1 ring-brand-line/70">
+            <a
+              key={destination.city}
+              className="block overflow-hidden rounded-[28px] border border-white bg-brand-ivory shadow-pearl ring-1 ring-brand-line/70 transition hover:-translate-y-0.5 hover:shadow-luxe"
+              href={createWhatsappHref(`Hello Micasa, I want help finding a stay in ${destination.city}, ${destination.country}.`)}
+              rel="noreferrer"
+              target="_blank"
+            >
               <div
                 className="h-56 bg-cover bg-center"
                 style={{ backgroundImage: `url(${destination.image})` }}
@@ -188,7 +195,7 @@ export function HomeSections() {
                   {destination.country} - {destination.properties} homes
                 </p>
               </div>
-            </article>
+            </a>
           ))}
         </div>
       </section>

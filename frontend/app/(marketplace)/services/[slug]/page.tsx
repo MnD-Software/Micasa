@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { getServiceBySlug, marketplaceExperiences, marketplaceServices } from "@/lib/service-data";
 import { formatCurrency } from "@/lib/utils";
+import { createWhatsappHref } from "@/lib/whatsapp";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -22,7 +23,7 @@ export default async function ServiceDetailPage({ params }: Props) {
     notFound();
   }
 
-  const whatsappMessage = encodeURIComponent(`Hello Micasa, I want to check dates for ${service.title}.`);
+  const whatsappHref = createWhatsappHref(`Hello Micasa, I want to check dates for ${service.title}.`);
 
   return (
     <main className="min-h-screen bg-white pb-32">
@@ -87,7 +88,7 @@ export default async function ServiceDetailPage({ params }: Props) {
             From <span className="font-semibold">{formatCurrency(service.startingPrice)}</span>
             <span className="text-brand-muted"> / {service.unit}</span>
           </p>
-          <a href={`https://wa.me/254715410023?text=${whatsappMessage}`} rel="noreferrer" target="_blank">
+          <a href={whatsappHref} rel="noreferrer" target="_blank">
             <Button size="lg" className="min-w-[160px]">Show dates</Button>
           </a>
         </div>

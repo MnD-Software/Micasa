@@ -1,17 +1,10 @@
 "use client";
 
 import { MessageCircle } from "lucide-react";
-
-const fallbackWhatsappNumber = "254715410023";
-
-export function getBookingWhatsappNumber() {
-  return (process.env.NEXT_PUBLIC_BOOKING_WHATSAPP || fallbackWhatsappNumber).replace(/\D/g, "");
-}
+import { createWhatsappHref } from "@/lib/whatsapp";
 
 export function FloatingWhatsAppButton() {
-  const whatsappNumber = getBookingWhatsappNumber();
-  const message = encodeURIComponent("Hello Micasa, I would like help choosing and booking a stay in Nyali.");
-  const href = `https://wa.me/${whatsappNumber}?text=${message}`;
+  const href = createWhatsappHref("Hello Micasa, I would like help choosing and booking a stay in Nyali.");
 
   return (
     <a

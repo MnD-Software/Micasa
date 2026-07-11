@@ -8,7 +8,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { usePreferences } from "@/components/marketplace/preferences-provider";
-import { getBookingWhatsappNumber } from "@/components/marketplace/whatsapp-button";
+import { createWhatsappHref } from "@/lib/whatsapp";
 import { nightsBetween } from "@/lib/utils";
 import type { Property } from "@/types/marketplace";
 
@@ -28,7 +28,6 @@ export function BookingWidget({ property }: { property: Property }) {
   const { formatMoney, t } = usePreferences();
   const paybill = process.env.NEXT_PUBLIC_MPESA_PAYBILL?.trim();
   const mpesaAccountName = process.env.NEXT_PUBLIC_MPESA_ACCOUNT_NAME?.trim() || "MICASA";
-  const whatsappNumber = getBookingWhatsappNumber();
   const [availabilityChecked, setAvailabilityChecked] = useState(false);
   const [confirmation, setConfirmation] = useState<{
     code: string;
@@ -77,15 +76,14 @@ export function BookingWidget({ property }: { property: Property }) {
     setConfirmation({ code, paymentMethod: data.paymentMethod, total: totals.total });
   }
 
-  const whatsappMessage = encodeURIComponent(
+  const whatsappMessage =
     `Hello, I want to book ${property.title}.
 Dates: ${values.checkIn} to ${values.checkOut}
 Guests: ${values.guests}
 Bedrooms: ${values.bedrooms}
 Rate: ${formatMoney(totals.nightlyRate)} per night
-Total estimate: ${formatMoney(totals.total)}`
-  );
-  const whatsappHref = whatsappNumber ? `https://wa.me/${whatsappNumber}?text=${whatsappMessage}` : undefined;
+Total estimate: ${formatMoney(totals.total)}`;
+  const whatsappHref = createWhatsappHref(whatsappMessage);
 
   return (
     <aside className="sticky top-28 rounded-[22px] border border-white bg-brand-ivory p-5 shadow-luxe ring-1 ring-brand-line/70">
@@ -182,22 +180,15 @@ Total estimate: ${formatMoney(totals.total)}`
         <a
           className={[
             "focus-ring inline-flex h-12 items-center justify-center gap-2 rounded-full text-sm font-bold transition",
-            whatsappHref
-              ? "bg-brand-success text-white hover:bg-[#008f82]"
-              : "pointer-events-none bg-brand-line text-brand-muted"
+            "bg-brand-success text-white hover:bg-[#008f82]"
           ].join(" ")}
-          href={whatsappHref ?? "#"}
+          href={whatsappHref}
           rel="noreferrer"
           target="_blank"
         >
           <MessageCircle size={18} aria-hidden />
           {t("bookWhatsapp")}
         </a>
-        {!whatsappHref ? (
-          <p className="text-center text-xs text-brand-muted">
-            Add `NEXT_PUBLIC_BOOKING_WHATSAPP` in `.env` to activate WhatsApp booking.
-          </p>
-        ) : null}
       </form>
 
       <p className="mt-4 flex items-center justify-center gap-2 text-sm text-brand-muted">
