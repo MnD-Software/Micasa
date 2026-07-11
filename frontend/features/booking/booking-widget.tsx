@@ -86,37 +86,37 @@ Total estimate: ${formatMoney(totals.total)}`;
   const whatsappHref = createWhatsappHref(whatsappMessage);
 
   return (
-    <aside className="sticky top-28 rounded-[22px] border border-white bg-brand-ivory p-5 shadow-luxe ring-1 ring-brand-line/70">
-      <div className="flex items-end justify-between">
+    <aside className="w-full max-w-full overflow-hidden rounded-[20px] border border-white bg-brand-ivory p-4 shadow-pearl ring-1 ring-brand-line/70 lg:sticky lg:top-28 lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto lg:rounded-[22px] lg:p-5 lg:shadow-luxe">
+      <div className="flex items-start justify-between gap-3">
         <p className="text-brand-ink">
-          <span className="text-2xl font-semibold">{formatMoney(property.pricePerNight)}</span>
+          <span className="text-xl font-semibold sm:text-2xl">{formatMoney(property.pricePerNight)}</span>
           <span className="text-sm text-brand-muted"> {t("night")}</span>
         </p>
         <p className="text-sm font-semibold text-brand-ink">{property.rating} · {property.reviews} reviews</p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="mt-5 grid gap-3">
+      <form onSubmit={handleSubmit(onSubmit)} className="mt-4 grid gap-3 sm:mt-5">
         <div className="grid grid-cols-2 overflow-hidden rounded-2xl border border-brand-line">
-          <label className="border-r border-brand-line p-3">
-            <span className="block text-xs font-bold uppercase text-brand-ink">{t("checkIn")}</span>
+          <label className="min-w-0 border-r border-brand-line p-3">
+            <span className="block text-[11px] font-bold uppercase text-brand-ink sm:text-xs">{t("checkIn")}</span>
             <Input {...register("checkIn")} type="date" className="h-auto rounded-none border-0 p-0" />
           </label>
-          <label className="p-3">
-            <span className="block text-xs font-bold uppercase text-brand-ink">{t("checkOut")}</span>
+          <label className="min-w-0 p-3">
+            <span className="block text-[11px] font-bold uppercase text-brand-ink sm:text-xs">{t("checkOut")}</span>
             <Input {...register("checkOut")} type="date" className="h-auto rounded-none border-0 p-0" />
           </label>
-          <label className="col-span-2 border-t border-brand-line p-3">
-            <span className="block text-xs font-bold uppercase text-brand-ink">{t("guests")}</span>
+          <label className="min-w-0 border-t border-brand-line p-3">
+            <span className="block text-[11px] font-bold uppercase text-brand-ink sm:text-xs">{t("guests")}</span>
             <Input {...register("guests")} type="number" min={1} className="h-auto rounded-none border-0 p-0" />
           </label>
-          <label className="col-span-2 border-t border-brand-line p-3">
-            <span className="block text-xs font-bold uppercase text-brand-ink">{t("bedroomsNeeded")}</span>
+          <label className="min-w-0 border-l border-t border-brand-line p-3">
+            <span className="block text-[11px] font-bold uppercase text-brand-ink sm:text-xs">{t("bedroomsNeeded")}</span>
             <Input {...register("bedrooms")} type="number" min={1} max={property.bedrooms} className="h-auto rounded-none border-0 p-0" />
           </label>
         </div>
 
         <button
-          className="focus-ring flex min-h-12 items-center justify-center gap-2 rounded-full border border-brand-line bg-white px-4 text-sm font-bold text-brand-ink shadow-pearl transition hover:border-brand-ink"
+          className="focus-ring flex min-h-11 items-center justify-center gap-2 rounded-full border border-brand-line bg-white px-4 text-sm font-bold text-brand-ink shadow-pearl transition hover:border-brand-ink sm:min-h-12"
           onClick={() => setAvailabilityChecked(true)}
           type="button"
         >
@@ -127,7 +127,7 @@ Total estimate: ${formatMoney(totals.total)}`;
         {availabilityChecked ? (
           <div
             className={[
-              "rounded-2xl border p-4 text-sm",
+              "rounded-2xl border p-3 text-sm sm:p-4",
               isAvailable
                 ? "border-brand-success/30 bg-white text-brand-ink"
                 : "border-brand-error/30 bg-white text-brand-error"
@@ -154,32 +154,32 @@ Total estimate: ${formatMoney(totals.total)}`;
         <fieldset className="grid gap-2">
           <legend className="mb-1 text-xs font-bold uppercase text-brand-ink">{t("payWith")}</legend>
           <div className="grid grid-cols-2 gap-2">
-            <label className="flex cursor-pointer items-center gap-2 rounded-2xl border border-brand-line bg-white p-3 text-sm font-semibold text-brand-ink">
+            <label className="flex min-w-0 cursor-pointer items-center gap-2 rounded-2xl border border-brand-line bg-white p-3 text-sm font-semibold text-brand-ink">
               <input {...register("paymentMethod")} type="radio" value="mpesa" className="accent-brand-strong" />
-              <Smartphone size={17} aria-hidden />
-              {t("mpesa")}
+              <Smartphone size={17} aria-hidden className="shrink-0" />
+              <span className="truncate">{t("mpesa")}</span>
             </label>
-            <label className="flex cursor-pointer items-center gap-2 rounded-2xl border border-brand-line bg-white p-3 text-sm font-semibold text-brand-ink">
+            <label className="flex min-w-0 cursor-pointer items-center gap-2 rounded-2xl border border-brand-line bg-white p-3 text-sm font-semibold text-brand-ink">
               <input {...register("paymentMethod")} type="radio" value="card" className="accent-brand-strong" />
-              <CreditCard size={17} aria-hidden />
-              {t("card")}
+              <CreditCard size={17} aria-hidden className="shrink-0" />
+              <span className="truncate">{t("card")}</span>
             </label>
           </div>
           <Input {...register("paymentContact")} placeholder="M-Pesa phone or card email" />
-          <p className="text-xs leading-5 text-brand-muted">
+          <p className="break-words text-xs leading-5 text-brand-muted">
             M-Pesa PayBill: <span className="font-bold text-brand-ink">{paybill || "add PayBill in .env/admin"}</span>.
             Account: <span className="font-bold text-brand-ink">{mpesaAccountName}</span>. Card collection is ready for launch when payment keys are enabled.
           </p>
         </fieldset>
 
         <Input {...register("coupon")} placeholder="Coupon code" />
-        <Button type="submit" size="lg" className="w-full">
+        <Button type="submit" size="lg" className="min-h-12 w-full px-4 sm:min-h-14">
           <BadgeCheck size={18} aria-hidden />
           {t("reserveConfirm")}
         </Button>
         <a
           className={[
-            "focus-ring inline-flex h-12 items-center justify-center gap-2 rounded-full text-sm font-bold transition",
+            "focus-ring inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-4 text-sm font-bold transition",
             "bg-brand-success text-white hover:bg-[#008f82]"
           ].join(" ")}
           href={whatsappHref}
@@ -191,13 +191,13 @@ Total estimate: ${formatMoney(totals.total)}`;
         </a>
       </form>
 
-      <p className="mt-4 flex items-center justify-center gap-2 text-sm text-brand-muted">
+      <p className="mt-4 flex items-center justify-center gap-2 text-center text-sm text-brand-muted">
         <ShieldCheck size={16} aria-hidden />
         {t("notCharged")}
       </p>
 
       {confirmation ? (
-        <div className="mt-5 rounded-2xl border border-brand-success/30 bg-white p-4 text-sm shadow-pearl">
+        <div className="mt-5 rounded-2xl border border-brand-success/30 bg-white p-3 text-sm shadow-pearl sm:p-4">
           <p className="flex items-center gap-2 font-bold text-brand-ink">
             <BadgeCheck size={18} className="text-brand-success" aria-hidden />
             Instant confirmation prepared
@@ -212,7 +212,7 @@ Total estimate: ${formatMoney(totals.total)}`;
         </div>
       ) : null}
 
-      <div className="mt-5 grid gap-3 text-sm">
+      <div className="mt-5 grid gap-2.5 text-sm sm:gap-3">
         <div className="flex justify-between">
           <span>{formatMoney(totals.nightlyRate)} x {totals.nights} nights</span>
           <span>{formatMoney(totals.subtotal)}</span>

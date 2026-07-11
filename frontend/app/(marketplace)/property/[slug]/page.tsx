@@ -5,6 +5,11 @@ import { BookingWidget } from "@/features/booking/booking-widget";
 import { MobileTabBar } from "@/components/marketplace/mobile-tab-bar";
 import { SiteHeader } from "@/components/marketplace/site-header";
 import { PropertyCard } from "@/components/marketplace/property-card";
+import { PropertyDetailActions } from "@/components/marketplace/property-detail-actions";
+import { PropertyMediaCarousel } from "@/components/marketplace/property-media-carousel";
+import { PropertyReviewSummary } from "@/components/marketplace/property-review-summary";
+import { PropertySleepRooms } from "@/components/marketplace/property-sleep-rooms";
+import { ReviewModule } from "@/components/marketplace/review-module";
 import { getPropertyBySlug, properties } from "@/lib/marketplace-data";
 
 type Props = {
@@ -31,6 +36,17 @@ export default async function PropertyPage({ params }: Props) {
     <>
       <SiteHeader />
       <main className="mx-auto max-w-[1480px] px-4 pb-28 pt-5 sm:px-6 sm:py-6 lg:px-8">
+        <div className="mb-4 flex flex-col gap-3 sm:mb-5 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <h1 className="text-2xl font-bold leading-tight text-brand-ink sm:text-4xl">{property.title}</h1>
+            <p className="mt-2 flex flex-wrap items-center gap-2 text-sm font-semibold text-brand-ink">
+              <Star size={15} className="fill-brand-ink" aria-hidden />
+              {property.rating} - {property.reviews} reviews - {property.location}
+            </p>
+          </div>
+          <PropertyDetailActions property={property} />
+        </div>
+
         <section className="overflow-hidden rounded-[24px] border border-white bg-brand-ivory p-3 shadow-luxe ring-1 ring-brand-line/70 sm:rounded-[34px] sm:p-4">
           <div className="grid gap-5 lg:grid-cols-[0.75fr_1.25fr] lg:items-stretch">
             <div className="flex flex-col justify-between gap-5 p-2 sm:gap-8 sm:p-5">
@@ -40,10 +56,9 @@ export default async function PropertyPage({ params }: Props) {
                   Micasa selected stay
                 </p>
                 <p className="mt-4 text-sm font-semibold text-brand-muted sm:mt-5">{property.type} in {property.location}</p>
-                <h1 className="mt-2 text-3xl font-bold leading-tight text-brand-ink sm:text-6xl">{property.title}</h1>
-                <p className="mt-4 flex items-center gap-2 text-sm text-brand-ink">
-                  <Star size={16} className="fill-brand-ink" aria-hidden />
-                  {property.rating} - {property.reviews} reviews - {property.location}
+                <h2 className="mt-2 text-3xl font-bold leading-tight text-brand-ink sm:text-5xl">Guest favorite coastal stay</h2>
+                <p className="mt-4 text-sm leading-6 text-brand-muted">
+                  Premium media, verified stay details, and quick booking in one focused page.
                 </p>
               </div>
               <div className="grid grid-cols-3 gap-3">
@@ -59,20 +74,24 @@ export default async function PropertyPage({ params }: Props) {
                 ))}
               </div>
             </div>
-            <div className="grid gap-2 overflow-hidden rounded-[20px] sm:rounded-[28px] md:min-h-[420px] md:grid-cols-4 md:grid-rows-2">
-              <div className="relative aspect-[4/3] md:col-span-2 md:row-span-2 md:aspect-auto">
-                <Image src={property.images[0]} alt={property.title} fill priority className="object-cover" />
-              </div>
-              {property.images.slice(1, 5).map((image, index) => (
-                <div key={image} className="relative hidden aspect-[4/3] md:block">
-                  <Image src={image} alt={`${property.title} gallery ${index + 2}`} fill className="object-cover" />
-                </div>
-              ))}
-            </div>
+            <PropertyMediaCarousel title={property.title} images={property.images} videos={property.videos} />
           </div>
         </section>
 
-        <div className="mt-7 grid gap-8 sm:mt-10 lg:grid-cols-[1fr_380px] lg:gap-10">
+        <nav className="sticky top-20 z-20 -mx-4 mt-5 hidden border-y border-brand-line bg-white/95 px-4 py-3 backdrop-blur lg:flex lg:gap-8">
+          {[
+            ["Photos", "#photos"],
+            ["Amenities", "#amenities"],
+            ["Reviews", "#reviews"],
+            ["Location", "#location"]
+          ].map(([label, href]) => (
+            <a key={label} className="text-sm font-bold text-brand-ink underline-offset-4 hover:underline" href={href}>
+              {label}
+            </a>
+          ))}
+        </nav>
+
+        <div className="mt-7 grid gap-8 sm:mt-10 lg:grid-cols-[1fr_380px] lg:items-start lg:gap-10">
           <div>
             <section className="border-b border-brand-line pb-8">
               <div className="flex items-center justify-between gap-4">
@@ -108,11 +127,11 @@ export default async function PropertyPage({ params }: Props) {
               ))}
             </section>
 
-            <section className="border-b border-brand-line py-6 sm:py-8">
+            <section className="content-visibility-auto border-b border-brand-line py-6 [contain-intrinsic-size:560px] sm:py-8">
               <p className="text-sm leading-7 text-brand-ink sm:text-base sm:leading-8">{property.description}</p>
             </section>
 
-            <section className="border-b border-brand-line py-6 sm:py-8">
+            <section id="photos" className="content-visibility-auto border-b border-brand-line py-6 [contain-intrinsic-size:520px] sm:py-8">
               <h2 className="text-xl font-semibold text-brand-ink sm:text-2xl">Photos and videos</h2>
               <div className="-mx-4 mt-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:overflow-visible sm:px-0 sm:pb-0">
                 {property.videos?.map((video) => (
@@ -143,7 +162,9 @@ export default async function PropertyPage({ params }: Props) {
               </div>
             </section>
 
-            <section className="border-b border-brand-line py-6 sm:py-8">
+            <PropertySleepRooms property={property} />
+
+            <section id="amenities" className="content-visibility-auto border-b border-brand-line py-6 [contain-intrinsic-size:360px] sm:py-8">
               <h2 className="text-xl font-semibold text-brand-ink sm:text-2xl">Amenities</h2>
               <div className="mt-4 grid grid-cols-2 gap-3 sm:mt-5 sm:gap-4">
                 {property.amenities.map((amenity) => (
@@ -154,7 +175,9 @@ export default async function PropertyPage({ params }: Props) {
               </div>
             </section>
 
-            <section className="border-b border-brand-line py-6 sm:py-8">
+            <PropertyReviewSummary property={property} />
+
+            <section id="location" className="border-b border-brand-line py-6 sm:py-8">
               <h2 className="text-xl font-semibold text-brand-ink sm:text-2xl">Where you will be</h2>
               <div className="mt-4 grid min-h-56 place-items-center rounded-[22px] border border-white bg-brand-soft p-5 text-center shadow-pearl sm:mt-5 sm:min-h-72 sm:rounded-[28px] sm:p-6">
                 <MapPinned className="mx-auto text-brand-strong" size={36} aria-hidden />
@@ -166,22 +189,17 @@ export default async function PropertyPage({ params }: Props) {
               </div>
             </section>
 
-            <section className="py-6 sm:py-8">
-              <h2 className="text-xl font-semibold text-brand-ink sm:text-2xl">Reviews</h2>
-              <div className="mt-4 grid gap-3 md:grid-cols-2 md:gap-5">
-                {["Immaculate stay, fast support, and exactly as shown.", "The booking flow was transparent and the host was excellent."].map((review) => (
-                  <article key={review} className="rounded-[20px] border border-brand-line bg-white/72 p-4 shadow-pearl sm:rounded-[24px] sm:p-5">
-                    <p className="text-sm leading-6 text-brand-ink">{review}</p>
-                    <p className="mt-4 text-sm font-semibold text-brand-muted">Verified guest</p>
-                  </article>
-                ))}
-              </div>
-            </section>
+            <ReviewModule
+              propertyId={property.id}
+              propertyTitle={property.title}
+              baseRating={property.rating}
+              baseReviewCount={property.reviews}
+            />
           </div>
           <BookingWidget property={property} />
         </div>
 
-        <section className="py-8 sm:py-12">
+        <section className="content-visibility-auto py-8 [contain-intrinsic-size:420px] sm:py-12">
           <h2 className="mb-4 text-xl font-semibold text-brand-ink sm:mb-6 sm:text-2xl">Similar Micasa stays</h2>
           <div className="grid grid-cols-2 gap-x-4 gap-y-7 md:grid-cols-3 md:gap-7">
             {similar.map((item) => (

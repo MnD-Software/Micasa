@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { MobileTabBar } from "@/components/marketplace/mobile-tab-bar";
+import { AdminListingControls } from "@/components/marketplace/admin-listing-controls";
 import { SiteHeader } from "@/components/marketplace/site-header";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -30,7 +31,7 @@ import { Input } from "@/components/ui/input";
 import { formatCurrency } from "@/lib/utils";
 import { getBookingWhatsappNumber } from "@/lib/whatsapp";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+const API_URL = "/api/backend";
 const adminTokenKey = "micasa-admin-token";
 
 type ApiProperty = {
@@ -311,7 +312,7 @@ export default function AdminDashboardPage() {
 
         {error ? (
           <section className="mt-6 rounded-3xl border border-brand-error/25 bg-white p-5 text-sm text-brand-error shadow-pearl">
-            Backend connection failed: {error}. Check `NEXT_PUBLIC_API_URL` and confirm the Render API is awake.
+            Backend connection failed: {error}. Check `BACKEND_API_URL` in Vercel and confirm the Render API is awake.
           </section>
         ) : null}
 
@@ -438,6 +439,8 @@ export default function AdminDashboardPage() {
             </p>
           </Card>
         </section>
+
+        <AdminListingControls />
 
         <section className="mt-6 rounded-[30px] border border-white bg-brand-ivory p-5 shadow-pearl ring-1 ring-brand-line/70">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">

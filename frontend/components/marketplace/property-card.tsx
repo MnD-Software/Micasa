@@ -1,9 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Heart, MapPin, Star } from "lucide-react";
+import { ChevronLeft, ChevronRight, Heart, MapPin, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import type { Property } from "@/types/marketplace";
 import { usePreferences } from "@/components/marketplace/preferences-provider";
 import { useAuthStore } from "@/store/auth-store";
@@ -11,6 +12,7 @@ import { useSavedStore } from "@/store/saved-store";
 
 export function PropertyCard({ property, compact = false }: { property: Property; compact?: boolean }) {
   const totalForTwoNights = property.pricePerNight * 2 + property.cleaningFee + property.serviceFee;
+  const [activeImage, setActiveImage] = useState(0);
   const { formatMoney, t } = usePreferences();
   const accountKey = useAuthStore((state) => state.accountKey);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -26,6 +28,12 @@ export function PropertyCard({ property, compact = false }: { property: Property
     toggleSaved(property.id, accountKey);
   }
 
+  function goToImage(index: number) {
+    setActiveImage((index + property.images.length) % property.images.length);
+  }
+
+  const image = property.images[activeImage] ?? property.images[0];
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 20 }}
@@ -38,7 +46,7 @@ export function PropertyCard({ property, compact = false }: { property: Property
         <Link href={`/property/${property.slug}`} aria-label={`View ${property.title}`}>
           <div className={["relative overflow-hidden bg-brand-soft transition duration-300 group-hover:shadow-lift", compact ? "aspect-square rounded-[18px]" : "aspect-[4/3] rounded-[18px]"].join(" ")}>
             <Image
-              src={property.images[0]}
+              src={image}
               alt={property.title}
               fill
               sizes={compact ? "(min-width: 1280px) 224px, (min-width: 640px) 218px, 44vw" : "(min-width: 1280px) 20vw, (min-width: 768px) 28vw, 92vw"}
@@ -46,6 +54,40 @@ export function PropertyCard({ property, compact = false }: { property: Property
             />
           </div>
         </Link>
+        {property.images.length > 1 ? (
+          <>
+            <button
+              aria-label={`Previous photo of ${property.title}`}
+              className="focus-ring absolute left-2.5 top-1/2 hidden h-7 w-7 -translate-y-1/2 place-items-center rounded-full bg-white/86 text-brand-ink shadow-pearl backdrop-blur transition group-hover:grid"
+              onClick={() => goToImage(activeImage - 1)}
+              type="button"
+            >
+              <ChevronLeft size={16} aria-hidden />
+            </button>
+            <button
+              aria-label={`Next photo of ${property.title}`}
+              className="focus-ring absolute right-2.5 top-1/2 hidden h-7 w-7 -translate-y-1/2 place-items-center rounded-full bg-white/86 text-brand-ink shadow-pearl backdrop-blur transition group-hover:grid"
+              onClick={() => goToImage(activeImage + 1)}
+              type="button"
+            >
+              <ChevronRight size={16} aria-hidden />
+            </button>
+            <div className="absolute inset-x-0 bottom-2 flex justify-center gap-1">
+              {property.images.slice(0, 5).map((item, index) => (
+                <button
+                  key={`${property.id}-${item}-${index}`}
+                  aria-label={`Show ${property.title} photo ${index + 1}`}
+                  className={[
+                    "h-1.5 rounded-full shadow-sm transition",
+                    index === activeImage ? "w-4 bg-white" : "w-1.5 bg-white/70"
+                  ].join(" ")}
+                  onClick={() => goToImage(index)}
+                  type="button"
+                />
+              ))}
+            </div>
+          </>
+        ) : null}
         <button
           className={[
             "focus-ring absolute right-2.5 top-2.5 grid h-8 w-8 place-items-center rounded-full border border-white/80 bg-white/86 shadow-pearl backdrop-blur transition hover:bg-white",

@@ -3,12 +3,15 @@
 import Image from "next/image";
 import { ArrowLeft, ArrowRight, ConciergeBell, ShieldCheck, Waves, Wifi } from "lucide-react";
 import { PropertyCard } from "@/components/marketplace/property-card";
+import { TrustMemberStrip } from "@/components/marketplace/trust-member-strip";
 import { destinations, experiences, properties } from "@/lib/marketplace-data";
 import { usePreferences } from "@/components/marketplace/preferences-provider";
 import { createWhatsappHref } from "@/lib/whatsapp";
 import { useSearchStore } from "@/store/search-store";
 
 const nextMonthHomes = properties;
+const groupReadyHomes = [...properties].sort((a, b) => b.guests - a.guests);
+const intimateHomes = [...properties].sort((a, b) => a.guests - b.guests);
 
 function RailHeader({ title }: { title: string }) {
   return (
@@ -119,8 +122,12 @@ export function HomeSections() {
         </div>
       </section>
 
+      <TrustMemberStrip />
+
       <PropertyRail id="featured-stays" title={`Popular homes in ${search.location.split(",")[0] || "Nyali"}`} items={availableHomes} />
       <PropertyRail title={`Available next month in ${search.location.split(",")[0] || "Nyali"}`} items={nextMonthHomes} />
+      <PropertyRail title="Best for groups and families" items={groupReadyHomes} />
+      <PropertyRail title="Couples and work trips" items={intimateHomes} />
 
       <section className="py-5 sm:py-7">
         <RailHeader title="Guest favorite destinations" />
