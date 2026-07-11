@@ -7,16 +7,19 @@ import Link from "next/link";
 import { useState } from "react";
 import type { Property } from "@/types/marketplace";
 import { usePreferences } from "@/components/marketplace/preferences-provider";
+import { useHydrated } from "@/hooks/use-hydrated";
 import { useAuthStore } from "@/store/auth-store";
 import { useSavedStore } from "@/store/saved-store";
 
 export function PropertyCard({ property, compact = false }: { property: Property; compact?: boolean }) {
   const totalForTwoNights = property.pricePerNight * 2 + property.cleaningFee + property.serviceFee;
   const [activeImage, setActiveImage] = useState(0);
+  const hydrated = useHydrated();
   const { formatMoney, t } = usePreferences();
   const accountKey = useAuthStore((state) => state.accountKey);
-  const isSaved = useSavedStore((state) => state.isSaved(property.id, accountKey));
+  const savedInStore = useSavedStore((state) => state.isSaved(property.id, accountKey));
   const toggleSaved = useSavedStore((state) => state.toggleSaved);
+  const isSaved = hydrated && savedInStore;
 
   function handleSave() {
     toggleSaved(property.id, accountKey);

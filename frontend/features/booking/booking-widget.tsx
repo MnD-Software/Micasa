@@ -8,6 +8,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { usePreferences } from "@/components/marketplace/preferences-provider";
+import { useHydrated } from "@/hooks/use-hydrated";
 import { createWhatsappHref } from "@/lib/whatsapp";
 import { nightsBetween } from "@/lib/utils";
 import { useAuthStore } from "@/store/auth-store";
@@ -27,6 +28,7 @@ type BookingValues = z.infer<typeof bookingSchema>;
 
 export function BookingWidget({ property }: { property: Property }) {
   const { formatMoney, t } = usePreferences();
+  const hydrated = useHydrated();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const paybill = process.env.NEXT_PUBLIC_MPESA_PAYBILL?.trim();
   const mpesaAccountName = process.env.NEXT_PUBLIC_MPESA_ACCOUNT_NAME?.trim() || "MICASA";
@@ -73,7 +75,7 @@ export function BookingWidget({ property }: { property: Property }) {
   }
 
   function requireAccount() {
-    if (isAuthenticated) {
+    if (hydrated && isAuthenticated) {
       return true;
     }
     loginForBooking();

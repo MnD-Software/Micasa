@@ -6,16 +6,21 @@ import { MobileTabBar } from "@/components/marketplace/mobile-tab-bar";
 import { PropertyCard } from "@/components/marketplace/property-card";
 import { SiteHeader } from "@/components/marketplace/site-header";
 import { Button } from "@/components/ui/button";
+import { useHydrated } from "@/hooks/use-hydrated";
 import { properties } from "@/lib/marketplace-data";
 import { useAuthStore } from "@/store/auth-store";
 import { useSavedStore } from "@/store/saved-store";
 
 export default function SavedPage() {
+  const hydrated = useHydrated();
   const accountKey = useAuthStore((state) => state.accountKey);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const user = useAuthStore((state) => state.user);
   const savedIds = useSavedStore((state) => state.getSavedIds(accountKey));
-  const savedHomes = properties.filter((property) => savedIds.includes(property.id));
+  const visibleSavedIds = hydrated ? savedIds : [];
+  const visibleIsAuthenticated = hydrated && isAuthenticated;
+  const visibleUser = hydrated ? user : null;
+  const savedHomes = properties.filter((property) => visibleSavedIds.includes(property.id));
 
   return (
     <>
@@ -24,16 +29,16 @@ export default function SavedPage() {
         <section className="rounded-[24px] border border-white bg-brand-ivory p-5 shadow-pearl ring-1 ring-brand-line/70">
           <p className="text-xs font-bold uppercase tracking-[0.12em] text-brand-strong">Wishlist</p>
           <h1 className="mt-2 text-3xl font-bold text-brand-ink sm:text-4xl">
-            {isAuthenticated ? `${user?.fullName?.split(" ")[0] ?? "Your"} saved stays` : "Saved stays on this device"}
+            {visibleIsAuthenticated ? `${visibleUser?.fullName?.split(" ")[0] ?? "Your"} saved stays` : "Saved stays on this device"}
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-brand-muted">
-            {isAuthenticated
+            {visibleIsAuthenticated
               ? "Tap the heart on any listing to keep it here while comparing dates, bedrooms, rates, and WhatsApp booking options."
               : "You can like homes before signing in. Log in when you are ready to book or keep them across devices."}
           </p>
         </section>
 
-        {!isAuthenticated ? (
+        {!visibleIsAuthenticated ? (
           <section className="mt-4 flex flex-col gap-3 rounded-[22px] border border-brand-line bg-white p-4 shadow-pearl sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm font-semibold text-brand-ink">Sign in before booking so your trip, messages, and saved homes attach to your account.</p>
             <Link href="/login?next=/saved" className="shrink-0">

@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { currencies, languages, usePreferences } from "@/components/marketplace/preferences-provider";
 import { FloatingWhatsAppButton } from "@/components/marketplace/whatsapp-button";
+import { useHydrated } from "@/hooks/use-hydrated";
 import { useSearchStore } from "@/store/search-store";
 import { useAuthStore } from "@/store/auth-store";
 import { useSavedStore } from "@/store/saved-store";
@@ -46,6 +47,7 @@ export function SiteHeader() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileLocation, setMobileLocation] = useState("Nyali, Mombasa");
+  const hydrated = useHydrated();
   const pathname = usePathname();
   const { currency, language, setCurrency, setLanguage, t } = usePreferences();
   const accountKey = useAuthStore((state) => state.accountKey);
@@ -54,6 +56,9 @@ export function SiteHeader() {
   const savedCount = useSavedStore((state) => state.getSavedIds(accountKey).length);
   const activeFilter = useSearchStore((state) => state.filter);
   const setSearch = useSearchStore((state) => state.setSearch);
+  const visibleSavedCount = hydrated ? savedCount : 0;
+  const visibleIsAuthenticated = hydrated && isAuthenticated;
+  const visibleUser = hydrated ? user : null;
 
   useEffect(() => {
     const update = () => setIsScrolled(window.scrollY > 28);
@@ -163,14 +168,14 @@ export function SiteHeader() {
             {t("becomeHost")}
           </Link>
           <Link
-            aria-label={`${savedCount} saved homes`}
+            aria-label={`${visibleSavedCount} saved homes`}
             className="focus-ring relative grid h-11 w-11 place-items-center rounded-full border border-white bg-brand-ivory text-brand-ink shadow-pearl transition hover:border-brand-line"
             href="/saved"
           >
             <Heart size={19} aria-hidden />
-            {savedCount > 0 ? (
+            {visibleSavedCount > 0 ? (
               <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-brand-strong px-1 text-[10px] font-bold text-white">
-                {savedCount}
+                {visibleSavedCount}
               </span>
             ) : null}
           </Link>
@@ -178,12 +183,12 @@ export function SiteHeader() {
             {renderPreferenceControls("desktop")}
           </div>
           <Link
-            aria-label={isAuthenticated ? "Open guest dashboard" : "Log in"}
+            aria-label={visibleIsAuthenticated ? "Open guest dashboard" : "Log in"}
             className="focus-ring grid h-12 w-12 place-items-center rounded-full border border-white bg-brand-ivory text-brand-ink shadow-pearl transition hover:border-brand-line"
-            href={isAuthenticated ? "/dashboard/guest" : "/login"}
+            href={visibleIsAuthenticated ? "/dashboard/guest" : "/login"}
           >
-            {user?.fullName ? (
-              <span className="text-sm font-bold">{user.fullName.slice(0, 1).toUpperCase()}</span>
+            {visibleUser?.fullName ? (
+              <span className="text-sm font-bold">{visibleUser.fullName.slice(0, 1).toUpperCase()}</span>
             ) : (
               <UserRound size={20} aria-hidden />
             )}

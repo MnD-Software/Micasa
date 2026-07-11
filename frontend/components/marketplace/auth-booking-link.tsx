@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { useHydrated } from "@/hooks/use-hydrated";
 import { useAuthStore } from "@/store/auth-store";
 
 export function AuthBookingLink({
@@ -12,6 +13,7 @@ export function AuthBookingLink({
   className?: string;
   href: string;
 }) {
+  const hydrated = useHydrated();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   return (
@@ -19,7 +21,7 @@ export function AuthBookingLink({
       className={className}
       href={href}
       onClick={(event) => {
-        if (!isAuthenticated) {
+        if (!hydrated || !isAuthenticated) {
           event.preventDefault();
           window.location.href = `/login?next=${encodeURIComponent(window.location.pathname)}`;
         }

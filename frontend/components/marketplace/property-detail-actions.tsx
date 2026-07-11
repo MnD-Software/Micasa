@@ -3,15 +3,18 @@
 import { Copy, Facebook, Heart, Mail, MessageCircle, MoreHorizontal, Share2, X } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
+import { useHydrated } from "@/hooks/use-hydrated";
 import { useAuthStore } from "@/store/auth-store";
 import { useSavedStore } from "@/store/saved-store";
 import type { Property } from "@/types/marketplace";
 
 export function PropertyDetailActions({ property }: { property: Property }) {
   const [shareOpen, setShareOpen] = useState(false);
+  const hydrated = useHydrated();
   const accountKey = useAuthStore((state) => state.accountKey);
-  const isSaved = useSavedStore((state) => state.isSaved(property.id, accountKey));
+  const savedInStore = useSavedStore((state) => state.isSaved(property.id, accountKey));
   const toggleSaved = useSavedStore((state) => state.toggleSaved);
+  const isSaved = hydrated && savedInStore;
 
   function saveProperty() {
     toggleSaved(property.id, accountKey);

@@ -11,20 +11,21 @@ type SavedStore = {
 };
 
 const guestAccountKey = "guest";
+const emptySavedIds: string[] = [];
 
 export const useSavedStore = create<SavedStore>()(
   persist(
     (set, get) => ({
       savedByAccount: {},
-      getSavedIds: (accountKey) => (get().savedByAccount ?? {})[accountKey] ?? [],
-      isSaved: (id, accountKey) => ((get().savedByAccount ?? {})[accountKey] ?? []).includes(id),
+      getSavedIds: (accountKey) => (get().savedByAccount ?? {})[accountKey] ?? emptySavedIds,
+      isSaved: (id, accountKey) => ((get().savedByAccount ?? {})[accountKey] ?? emptySavedIds).includes(id),
       toggleSaved: (id, accountKey) =>
         set((state) => ({
           savedByAccount: {
             ...(state.savedByAccount ?? {}),
-            [accountKey]: ((state.savedByAccount ?? {})[accountKey] ?? []).includes(id)
-              ? ((state.savedByAccount ?? {})[accountKey] ?? []).filter((savedId) => savedId !== id)
-              : [id, ...((state.savedByAccount ?? {})[accountKey] ?? [])]
+            [accountKey]: ((state.savedByAccount ?? {})[accountKey] ?? emptySavedIds).includes(id)
+              ? ((state.savedByAccount ?? {})[accountKey] ?? emptySavedIds).filter((savedId) => savedId !== id)
+              : [id, ...((state.savedByAccount ?? {})[accountKey] ?? emptySavedIds)]
           }
         }))
     }),

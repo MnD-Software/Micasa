@@ -2,10 +2,13 @@
 
 import { Handshake, Home, ShieldCheck, Sparkles } from "lucide-react";
 import Link from "next/link";
+import { useHydrated } from "@/hooks/use-hydrated";
 import { useAuthStore } from "@/store/auth-store";
 
 export function TrustMemberStrip() {
+  const hydrated = useHydrated();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const showMemberPrompt = hydrated ? !isAuthenticated : true;
 
   return (
     <section className="py-3 sm:py-4">
@@ -27,7 +30,7 @@ export function TrustMemberStrip() {
         ))}
       </div>
 
-      {!isAuthenticated ? (
+      {showMemberPrompt ? (
         <div className="mt-2 flex items-center justify-between gap-3 rounded-2xl bg-[#171d3d] px-3 py-3 text-white shadow-pearl sm:px-4">
           <div className="flex min-w-0 items-center gap-3">
             <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-white/10">

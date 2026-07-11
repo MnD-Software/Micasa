@@ -2,18 +2,22 @@
 
 import { Heart, Search, UserRound } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { useHydrated } from "@/hooks/use-hydrated";
 import { useAuthStore } from "@/store/auth-store";
 import { useSavedStore } from "@/store/saved-store";
 
 export function MobileTabBar() {
   const pathname = usePathname();
+  const hydrated = useHydrated();
   const accountKey = useAuthStore((state) => state.accountKey);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const savedCount = useSavedStore((state) => state.getSavedIds(accountKey).length);
+  const visibleSavedCount = hydrated ? savedCount : 0;
+  const visibleIsAuthenticated = hydrated && isAuthenticated;
   const tabs = [
     { label: "Explore", href: "/", Icon: Search },
     { label: "Wishlists", href: "/saved", Icon: Heart },
-    { label: isAuthenticated ? "Profile" : "Log in", href: isAuthenticated ? "/dashboard/guest" : "/login", Icon: UserRound }
+    { label: visibleIsAuthenticated ? "Profile" : "Log in", href: visibleIsAuthenticated ? "/dashboard/guest" : "/login", Icon: UserRound }
   ] as const;
 
   return (
@@ -31,9 +35,9 @@ export function MobileTabBar() {
             href={href}
           >
             <Icon size={30} strokeWidth={active ? 2.5 : 1.8} aria-hidden />
-            {label === "Wishlists" && savedCount > 0 ? (
+            {label === "Wishlists" && visibleSavedCount > 0 ? (
               <span className="absolute right-8 top-1 grid h-4 min-w-4 place-items-center rounded-full bg-brand-strong px-1 text-[9px] text-white">
-                {savedCount}
+                {visibleSavedCount}
               </span>
             ) : null}
             <span>{label}</span>

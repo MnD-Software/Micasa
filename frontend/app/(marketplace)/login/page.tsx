@@ -7,6 +7,7 @@ import { MobileTabBar } from "@/components/marketplace/mobile-tab-bar";
 import { SiteHeader } from "@/components/marketplace/site-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useHydrated } from "@/hooks/use-hydrated";
 import { useAuthStore, type AccountUser } from "@/store/auth-store";
 
 const API_URL = "/api/backend";
@@ -15,9 +16,12 @@ type Mode = "login" | "signup";
 
 export default function LoginPage() {
   const router = useRouter();
+  const hydrated = useHydrated();
   const setSession = useAuthStore((state) => state.setSession);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const user = useAuthStore((state) => state.user);
+  const visibleIsAuthenticated = hydrated && isAuthenticated;
+  const visibleUser = hydrated ? user : null;
   const [mode, setMode] = useState<Mode>("login");
   const [nextPath, setNextPath] = useState("/saved");
   const [fullName, setFullName] = useState("");
@@ -108,11 +112,11 @@ export default function LoginPage() {
         </section>
 
         <section className="rounded-[26px] border border-brand-line bg-white p-5 shadow-pearl sm:p-7">
-          {isAuthenticated ? (
+          {visibleIsAuthenticated ? (
             <div className="grid min-h-[360px] place-items-center text-center">
               <div>
                 <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-brand-soft text-2xl font-bold text-brand-strong">
-                  {user?.fullName?.slice(0, 1).toUpperCase() ?? "M"}
+                  {visibleUser?.fullName?.slice(0, 1).toUpperCase() ?? "M"}
                 </div>
                 <h2 className="mt-5 text-2xl font-bold text-brand-ink">You are signed in</h2>
                 <p className="mt-2 text-sm text-brand-muted">Continue to your saved homes or profile dashboard.</p>
