@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { usePreferences } from "@/components/marketplace/preferences-provider";
 import { createWhatsappHref } from "@/lib/whatsapp";
 import { nightsBetween } from "@/lib/utils";
+import { useAuthStore } from "@/store/auth-store";
 import type { Property } from "@/types/marketplace";
 
 const bookingSchema = z.object({
@@ -26,6 +27,7 @@ type BookingValues = z.infer<typeof bookingSchema>;
 
 export function BookingWidget({ property }: { property: Property }) {
   const { formatMoney, t } = usePreferences();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const paybill = process.env.NEXT_PUBLIC_MPESA_PAYBILL?.trim();
   const mpesaAccountName = process.env.NEXT_PUBLIC_MPESA_ACCOUNT_NAME?.trim() || "MICASA";
   const [availabilityChecked, setAvailabilityChecked] = useState(false);
@@ -65,7 +67,23 @@ export function BookingWidget({ property }: { property: Property }) {
     Number(values.guests) > 0 &&
     Number(values.bedrooms) > 0;
 
+  function loginForBooking() {
+    const next = `${window.location.pathname}${window.location.search}`;
+    window.location.href = `/login?next=${encodeURIComponent(next)}`;
+  }
+
+  function requireAccount() {
+    if (isAuthenticated) {
+      return true;
+    }
+    loginForBooking();
+    return false;
+  }
+
   function onSubmit(data: BookingValues) {
+    if (!requireAccount()) {
+      return;
+    }
     setAvailabilityChecked(true);
     if (!isAvailable) {
       return;
@@ -86,7 +104,8 @@ Total estimate: ${formatMoney(totals.total)}`;
   const whatsappHref = createWhatsappHref(whatsappMessage);
 
   return (
-    <aside className="w-full max-w-full overflow-hidden rounded-[20px] border border-white bg-brand-ivory p-4 shadow-pearl ring-1 ring-brand-line/70 lg:sticky lg:top-28 lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto lg:rounded-[22px] lg:p-5 lg:shadow-luxe">
+    <>
+    <aside className="hidden w-full max-w-full overflow-hidden rounded-[20px] border border-white bg-brand-ivory p-4 shadow-pearl ring-1 ring-brand-line/70 lg:sticky lg:top-28 lg:block lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto lg:rounded-[22px] lg:p-5 lg:shadow-luxe">
       <div className="flex items-start justify-between gap-3">
         <p className="text-brand-ink">
           <span className="text-xl font-semibold sm:text-2xl">{formatMoney(property.pricePerNight)}</span>
@@ -183,6 +202,12 @@ Total estimate: ${formatMoney(totals.total)}`;
             "bg-brand-success text-white hover:bg-[#008f82]"
           ].join(" ")}
           href={whatsappHref}
+          onClick={(event) => {
+            if (!isAuthenticated) {
+              event.preventDefault();
+              loginForBooking();
+            }
+          }}
           rel="noreferrer"
           target="_blank"
         >
@@ -243,5 +268,27 @@ Total estimate: ${formatMoney(totals.total)}`;
         </div>
       </div>
     </aside>
+    <div className="fixed inset-x-0 bottom-[84px] z-40 border-t border-brand-line bg-white px-4 py-3 shadow-[0_-14px_34px_rgba(34,34,34,0.12)] lg:hidden">
+      <div className="mx-auto flex max-w-md items-center justify-between gap-3">
+        <div className="min-w-0">
+          <p className="truncate text-sm font-semibold text-brand-ink">
+            {formatMoney(totals.total)} <span className="font-normal text-brand-muted">for {totals.nights} nights</span>
+          </p>
+          <p className="mt-0.5 truncate text-xs text-brand-muted">{values.checkIn} to {values.checkOut}</p>
+        </div>
+        <button
+          className="focus-ring min-h-12 shrink-0 rounded-full bg-brand-strong px-6 text-sm font-bold text-white shadow-lift"
+          onClick={() => {
+            if (requireAccount()) {
+              setAvailabilityChecked(true);
+            }
+          }}
+          type="button"
+        >
+          Reserve
+        </button>
+      </div>
+    </div>
+    </>
   );
 }

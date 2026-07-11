@@ -40,7 +40,7 @@ export function PropertyReviewSummary({ property }: { property: Property }) {
         </p>
       </div>
 
-      <div className="mt-8 flex gap-5 overflow-x-auto pb-2 lg:grid lg:grid-cols-7 lg:overflow-visible">
+      <div className="-mx-4 mt-8 flex gap-5 overflow-x-auto px-4 pb-2 sm:mx-0 sm:px-0 lg:grid lg:grid-cols-7 lg:overflow-visible">
         <div className="min-w-[180px] lg:min-w-0">
           <h3 className="font-semibold text-brand-ink">Overall rating</h3>
           <div className="mt-3 grid gap-1.5">
@@ -67,7 +67,7 @@ export function PropertyReviewSummary({ property }: { property: Property }) {
         })}
       </div>
 
-      <div className="mt-8 flex snap-x gap-3 overflow-x-auto pb-2">
+      <div className="-mx-4 mt-8 flex snap-x gap-3 overflow-x-auto px-4 pb-2 sm:mx-0 sm:px-0">
         {experience.reviewTags.map((tag) => (
           <span key={tag} className="snap-start whitespace-nowrap rounded-2xl border border-brand-line bg-white px-4 py-3 text-sm font-semibold text-brand-ink shadow-pearl">
             <Star size={14} className="mr-2 inline fill-brand-strong text-brand-strong" aria-hidden />

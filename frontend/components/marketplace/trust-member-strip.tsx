@@ -8,39 +8,39 @@ export function TrustMemberStrip() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   return (
-    <section className="grid gap-4 py-5 sm:py-6">
-      <div className="grid gap-4 rounded-[22px] bg-[#e5f8fb] p-5 sm:rounded-[28px] sm:p-7 lg:grid-cols-3">
+    <section className="py-3 sm:py-4">
+      <div className="flex snap-x gap-2 overflow-x-auto rounded-2xl bg-[#e9fbfd] p-2 sm:gap-3 sm:p-3 lg:grid lg:grid-cols-3 lg:overflow-visible">
         {[
-          [Home, "We know just the place", "Near the beach. By the pool. Find Micasa stays for every occasion."],
-          [ShieldCheck, "MicasaCare guarantee", "If your stay goes sideways, our support team will help make it right."],
-          [Handshake, "On call day or night", "Real people. Real support before, during, and after your stay."]
+          [Home, "Right stay match", "Beach, pool, family, or work-ready."],
+          [ShieldCheck, "MicasaCare", "Support if plans shift during a stay."],
+          [Handshake, "Local help", "Human support before and after check-in."]
         ].map(([Icon, title, text]) => (
-          <div key={String(title)} className="flex gap-4">
-            <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#73dff3] text-brand-ink sm:h-14 sm:w-14">
-              <Icon size={25} aria-hidden />
+          <div key={String(title)} className="flex min-w-[230px] snap-start items-center gap-3 rounded-xl bg-white/54 px-3 py-2.5 lg:min-w-0">
+            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#73dff3] text-brand-ink">
+              <Icon size={19} aria-hidden />
             </span>
-            <div>
-              <h2 className="text-base font-bold text-brand-ink sm:text-lg">{String(title)}</h2>
-              <p className="mt-1 text-sm leading-6 text-brand-ink/78 sm:text-base">{String(text)}</p>
+            <div className="min-w-0">
+              <h2 className="truncate text-sm font-bold text-brand-ink">{String(title)}</h2>
+              <p className="truncate text-xs text-brand-ink/70">{String(text)}</p>
             </div>
           </div>
         ))}
       </div>
 
       {!isAuthenticated ? (
-        <div className="flex flex-col gap-4 rounded-[22px] bg-[#171d3d] p-5 text-white shadow-pearl sm:rounded-[28px] sm:p-7 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex items-center gap-4">
-            <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-white/10">
-              <Sparkles size={26} aria-hidden />
+        <div className="mt-2 flex items-center justify-between gap-3 rounded-2xl bg-[#171d3d] px-3 py-3 text-white shadow-pearl sm:px-4">
+          <div className="flex min-w-0 items-center gap-3">
+            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-white/10">
+              <Sparkles size={18} aria-hidden />
             </span>
-            <p className="text-base font-bold sm:text-lg">Members always get our best prices when signed in</p>
+            <p className="truncate text-sm font-bold">Member prices when signed in</p>
           </div>
-          <div className="flex items-center gap-3">
-            <Link className="focus-ring rounded-full bg-blue-600 px-5 py-3 text-sm font-bold text-white hover:bg-blue-700" href="/login">
+          <div className="flex shrink-0 items-center gap-2">
+            <Link className="focus-ring rounded-full bg-blue-600 px-3 py-2 text-xs font-bold text-white hover:bg-blue-700 sm:px-4" href="/login">
               Sign in
             </Link>
-            <Link className="focus-ring rounded-full px-4 py-3 text-sm font-bold text-white/86 hover:bg-white/10" href="/become-host">
-              Learn more
+            <Link className="focus-ring hidden rounded-full px-3 py-2 text-xs font-bold text-white/86 hover:bg-white/10 sm:inline-flex" href="/become-host">
+              Learn
             </Link>
           </div>
         </div>

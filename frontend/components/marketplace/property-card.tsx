@@ -15,16 +15,10 @@ export function PropertyCard({ property, compact = false }: { property: Property
   const [activeImage, setActiveImage] = useState(0);
   const { formatMoney, t } = usePreferences();
   const accountKey = useAuthStore((state) => state.accountKey);
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const isSaved = useSavedStore((state) => state.isSaved(property.id, accountKey));
   const toggleSaved = useSavedStore((state) => state.toggleSaved);
 
   function handleSave() {
-    if (!isAuthenticated) {
-      const next = `${window.location.pathname}${window.location.search}`;
-      window.location.href = `/login?next=${encodeURIComponent(next)}`;
-      return;
-    }
     toggleSaved(property.id, accountKey);
   }
 

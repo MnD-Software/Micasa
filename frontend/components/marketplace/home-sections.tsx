@@ -44,6 +44,26 @@ function RailHeader({ title }: { title: string }) {
   );
 }
 
+function SeeAllCard({ items }: { items: typeof properties }) {
+  return (
+    <a
+      className="grid aspect-square w-[44vw] min-w-[158px] max-w-[190px] shrink-0 snap-start place-items-center rounded-[18px] border border-brand-line bg-white shadow-pearl transition hover:-translate-y-0.5 hover:shadow-luxe sm:w-[218px] sm:max-w-none lg:w-[224px]"
+      href="#featured-stays"
+    >
+      <div className="text-center">
+        <div className="mx-auto grid w-24 grid-cols-2 gap-1">
+          {items.slice(0, 4).map((property, index) => (
+            <div key={`${property.id}-see-all-${index}`} className="relative aspect-square overflow-hidden rounded-xl bg-brand-soft shadow-sm">
+              <Image src={property.images[index % property.images.length]} alt="" fill sizes="48px" className="object-cover" />
+            </div>
+          ))}
+        </div>
+        <p className="mt-4 text-base font-bold text-brand-ink">See all</p>
+      </div>
+    </a>
+  );
+}
+
 function PropertyRail({ title, items, id }: { title: string; items: typeof properties; id?: string }) {
   return (
     <section id={id} className="py-5 sm:py-6">
@@ -57,6 +77,7 @@ function PropertyRail({ title, items, id }: { title: string; items: typeof prope
             <PropertyCard property={property} compact />
           </div>
         ))}
+        <SeeAllCard items={items} />
       </div>
     </section>
   );
@@ -66,9 +87,13 @@ export function HomeSections() {
   const search = useSearchStore();
   const { formatMoney } = usePreferences();
   const query = search.location.trim().toLowerCase();
+  const filter = search.filter.trim().toLowerCase();
   const searchedHomes = properties.filter((property) => {
     const haystack = `${property.title} ${property.location} ${property.category} ${property.type}`.toLowerCase();
-    return property.guests >= search.guests && (!query || haystack.includes(query.split(",")[0]));
+    const amenityStack = property.amenities.join(" ").toLowerCase();
+    const matchesLocation = !query || haystack.includes(query.split(",")[0]);
+    const matchesFilter = !filter || haystack.includes(filter) || amenityStack.includes(filter);
+    return property.guests >= search.guests && matchesLocation && matchesFilter;
   });
   const availableHomes = searchedHomes.length > 0 ? searchedHomes : properties.filter((property) => property.guests >= search.guests);
   const flagship = properties[2] ?? properties[0];

@@ -2,6 +2,7 @@ import { ArrowLeft, Heart, Share, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { AuthBookingLink } from "@/components/marketplace/auth-booking-link";
 import { Button } from "@/components/ui/button";
 import { getServiceBySlug, marketplaceExperiences, marketplaceServices } from "@/lib/service-data";
 import { formatCurrency } from "@/lib/utils";
@@ -88,9 +89,9 @@ export default async function ServiceDetailPage({ params }: Props) {
             From <span className="font-semibold">{formatCurrency(service.startingPrice)}</span>
             <span className="text-brand-muted"> / {service.unit}</span>
           </p>
-          <a href={whatsappHref} rel="noreferrer" target="_blank">
+          <AuthBookingLink href={whatsappHref}>
             <Button size="lg" className="min-w-[138px] sm:min-w-[160px]">Show dates</Button>
-          </a>
+          </AuthBookingLink>
         </div>
       </section>
     </main>

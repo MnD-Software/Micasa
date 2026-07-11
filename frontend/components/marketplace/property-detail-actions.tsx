@@ -10,15 +10,10 @@ import type { Property } from "@/types/marketplace";
 export function PropertyDetailActions({ property }: { property: Property }) {
   const [shareOpen, setShareOpen] = useState(false);
   const accountKey = useAuthStore((state) => state.accountKey);
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const isSaved = useSavedStore((state) => state.isSaved(property.id, accountKey));
   const toggleSaved = useSavedStore((state) => state.toggleSaved);
 
   function saveProperty() {
-    if (!isAuthenticated) {
-      window.location.href = `/login?next=${encodeURIComponent(window.location.pathname)}`;
-      return;
-    }
     toggleSaved(property.id, accountKey);
   }
 

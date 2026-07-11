@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ConciergeBell, Globe2, Heart, House, Search, SlidersHorizontal, Sparkles, UserRound, X } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { currencies, languages, usePreferences } from "@/components/marketplace/preferences-provider";
 import { FloatingWhatsAppButton } from "@/components/marketplace/whatsapp-button";
@@ -30,8 +30,21 @@ const suggestions = [
   ["Mombasa, Kenya", "For coastal family trips"]
 ] as const;
 
+const filterOptions = [
+  ["", "Filters"],
+  ["Fast Wi-Fi", "Wifi"],
+  ["Parking", "Free parking"],
+  ["Self check-in", "Self check-in"],
+  ["bathrooms", "1+ bathrooms"],
+  ["Air conditioning", "Air conditioning"],
+  ["Smart TV", "TV"],
+  ["Swimming pool", "Pool"],
+  ["Beach", "Beach access"]
+] as const;
+
 export function SiteHeader() {
   const [searchOpen, setSearchOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const [mobileLocation, setMobileLocation] = useState("Nyali, Mombasa");
   const pathname = usePathname();
   const { currency, language, setCurrency, setLanguage, t } = usePreferences();
@@ -39,7 +52,15 @@ export function SiteHeader() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const user = useAuthStore((state) => state.user);
   const savedCount = useSavedStore((state) => state.getSavedIds(accountKey).length);
+  const activeFilter = useSearchStore((state) => state.filter);
   const setSearch = useSearchStore((state) => state.setSearch);
+
+  useEffect(() => {
+    const update = () => setIsScrolled(window.scrollY > 28);
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, []);
 
   function submitMobileSearch(location = mobileLocation) {
     const target = location.trim() || "Nyali, Mombasa";
@@ -92,8 +113,8 @@ export function SiteHeader() {
 
   return (
     <>
-    <header className="sticky top-0 z-40 border-b border-brand-line bg-brand-frost shadow-[0_1px_0_rgba(255,255,255,0.85)_inset] backdrop-blur-2xl">
-      <div className="mx-auto hidden h-[78px] max-w-[1820px] grid-cols-[auto_minmax(340px,1fr)_auto] items-center gap-5 px-6 lg:grid lg:px-10">
+    <header className="sticky top-0 z-40 border-b border-brand-line bg-brand-frost shadow-[0_1px_0_rgba(255,255,255,0.85)_inset] backdrop-blur-2xl transition-all duration-300">
+      <div className="mx-auto hidden h-[76px] max-w-[1820px] grid-cols-[auto_minmax(340px,1fr)_auto] items-center gap-5 px-6 transition-all duration-300 lg:grid lg:px-10">
         <Link className="flex min-w-0 items-center" href="/" aria-label="Micasa Staycations Nyali home">
           <span className="relative block h-10 w-[126px] shrink-0 overflow-hidden rounded-[12px] border border-brand-gold/30 bg-white shadow-pearl ring-1 ring-white/80 sm:h-12 sm:w-[158px]">
             <Image
@@ -170,10 +191,52 @@ export function SiteHeader() {
         </div>
       </div>
 
+      <div
+        className={cn(
+          "mx-auto hidden max-w-[980px] items-center justify-center gap-7 overflow-hidden px-6 transition-all duration-300 lg:flex",
+          isScrolled ? "max-h-0 opacity-0" : "max-h-16 pb-4 opacity-100"
+        )}
+      >
+        {mobileTabs.map(({ href, label, Icon, badge }) => (
+          <Link key={href} href={href} className="group flex items-center gap-2 border-b-3 border-transparent pb-2 text-sm font-bold text-brand-muted transition hover:border-brand-ink hover:text-brand-ink">
+            <span className="relative">
+              <Icon size={28} aria-hidden />
+              {badge ? <span className="absolute -right-5 -top-2 rounded-md bg-[#315073] px-1 py-0.5 text-[8px] text-white">NEW</span> : null}
+            </span>
+            {label}
+          </Link>
+        ))}
+      </div>
+
+      <div className="border-t border-brand-line/70">
+        <div className="mx-auto flex max-w-[1120px] gap-2 overflow-x-auto px-4 py-3 sm:px-6 lg:px-10">
+          {filterOptions.map(([value, label], index) => {
+            const active = activeFilter === value || (index === 0 && !activeFilter);
+            return (
+              <button
+                key={label}
+                className={cn(
+                  "focus-ring inline-flex h-10 shrink-0 items-center gap-2 rounded-full border px-4 text-sm font-semibold transition",
+                  active ? "border-brand-ink bg-white text-brand-ink shadow-pearl" : "border-brand-line bg-white/72 text-brand-muted hover:border-brand-ink hover:text-brand-ink"
+                )}
+                onClick={() => setSearch({ filter: value })}
+                type="button"
+              >
+                {index === 0 ? <SlidersHorizontal size={16} aria-hidden /> : null}
+                {label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       <div className="lg:hidden">
-        <div className="px-5 pb-2 pt-5">
+        <div className={cn("px-4 pb-2 transition-all duration-300", isScrolled ? "pt-3" : "pt-5")}>
           <button
-            className="focus-ring mx-auto flex h-[66px] w-full max-w-[630px] items-center justify-center gap-3 rounded-full border border-brand-line bg-white text-[19px] font-bold text-brand-ink shadow-[0_12px_34px_rgba(34,34,34,0.12)]"
+            className={cn(
+              "focus-ring mx-auto flex w-full max-w-[630px] items-center justify-center gap-3 rounded-full border border-brand-line bg-white font-bold text-brand-ink shadow-[0_12px_34px_rgba(34,34,34,0.12)] transition-all duration-300",
+              isScrolled ? "h-12 text-base" : "h-[62px] text-[18px]"
+            )}
             onClick={() => setSearchOpen(true)}
             type="button"
           >
@@ -181,7 +244,7 @@ export function SiteHeader() {
             Start your search
           </button>
         </div>
-        <nav className="grid grid-cols-3 border-b border-brand-line px-5 pt-3">
+        <nav className={cn("grid grid-cols-3 border-b border-brand-line px-5 transition-all duration-300", isScrolled ? "max-h-0 overflow-hidden pt-0 opacity-0" : "max-h-24 pt-3 opacity-100")}>
           {mobileTabs.map(({ href, label, Icon, badge }) => {
             const isActive = href === "/#featured-stays" ? pathname === "/" : pathname === href;
             return (

@@ -35,10 +35,10 @@ export default async function PropertyPage({ params }: Props) {
   return (
     <>
       <SiteHeader />
-      <main className="mx-auto max-w-[1480px] px-4 pb-28 pt-5 sm:px-6 sm:py-6 lg:px-8">
+      <main className="mx-auto max-w-[1480px] overflow-x-hidden px-4 pb-44 pt-5 sm:px-6 sm:py-6 lg:px-8">
         <div className="mb-4 flex flex-col gap-3 sm:mb-5 sm:flex-row sm:items-start sm:justify-between">
-          <div>
-            <h1 className="text-2xl font-bold leading-tight text-brand-ink sm:text-4xl">{property.title}</h1>
+          <div className="min-w-0">
+            <h1 className="break-words text-2xl font-bold leading-tight text-brand-ink sm:text-4xl">{property.title}</h1>
             <p className="mt-2 flex flex-wrap items-center gap-2 text-sm font-semibold text-brand-ink">
               <Star size={15} className="fill-brand-ink" aria-hidden />
               {property.rating} - {property.reviews} reviews - {property.location}
@@ -95,7 +95,7 @@ export default async function PropertyPage({ params }: Props) {
           <div>
             <section className="border-b border-brand-line pb-8">
               <div className="flex items-center justify-between gap-4">
-                <div>
+                <div className="min-w-0">
                   <h2 className="text-2xl font-semibold text-brand-ink">Hosted by {property.host.name}</h2>
                   <p className="text-brand-muted">
                     {property.guests} guests - {property.bedrooms} bedrooms - {property.bathrooms} bathrooms
@@ -119,7 +119,7 @@ export default async function PropertyPage({ params }: Props) {
               ] satisfies TrustSignal[]).map(([title, text, Icon]) => (
                 <div key={String(title)} className="flex gap-3 sm:gap-4">
                   <Icon className="mt-1 text-brand-strong" size={21} aria-hidden />
-                  <div>
+                  <div className="min-w-0">
                     <h3 className="text-[15px] font-semibold text-brand-ink sm:text-base">{title}</h3>
                     <p className="text-sm leading-6 text-brand-muted">{text}</p>
                   </div>
@@ -166,7 +166,7 @@ export default async function PropertyPage({ params }: Props) {
 
             <section id="amenities" className="content-visibility-auto border-b border-brand-line py-6 [contain-intrinsic-size:360px] sm:py-8">
               <h2 className="text-xl font-semibold text-brand-ink sm:text-2xl">Amenities</h2>
-              <div className="mt-4 grid grid-cols-2 gap-3 sm:mt-5 sm:gap-4">
+              <div className="mt-4 grid grid-cols-1 gap-3 sm:mt-5 sm:grid-cols-2 sm:gap-4">
                 {property.amenities.map((amenity) => (
                   <div key={amenity} className="rounded-2xl border border-brand-line bg-white/72 p-3 text-[13px] font-medium leading-5 text-brand-ink shadow-pearl sm:p-4 sm:text-sm">
                     {amenity}
