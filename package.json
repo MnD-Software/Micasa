@@ -9,8 +9,5 @@
     "lint": "npm --prefix frontend run lint",
     "import:2chat": "node scripts/import-2chat-catalog.mjs",
     "test:backend": "pytest backend/tests"
-  },
-  "workspaces": [
-    "frontend"
-  ]
+  }
 }
