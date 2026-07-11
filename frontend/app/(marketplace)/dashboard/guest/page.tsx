@@ -1,4 +1,5 @@
 import { CalendarCheck, Heart, MessageSquare, Star, type LucideIcon } from "lucide-react";
+import { MobileTabBar } from "@/components/marketplace/mobile-tab-bar";
 import { SiteHeader } from "@/components/marketplace/site-header";
 import { Card } from "@/components/ui/card";
 import { properties } from "@/lib/marketplace-data";
@@ -31,6 +32,7 @@ export default function GuestDashboardPage() {
           <p className="mt-2 text-brand-muted">{properties[0].title} · Aug 15-19, 2026</p>
         </section>
       </main>
+      <MobileTabBar />
     </>
   );
 }

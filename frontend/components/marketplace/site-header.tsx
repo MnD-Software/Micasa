@@ -2,20 +2,25 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Globe2, Menu, Search } from "lucide-react";
+import { Globe2, Heart, Menu, Search, UserRound } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { currencies, languages, usePreferences } from "@/components/marketplace/preferences-provider";
+import { FloatingWhatsAppButton } from "@/components/marketplace/whatsapp-button";
+import { useSavedStore } from "@/store/saved-store";
 
 const links = [
-  { href: "#featured-stays", key: "homes" },
-  { href: "#", key: "experiences" },
-  { href: "#", key: "services" }
+  { href: "/#featured-stays", key: "homes" },
+  { href: "/experiences", key: "experiences" },
+  { href: "/services", key: "services" }
 ] as const;
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
   const { currency, language, setCurrency, setLanguage, t } = usePreferences();
+  const savedCount = useSavedStore((state) => state.savedIds.length);
 
   const renderPreferenceControls = (idPrefix: string) => (
     <div className="flex items-center gap-2 rounded-full border border-white bg-brand-ivory p-1 shadow-pearl">
@@ -56,44 +61,77 @@ export function SiteHeader() {
   );
 
   return (
+    <>
     <header className="sticky top-0 z-40 border-b border-brand-line bg-brand-frost shadow-[0_1px_0_rgba(255,255,255,0.85)_inset] backdrop-blur-2xl">
-      <div className="mx-auto flex h-[72px] max-w-[1820px] items-center justify-between gap-4 px-4 sm:h-[86px] sm:px-6 lg:px-10">
+      <div className="mx-auto grid h-[68px] max-w-[1820px] grid-cols-[auto_1fr_auto] items-center gap-3 px-4 sm:h-[78px] sm:px-6 lg:px-10">
         <Link className="flex min-w-0 items-center" href="/" aria-label="Micasa Staycations Nyali home">
-          <span className="relative block h-12 w-[138px] shrink-0 overflow-hidden rounded-[14px] border border-brand-gold/30 bg-white shadow-pearl ring-1 ring-white/80 sm:h-14 sm:w-[178px]">
+          <span className="relative block h-10 w-[126px] shrink-0 overflow-hidden rounded-[12px] border border-brand-gold/30 bg-white shadow-pearl ring-1 ring-white/80 sm:h-12 sm:w-[158px]">
             <Image
-              src="/images/brand/micasa-logo.svg"
+              src="/images/brand/micasa-logo.jpeg"
               alt="Micasa Staycations"
               fill
               priority
-              sizes="(min-width: 640px) 178px, 138px"
+              sizes="(min-width: 640px) 158px, 126px"
               className="object-contain px-2 py-1.5"
             />
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-10 text-base font-semibold text-brand-muted lg:flex">
-          <a className="text-brand-ink" href="#featured-stays">
+        <div className="hidden min-w-0 items-center justify-center gap-6 lg:flex">
+          <Link
+            className="focus-ring flex h-12 min-w-[360px] max-w-xl items-center justify-between rounded-full border border-brand-line bg-white px-5 text-sm font-semibold text-brand-ink shadow-pearl transition hover:shadow-lift"
+            href="/#featured-stays"
+          >
+            <span>Nyali</span>
+            <span className="h-5 w-px bg-brand-line" aria-hidden />
+            <span>Any week</span>
+            <span className="h-5 w-px bg-brand-line" aria-hidden />
+            <span className="text-brand-muted">Add guests</span>
+            <span className="grid h-8 w-8 place-items-center rounded-full bg-brand-strong text-white">
+              <Search size={16} aria-hidden />
+            </span>
+          </Link>
+        </div>
+
+        <nav className="hidden items-center justify-end gap-5 text-sm font-semibold text-brand-muted lg:flex">
+          <Link className={pathname === "/" ? "text-brand-ink" : "transition hover:text-brand-ink"} href="/">
             {t("all")}
-          </a>
+          </Link>
           {links.map((link) => (
-            <a key={link.key} className="transition hover:text-brand-ink" href={link.href}>
+            <Link
+              key={link.key}
+              className={pathname === link.href ? "text-brand-ink" : "transition hover:text-brand-ink"}
+              href={link.href}
+            >
               {t(link.key)}
-            </a>
+            </Link>
           ))}
         </nav>
 
         <div className="hidden items-center gap-3 md:flex">
-          <a className="rounded-full px-4 py-3 text-sm font-semibold text-brand-ink transition hover:bg-white hover:shadow-pearl" href="#">
+          <Link className="rounded-full px-3 py-2.5 text-sm font-semibold text-brand-ink transition hover:bg-white hover:shadow-pearl" href="/become-host">
             {t("becomeHost")}
-          </a>
-          {renderPreferenceControls("desktop")}
-          <button
-            aria-label="Open account menu"
-            className="focus-ring grid h-12 w-12 place-items-center rounded-full border border-white bg-brand-ivory text-brand-ink shadow-pearl transition hover:border-brand-line"
-            type="button"
+          </Link>
+          <Link
+            aria-label={`${savedCount} saved homes`}
+            className="focus-ring relative grid h-11 w-11 place-items-center rounded-full border border-white bg-brand-ivory text-brand-ink shadow-pearl transition hover:border-brand-line"
+            href="/saved"
           >
-            <Menu size={22} aria-hidden />
-          </button>
+            <Heart size={19} aria-hidden />
+            {savedCount > 0 ? (
+              <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-brand-strong px-1 text-[10px] font-bold text-white">
+                {savedCount}
+              </span>
+            ) : null}
+          </Link>
+          {renderPreferenceControls("desktop")}
+          <Link
+            aria-label="Open guest dashboard"
+            className="focus-ring grid h-12 w-12 place-items-center rounded-full border border-white bg-brand-ivory text-brand-ink shadow-pearl transition hover:border-brand-line"
+            href="/dashboard/guest"
+          >
+            <UserRound size={20} aria-hidden />
+          </Link>
         </div>
 
         <button
@@ -112,24 +150,28 @@ export function SiteHeader() {
           open ? "block" : "hidden"
         )}
       >
-        <div className="mb-4 flex items-center gap-3 rounded-full border border-brand-line bg-white px-4 py-3 text-sm text-brand-muted shadow-pearl">
+        <Link href="/#featured-stays" className="mb-4 flex items-center gap-3 rounded-full border border-brand-line bg-white px-4 py-3 text-sm text-brand-muted shadow-pearl" onClick={() => setOpen(false)}>
           <Search size={18} aria-hidden />
           {t("anywhereAnyWeek")}
-        </div>
+        </Link>
         <div className="mb-4 flex items-center justify-between gap-3">
           <Globe2 size={18} className="text-brand-muted" aria-hidden />
           {renderPreferenceControls("mobile")}
         </div>
         <div className="grid gap-3 text-sm font-medium text-brand-ink">
-          <a href="#featured-stays">{t("all")}</a>
+          <Link href="/" onClick={() => setOpen(false)}>{t("all")}</Link>
           {links.map((link) => (
-            <a key={link.key} href={link.href}>
+            <Link key={link.key} href={link.href} onClick={() => setOpen(false)}>
               {t(link.key)}
-            </a>
+            </Link>
           ))}
-          <a href="#">{t("becomeHost")}</a>
+          <Link href="/saved" onClick={() => setOpen(false)}>{t("saved")} {savedCount > 0 ? `(${savedCount})` : ""}</Link>
+          <Link href="/become-host" onClick={() => setOpen(false)}>{t("becomeHost")}</Link>
+          <Link href="/dashboard/guest" onClick={() => setOpen(false)}>{t("profile")}</Link>
         </div>
       </div>
     </header>
+    <FloatingWhatsAppButton />
+    </>
   );
 }

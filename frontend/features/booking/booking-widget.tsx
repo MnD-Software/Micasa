@@ -8,6 +8,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { usePreferences } from "@/components/marketplace/preferences-provider";
+import { getBookingWhatsappNumber } from "@/components/marketplace/whatsapp-button";
 import { nightsBetween } from "@/lib/utils";
 import type { Property } from "@/types/marketplace";
 
@@ -27,7 +28,7 @@ export function BookingWidget({ property }: { property: Property }) {
   const { formatMoney, t } = usePreferences();
   const paybill = process.env.NEXT_PUBLIC_MPESA_PAYBILL?.trim();
   const mpesaAccountName = process.env.NEXT_PUBLIC_MPESA_ACCOUNT_NAME?.trim() || "MICASA";
-  const whatsappNumber = process.env.NEXT_PUBLIC_BOOKING_WHATSAPP?.replace(/\D/g, "") ?? "";
+  const whatsappNumber = getBookingWhatsappNumber();
   const [availabilityChecked, setAvailabilityChecked] = useState(false);
   const [confirmation, setConfirmation] = useState<{
     code: string;

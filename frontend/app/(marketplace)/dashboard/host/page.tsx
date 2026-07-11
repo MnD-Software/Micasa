@@ -1,4 +1,5 @@
 import { ChartNoAxesCombined, Home, Inbox, Percent, type LucideIcon } from "lucide-react";
+import { MobileTabBar } from "@/components/marketplace/mobile-tab-bar";
 import { SiteHeader } from "@/components/marketplace/site-header";
 import { Card } from "@/components/ui/card";
 
@@ -26,6 +27,7 @@ export default function HostDashboardPage() {
           ))}
         </div>
       </main>
+      <MobileTabBar />
     </>
   );
 }

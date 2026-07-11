@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { BadgeCheck, CalendarDays, MapPinned, Sparkles, Star, Wifi, type LucideIcon } from "lucide-react";
 import { BookingWidget } from "@/features/booking/booking-widget";
+import { MobileTabBar } from "@/components/marketplace/mobile-tab-bar";
 import { SiteHeader } from "@/components/marketplace/site-header";
 import { PropertyCard } from "@/components/marketplace/property-card";
 import { getPropertyBySlug, properties } from "@/lib/marketplace-data";
@@ -158,6 +159,7 @@ export default async function PropertyPage({ params }: Props) {
           </div>
         </section>
       </main>
+      <MobileTabBar />
     </>
   );
 }

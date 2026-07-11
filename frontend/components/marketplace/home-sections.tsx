@@ -12,13 +12,13 @@ const nextMonthHomes = properties;
 
 function RailHeader({ title }: { title: string }) {
   return (
-    <div className="mb-5 flex items-center justify-between gap-4">
+    <div className="mb-3 flex items-center justify-between gap-4">
       <a className="group inline-flex min-w-0 items-center gap-3" href="#featured-stays">
-        <h2 className="truncate text-2xl font-bold tracking-normal text-brand-ink sm:text-3xl">
+        <h2 className="truncate text-xl font-bold tracking-normal text-brand-ink sm:text-2xl">
           {title}
         </h2>
-        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-white bg-brand-ivory text-brand-ink shadow-pearl transition group-hover:border-brand-line">
-          <ArrowRight size={22} aria-hidden />
+        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-white bg-brand-ivory text-brand-ink shadow-pearl transition group-hover:border-brand-line">
+          <ArrowRight size={18} aria-hidden />
         </span>
       </a>
       <div className="hidden items-center gap-3 sm:flex">
@@ -41,15 +41,15 @@ function RailHeader({ title }: { title: string }) {
   );
 }
 
-function PropertyRail({ title, items }: { title: string; items: typeof properties }) {
+function PropertyRail({ title, items, id }: { title: string; items: typeof properties; id?: string }) {
   return (
-    <section id={title === "Popular homes in Mombasa" ? "featured-stays" : undefined} className="py-8 sm:py-10">
+    <section id={id} className="py-5 sm:py-6">
       <RailHeader title={title} />
       <div className="-mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-4 sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-10">
         {items.map((property, index) => (
           <div
             key={`${property.id}-${title}-${index}`}
-            className="w-[calc(100vw-2rem)] shrink-0 snap-start sm:w-[268px] lg:w-[272px]"
+            className="w-[76vw] shrink-0 snap-start sm:w-[218px] lg:w-[224px]"
           >
             <PropertyCard property={property} compact />
           </div>
@@ -73,14 +73,14 @@ export function HomeSections() {
   const flagship = properties[2] ?? properties[0];
 
   return (
-    <main className="mx-auto max-w-[1820px] px-4 pb-28 pt-4 sm:px-6 sm:py-6 lg:px-10">
-      <section className="mb-3 rounded-[28px] border border-white bg-brand-ivory p-5 shadow-pearl ring-1 ring-brand-line/70">
+    <main className="mx-auto max-w-[1820px] px-4 pb-28 pt-3 sm:px-6 sm:py-5 lg:px-10">
+      <section className="mb-3 rounded-[20px] border border-white bg-brand-ivory p-4 shadow-pearl ring-1 ring-brand-line/70">
         <p className="text-xs font-bold uppercase tracking-[0.12em] text-brand-strong">
           Live collection
         </p>
         <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-brand-ink sm:text-3xl">
+            <h1 className="text-xl font-bold text-brand-ink sm:text-2xl">
               Available Micasa stays near {search.location || "your destination"}
             </h1>
             <p className="mt-1 text-sm text-brand-muted">{searchSummary}</p>
@@ -91,8 +91,8 @@ export function HomeSections() {
         </div>
       </section>
 
-      <section className="my-8 grid gap-5 overflow-hidden rounded-[34px] border border-white bg-brand-ink p-4 text-white shadow-luxe ring-1 ring-brand-line/70 lg:grid-cols-[1.1fr_0.9fr]">
-        <div className="relative min-h-[360px] overflow-hidden rounded-[28px]">
+      <section id="services" className="my-5 grid gap-4 overflow-hidden rounded-[24px] border border-white bg-brand-ink p-3 text-white shadow-luxe ring-1 ring-brand-line/70 lg:grid-cols-[1.05fr_0.95fr]">
+        <div className="relative min-h-[260px] overflow-hidden rounded-[20px] sm:min-h-[320px]">
           <Image
             src={flagship.images[0]}
             alt={flagship.title}
@@ -103,18 +103,18 @@ export function HomeSections() {
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.02),rgba(0,0,0,0.58))]" />
           <div className="absolute bottom-0 p-5 sm:p-7">
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/72">Signature stay</p>
-            <h2 className="mt-3 max-w-xl text-3xl font-bold leading-tight sm:text-5xl">{flagship.title}</h2>
+            <h2 className="mt-3 max-w-xl text-2xl font-bold leading-tight sm:text-4xl">{flagship.title}</h2>
             <p className="mt-3 max-w-lg text-sm leading-6 text-white/78">
               Sea views, pool access, secure parking, fast Wi-Fi, and a fully equipped kitchen in prime Nyali.
             </p>
           </div>
         </div>
-        <div className="grid content-between gap-5 p-2 sm:p-5">
+        <div className="grid content-between gap-4 p-2 sm:p-4">
           <div>
             <p className="inline-flex rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-white/78 backdrop-blur">
               Micasa stay OS
             </p>
-            <h2 className="mt-5 text-3xl font-bold leading-tight sm:text-5xl">
+            <h2 className="mt-4 text-2xl font-bold leading-tight sm:text-4xl">
               A polished booking layer for coastal comfort.
             </h2>
             <p className="mt-4 text-sm leading-7 text-white/70">
@@ -128,7 +128,7 @@ export function HomeSections() {
               [ConciergeBell, "Chef optional", "Private chef on request"],
               [ShieldCheck, "Secure stays", "Parking and 24/7 manned security"]
             ].map(([Icon, title, text]) => (
-              <div key={String(title)} className="rounded-2xl border border-white/14 bg-white/10 p-4 backdrop-blur-xl">
+              <div key={String(title)} className="rounded-2xl border border-white/14 bg-white/10 p-3 backdrop-blur-xl">
                 <Icon size={20} className="text-brand-gold" aria-hidden />
                 <p className="mt-3 font-bold">{String(title)}</p>
                 <p className="mt-1 text-xs leading-5 text-white/64">{String(text)}</p>
@@ -138,7 +138,7 @@ export function HomeSections() {
         </div>
       </section>
 
-      <PropertyRail title={`Available stays in ${search.location || "Nyali, Mombasa"}`} items={availableHomes} />
+      <PropertyRail id="featured-stays" title={`Available stays in ${search.location || "Nyali, Mombasa"}`} items={availableHomes} />
       <PropertyRail title="Fresh coastal picks for next month" items={nextMonthHomes} />
 
       <section className="my-8 grid gap-4 rounded-[32px] border border-white bg-brand-ivory p-5 shadow-pearl ring-1 ring-brand-line/70 sm:grid-cols-[1fr_1fr_1fr] sm:p-6">
@@ -171,7 +171,7 @@ export function HomeSections() {
         </div>
       </section>
 
-      <section className="py-10">
+      <section className="py-7">
         <RailHeader title="Guest favorite destinations" />
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {destinations.map((destination) => (
@@ -193,13 +193,13 @@ export function HomeSections() {
         </div>
       </section>
 
-      <section className="pb-16 pt-8">
+      <section id="experiences" className="pb-16 pt-6">
         <RailHeader title="Experiences to add to your stay" />
         <div className="-mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-4 sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-10">
           {experiences.map((experience) => (
-            <article key={experience.title} className="w-[calc(100vw-2rem)] shrink-0 snap-start sm:w-[300px]">
+            <article key={experience.title} className="w-[76vw] shrink-0 snap-start sm:w-[224px]">
               <div
-                className="aspect-[4/3] rounded-[28px] bg-cover bg-center"
+                className="aspect-[4/3] rounded-[18px] bg-cover bg-center"
                 style={{ backgroundImage: `url(${experience.image})` }}
                 role="img"
                 aria-label={experience.title}
