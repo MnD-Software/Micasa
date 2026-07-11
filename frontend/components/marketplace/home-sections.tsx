@@ -46,11 +46,11 @@ function PropertyRail({ title, items, id }: { title: string; items: typeof prope
   return (
     <section id={id} className="py-5 sm:py-6">
       <RailHeader title={title} />
-      <div className="-mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-4 sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-10">
+      <div className="-mx-5 flex snap-x gap-4 overflow-x-auto px-5 pb-4 sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-10">
         {items.map((property, index) => (
           <div
             key={`${property.id}-${title}-${index}`}
-            className="w-[76vw] shrink-0 snap-start sm:w-[218px] lg:w-[224px]"
+            className="w-[44vw] min-w-[158px] max-w-[190px] shrink-0 snap-start sm:w-[218px] sm:max-w-none lg:w-[224px]"
           >
             <PropertyCard property={property} compact />
           </div>

@@ -26,7 +26,7 @@ export default function SavedPage() {
         </section>
 
         {savedHomes.length > 0 ? (
-          <section className="mt-6 grid gap-x-5 gap-y-7 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
+          <section className="mt-6 grid grid-cols-2 gap-x-4 gap-y-7 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {savedHomes.map((property) => (
               <PropertyCard key={property.id} property={property} compact />
             ))}

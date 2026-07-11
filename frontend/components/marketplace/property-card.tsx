@@ -24,12 +24,12 @@ export function PropertyCard({ property, compact = false }: { property: Property
     >
       <div className="relative">
         <Link href={`/property/${property.slug}`} aria-label={`View ${property.title}`}>
-          <div className={["relative overflow-hidden bg-brand-soft transition duration-300 group-hover:shadow-lift", compact ? "aspect-[1.08/1] rounded-[16px]" : "aspect-[4/3] rounded-[18px]"].join(" ")}>
+          <div className={["relative overflow-hidden bg-brand-soft transition duration-300 group-hover:shadow-lift", compact ? "aspect-square rounded-[18px]" : "aspect-[4/3] rounded-[18px]"].join(" ")}>
             <Image
               src={property.images[0]}
               alt={property.title}
               fill
-              sizes="(min-width: 1280px) 20vw, (min-width: 768px) 28vw, 92vw"
+              sizes={compact ? "(min-width: 1280px) 224px, (min-width: 640px) 218px, 44vw" : "(min-width: 1280px) 20vw, (min-width: 768px) 28vw, 92vw"}
               className="object-cover transition duration-500 group-hover:scale-[1.035]"
             />
           </div>
@@ -53,28 +53,42 @@ export function PropertyCard({ property, compact = false }: { property: Property
       </div>
       <Link href={`/property/${property.slug}`} aria-label={`View ${property.title}`}>
         <div className="mt-2 grid gap-0.5 px-0.5">
-          <div className="flex items-start justify-between gap-3">
-            <h3 className="line-clamp-1 text-[15px] font-semibold leading-5 text-brand-ink">
+          <div className={compact ? "grid gap-1" : "flex items-start justify-between gap-3"}>
+            <h3 className={compact ? "line-clamp-2 text-[14px] font-semibold leading-[18px] text-brand-ink sm:text-[15px] sm:leading-5" : "line-clamp-1 text-[15px] font-semibold leading-5 text-brand-ink"}>
               {compact ? `${property.type} in ${property.location.split(",")[0]}` : property.title}
             </h3>
-            <span className="flex shrink-0 items-center gap-1 text-[13px] text-brand-ink">
-              <Star size={13} className="fill-brand-ink" aria-hidden />
-              {property.rating}
-            </span>
+            {!compact ? (
+              <span className="flex shrink-0 items-center gap-1 text-[13px] text-brand-ink">
+                <Star size={13} className="fill-brand-ink" aria-hidden />
+                {property.rating}
+              </span>
+            ) : null}
           </div>
-          <p className="line-clamp-1 text-[13px] text-brand-muted">
-            <MapPin size={12} aria-hidden className="mr-1 inline" />
-            {property.location.split(",").slice(0, 2).join(",")}
-          </p>
+          {!compact ? (
+            <p className="line-clamp-1 text-[13px] text-brand-muted">
+              <MapPin size={12} aria-hidden className="mr-1 inline" />
+              {property.location.split(",").slice(0, 2).join(",")}
+            </p>
+          ) : null}
           {!compact ? (
             <p className="text-[13px] text-brand-muted">
               {property.guests} guests - {property.bedrooms} bedrooms - {property.bathrooms} baths
             </p>
           ) : null}
-          <p className="pt-0.5 text-[13px] text-brand-ink">
-            <span className="font-semibold">{formatMoney(compact ? totalForTwoNights : property.pricePerNight)}</span>
-            {compact ? ` ${t("forTwoNights")}` : ` ${t("night")}`}
-          </p>
+          {compact ? (
+            <p className="line-clamp-1 text-[13px] leading-5 text-brand-muted">
+              <span className="font-semibold text-brand-ink">{formatMoney(totalForTwoNights)}</span>
+              {` ${t("forTwoNights")} `}
+              <span aria-hidden>·</span>
+              <Star size={13} className="mx-0.5 inline fill-brand-ink align-[-2px]" aria-hidden />
+              <span>{property.rating}</span>
+            </p>
+          ) : (
+            <p className="pt-0.5 text-[13px] text-brand-ink">
+              <span className="font-semibold">{formatMoney(property.pricePerNight)}</span>
+              {` ${t("night")}`}
+            </p>
+          )}
         </div>
       </Link>
     </motion.article>
