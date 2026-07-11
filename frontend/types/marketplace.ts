@@ -25,6 +25,7 @@ export type Property = {
     lng: number;
   };
   images: string[];
+  videos?: string[];
   amenities: string[];
   featured?: boolean;
 };

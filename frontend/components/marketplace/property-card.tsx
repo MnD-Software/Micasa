@@ -6,13 +6,25 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Property } from "@/types/marketplace";
 import { usePreferences } from "@/components/marketplace/preferences-provider";
+import { useAuthStore } from "@/store/auth-store";
 import { useSavedStore } from "@/store/saved-store";
 
 export function PropertyCard({ property, compact = false }: { property: Property; compact?: boolean }) {
   const totalForTwoNights = property.pricePerNight * 2 + property.cleaningFee + property.serviceFee;
   const { formatMoney, t } = usePreferences();
-  const isSaved = useSavedStore((state) => state.isSaved(property.id));
+  const accountKey = useAuthStore((state) => state.accountKey);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const isSaved = useSavedStore((state) => state.isSaved(property.id, accountKey));
   const toggleSaved = useSavedStore((state) => state.toggleSaved);
+
+  function handleSave() {
+    if (!isAuthenticated) {
+      const next = `${window.location.pathname}${window.location.search}`;
+      window.location.href = `/login?next=${encodeURIComponent(next)}`;
+      return;
+    }
+    toggleSaved(property.id, accountKey);
+  }
 
   return (
     <motion.article
@@ -40,7 +52,7 @@ export function PropertyCard({ property, compact = false }: { property: Property
             isSaved ? "text-brand-strong" : "text-brand-ink"
           ].join(" ")}
           aria-label={`${isSaved ? "Remove" : "Save"} ${property.title}`}
-          onClick={() => toggleSaved(property.id)}
+          onClick={handleSave}
           type="button"
         >
           <Heart size={17} aria-hidden className={isSaved ? "fill-brand-strong" : ""} />

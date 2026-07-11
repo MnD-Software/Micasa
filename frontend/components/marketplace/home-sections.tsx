@@ -1,11 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { ArrowLeft, ArrowRight, Building2, ConciergeBell, ShieldCheck, Sparkles, Waves, Wifi } from "lucide-react";
+import { ArrowLeft, ArrowRight, ConciergeBell, ShieldCheck, Waves, Wifi } from "lucide-react";
 import { PropertyCard } from "@/components/marketplace/property-card";
 import { destinations, experiences, properties } from "@/lib/marketplace-data";
 import { usePreferences } from "@/components/marketplace/preferences-provider";
-import { nightsBetween } from "@/lib/utils";
 import { createWhatsappHref } from "@/lib/whatsapp";
 import { useSearchStore } from "@/store/search-store";
 
@@ -69,29 +68,10 @@ export function HomeSections() {
     return property.guests >= search.guests && (!query || haystack.includes(query.split(",")[0]));
   });
   const availableHomes = searchedHomes.length > 0 ? searchedHomes : properties.filter((property) => property.guests >= search.guests);
-  const nights = nightsBetween(search.checkIn, search.checkOut);
-  const searchSummary = `${availableHomes.length} available ${availableHomes.length === 1 ? "property" : "properties"} for ${search.guests} ${search.guests === 1 ? "guest" : "guests"} - ${nights} ${nights === 1 ? "night" : "nights"}`;
   const flagship = properties[2] ?? properties[0];
 
   return (
     <main className="mx-auto max-w-[1820px] px-5 pb-28 pt-5 sm:px-6 sm:py-5 lg:px-10">
-      <section className="mb-3 hidden rounded-[20px] border border-white bg-brand-ivory p-4 shadow-pearl ring-1 ring-brand-line/70 sm:block">
-        <p className="text-xs font-bold uppercase tracking-[0.12em] text-brand-strong">
-          Live collection
-        </p>
-        <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <h1 className="text-xl font-bold text-brand-ink sm:text-2xl">
-              Available Micasa stays near {search.location || "your destination"}
-            </h1>
-            <p className="mt-1 text-sm text-brand-muted">{searchSummary}</p>
-          </div>
-          <p className="text-sm font-semibold text-brand-ink">
-            {search.checkIn} to {search.checkOut}
-          </p>
-        </div>
-      </section>
-
       <section id="services" className="my-5 hidden gap-4 overflow-hidden rounded-[24px] border border-white bg-brand-ink p-3 text-white shadow-luxe ring-1 ring-brand-line/70 sm:grid lg:grid-cols-[1.05fr_0.95fr]">
         <div className="relative min-h-[260px] overflow-hidden rounded-[20px] sm:min-h-[320px]">
           <Image
@@ -142,42 +122,6 @@ export function HomeSections() {
       <PropertyRail id="featured-stays" title={`Popular homes in ${search.location.split(",")[0] || "Nyali"}`} items={availableHomes} />
       <PropertyRail title={`Available next month in ${search.location.split(",")[0] || "Nyali"}`} items={nextMonthHomes} />
 
-      <section className="my-6 -mx-5 flex snap-x gap-3 overflow-x-auto px-5 pb-2 sm:mx-0 sm:grid sm:gap-4 sm:overflow-visible sm:rounded-[24px] sm:border sm:border-white sm:bg-brand-ivory sm:p-5 sm:shadow-pearl sm:ring-1 sm:ring-brand-line/70 lg:grid-cols-3">
-        <div className="w-[76vw] max-w-[300px] shrink-0 snap-start rounded-[20px] border border-brand-line bg-white p-4 shadow-pearl sm:w-auto sm:max-w-none sm:border-0 sm:bg-transparent sm:p-0 sm:shadow-none">
-          <div className="flex gap-3">
-          <ShieldCheck className="mt-0.5 shrink-0 text-brand-success" size={21} aria-hidden />
-          <div>
-            <h2 className="text-[15px] font-bold leading-5 text-brand-ink sm:text-base">Own-property booking platform</h2>
-            <p className="mt-1.5 text-[13px] leading-5 text-brand-muted sm:text-sm sm:leading-6">
-              Guests can search, compare capacity, check availability, choose rooms, and continue with M-Pesa, card-ready checkout, or WhatsApp booking.
-            </p>
-          </div>
-        </div>
-        </div>
-        <div className="w-[76vw] max-w-[300px] shrink-0 snap-start rounded-[20px] border border-brand-line bg-white p-4 shadow-pearl sm:w-auto sm:max-w-none sm:border-0 sm:bg-transparent sm:p-0 sm:shadow-none">
-          <div className="flex gap-3">
-          <Building2 className="mt-0.5 shrink-0 text-brand-strong" size={21} aria-hidden />
-          <div>
-            <h2 className="text-[15px] font-bold leading-5 text-brand-ink sm:text-base">Marketplace expansion ready</h2>
-            <p className="mt-1.5 text-[13px] leading-5 text-brand-muted sm:text-sm sm:leading-6">
-              The operating model starts with owned stays and can expand into paid owner listings once the admin chooses to launch marketplace mode.
-            </p>
-          </div>
-        </div>
-        </div>
-        <div className="w-[76vw] max-w-[300px] shrink-0 snap-start rounded-[20px] border border-brand-line bg-white p-4 shadow-pearl sm:w-auto sm:max-w-none sm:border-0 sm:bg-transparent sm:p-0 sm:shadow-none">
-          <div className="flex gap-3">
-          <Sparkles className="mt-0.5 shrink-0 text-brand-gold" size={21} aria-hidden />
-          <div>
-            <h2 className="text-[15px] font-bold leading-5 text-brand-ink sm:text-base">Coming soon controls</h2>
-            <p className="mt-1.5 text-[13px] leading-5 text-brand-muted sm:text-sm sm:leading-6">
-              Public owner onboarding and live payments are labelled coming soon until enabled from the admin side.
-            </p>
-          </div>
-        </div>
-        </div>
-      </section>
-
       <section className="py-5 sm:py-7">
         <RailHeader title="Guest favorite destinations" />
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
@@ -189,12 +133,9 @@ export function HomeSections() {
               rel="noreferrer"
               target="_blank"
             >
-              <div
-                className="aspect-square bg-cover bg-center sm:aspect-auto sm:h-56"
-                style={{ backgroundImage: `url(${destination.image})` }}
-                role="img"
-                aria-label={destination.city}
-              />
+              <div className="relative aspect-square bg-brand-soft sm:aspect-auto sm:h-56">
+                <Image src={destination.image} alt={destination.city} fill sizes="(min-width: 1024px) 31vw, 50vw" className="object-cover" />
+              </div>
               <div className="p-3 sm:p-5">
                 <h3 className="line-clamp-1 text-[15px] font-bold leading-5 text-brand-ink sm:text-xl">{destination.city}</h3>
                 <p className="mt-0.5 line-clamp-1 text-[13px] text-brand-muted sm:text-sm">
@@ -211,12 +152,9 @@ export function HomeSections() {
         <div className="-mx-5 flex snap-x gap-4 overflow-x-auto px-5 pb-4 sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-10">
           {experiences.map((experience) => (
             <article key={experience.title} className="w-[44vw] min-w-[158px] max-w-[190px] shrink-0 snap-start sm:w-[224px] sm:max-w-none">
-              <div
-                className="aspect-square rounded-[18px] bg-cover bg-center"
-                style={{ backgroundImage: `url(${experience.image})` }}
-                role="img"
-                aria-label={experience.title}
-              />
+              <div className="relative aspect-square overflow-hidden rounded-[18px] bg-brand-soft">
+                <Image src={experience.image} alt={experience.title} fill sizes="(min-width: 640px) 224px, 44vw" className="object-cover" />
+              </div>
               <h3 className="mt-2 line-clamp-2 text-[14px] font-semibold leading-[18px] text-brand-ink sm:mt-4 sm:text-base sm:leading-5">{experience.title}</h3>
               <p className="mt-1 line-clamp-2 text-[13px] leading-5 text-brand-muted sm:text-sm">
                 {experience.location}{experience.price > 0 ? ` - from ${formatMoney(experience.price)}` : ""}

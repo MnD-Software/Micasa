@@ -5,8 +5,12 @@ const localImage = (fileName: string) => `/images/listings/nyali-villa/${fileNam
 const villaImages = [
   localImage("WhatsApp Image 2026-07-10 at 12.16.37.jpeg"),
   localImage("WhatsApp Image 2026-07-10 at 12.16.37 (1).jpeg"),
+  localImage("WhatsApp Image 2026-07-10 at 12.21.11.jpeg"),
+  localImage("WhatsApp Image 2026-07-10 at 12.21.12.jpeg"),
+  localImage("WhatsApp Image 2026-07-10 at 12.21.12 (1).jpeg"),
   localImage("WhatsApp Image 2026-07-10 at 12.21.12 (2).jpeg"),
   localImage("WhatsApp Image 2026-07-10 at 12.21.12 (3).jpeg"),
+  localImage("WhatsApp Image 2026-07-10 at 12.21.13.jpeg"),
   localImage("WhatsApp Image 2026-07-10 at 12.21.13 (1).jpeg")
 ];
 
@@ -15,23 +19,44 @@ const threeBedroomImages = [
   localImage("WhatsApp Image 2026-07-10 at 12.25.05.jpeg"),
   localImage("WhatsApp Image 2026-07-10 at 12.25.06.jpeg"),
   localImage("WhatsApp Image 2026-07-10 at 12.25.07.jpeg"),
+  localImage("WhatsApp Image 2026-07-10 at 12.25.14.jpeg"),
+  localImage("WhatsApp Image 2026-07-10 at 12.25.14 (1).jpeg"),
+  localImage("WhatsApp Image 2026-07-10 at 12.25.15.jpeg"),
+  localImage("WhatsApp Image 2026-07-10 at 12.25.15 (1).jpeg"),
+  localImage("WhatsApp Image 2026-07-10 at 12.25.16.jpeg"),
+  localImage("WhatsApp Image 2026-07-10 at 12.25.16 (1).jpeg"),
+  localImage("WhatsApp Image 2026-07-10 at 12.25.17.jpeg"),
+  localImage("WhatsApp Image 2026-07-10 at 12.25.17 (1).jpeg"),
+  localImage("WhatsApp Image 2026-07-10 at 12.25.18.jpeg"),
   localImage("WhatsApp Image 2026-07-10 at 12.25.19.jpeg")
 ];
 
 const seaViewImages = [
-  localImage("WhatsApp Image 2026-07-10 at 12.25.21.jpeg"),
+  localImage("WhatsApp Image 2026-07-10 at 12.25.20 (1).jpeg"),
   localImage("WhatsApp Image 2026-07-10 at 12.25.20.jpeg"),
+  localImage("WhatsApp Image 2026-07-10 at 12.25.21.jpeg"),
   localImage("WhatsApp Image 2026-07-10 at 12.25.23.jpeg"),
+  localImage("WhatsApp Image 2026-07-10 at 12.27.11.jpeg"),
+  localImage("WhatsApp Image 2026-07-10 at 12.27.11 (1).jpeg"),
   localImage("WhatsApp Image 2026-07-10 at 12.27.11 (2).jpeg"),
-  localImage("WhatsApp Image 2026-07-10 at 12.27.12.jpeg")
+  localImage("WhatsApp Image 2026-07-10 at 12.27.12 (1).jpeg"),
+  localImage("WhatsApp Image 2026-07-10 at 12.27.12.jpeg"),
+  localImage("WhatsApp Image 2026-07-10 at 12.27.13.jpeg")
 ];
 
 const oneBedroomImages = [
+  localImage("WhatsApp Image 2026-07-10 at 12.27.58.jpeg"),
+  localImage("WhatsApp Image 2026-07-10 at 12.27.59.jpeg"),
   localImage("WhatsApp Image 2026-07-10 at 12.27.59 (1).jpeg"),
   localImage("WhatsApp Image 2026-07-10 at 12.28.00.jpeg"),
   localImage("WhatsApp Image 2026-07-10 at 12.28.39.jpeg"),
   localImage("WhatsApp Image 2026-07-10 at 12.28.40.jpeg"),
   localImage("WhatsApp Image 2026-07-10 at 12.28.41.jpeg")
+];
+
+const listingVideos = [
+  localImage("WhatsApp Video 2026-07-10 at 12.25.35.mp4"),
+  localImage("WhatsApp Video 2026-07-10 at 12.28.38.mp4")
 ];
 
 export const categories = [
@@ -71,6 +96,7 @@ export const properties: Property[] = [
     },
     coordinates: { lat: -4.0435, lng: 39.7046 },
     images: villaImages,
+    videos: [listingVideos[0]],
     amenities: [
       "2-minute walk to the beach",
       "5-minute walk to Nyali Mall and Nyali Centre",
@@ -125,6 +151,7 @@ export const properties: Property[] = [
     },
     coordinates: { lat: -4.0435, lng: 39.7046 },
     images: threeBedroomImages,
+    videos: [listingVideos[0]],
     amenities: [
       "5-minute walk to major shopping malls",
       "10-minute walk to the beach",
@@ -165,6 +192,7 @@ export const properties: Property[] = [
     },
     coordinates: { lat: -4.0435, lng: 39.7046 },
     images: seaViewImages,
+    videos: [listingVideos[0]],
     amenities: [
       "Stunning ocean views",
       "Prime Nyali location",
@@ -203,6 +231,7 @@ export const properties: Property[] = [
     },
     coordinates: { lat: -4.0435, lng: 39.7046 },
     images: oneBedroomImages,
+    videos: [listingVideos[1]],
     amenities: [
       "2-minute walk to the beach",
       "5-minute walk to major shopping malls",

@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { currencies, languages, usePreferences } from "@/components/marketplace/preferences-provider";
 import { FloatingWhatsAppButton } from "@/components/marketplace/whatsapp-button";
 import { useSearchStore } from "@/store/search-store";
+import { useAuthStore } from "@/store/auth-store";
 import { useSavedStore } from "@/store/saved-store";
 
 const links = [
@@ -34,7 +35,10 @@ export function SiteHeader() {
   const [mobileLocation, setMobileLocation] = useState("Nyali, Mombasa");
   const pathname = usePathname();
   const { currency, language, setCurrency, setLanguage, t } = usePreferences();
-  const savedCount = useSavedStore((state) => state.savedIds.length);
+  const accountKey = useAuthStore((state) => state.accountKey);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const user = useAuthStore((state) => state.user);
+  const savedCount = useSavedStore((state) => state.getSavedIds(accountKey).length);
   const setSearch = useSearchStore((state) => state.setSearch);
 
   function submitMobileSearch(location = mobileLocation) {
@@ -153,11 +157,15 @@ export function SiteHeader() {
             {renderPreferenceControls("desktop")}
           </div>
           <Link
-            aria-label="Open guest dashboard"
+            aria-label={isAuthenticated ? "Open guest dashboard" : "Log in"}
             className="focus-ring grid h-12 w-12 place-items-center rounded-full border border-white bg-brand-ivory text-brand-ink shadow-pearl transition hover:border-brand-line"
-            href="/dashboard/guest"
+            href={isAuthenticated ? "/dashboard/guest" : "/login"}
           >
-            <UserRound size={20} aria-hidden />
+            {user?.fullName ? (
+              <span className="text-sm font-bold">{user.fullName.slice(0, 1).toUpperCase()}</span>
+            ) : (
+              <UserRound size={20} aria-hidden />
+            )}
           </Link>
         </div>
       </div>

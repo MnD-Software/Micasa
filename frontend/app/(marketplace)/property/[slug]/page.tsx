@@ -113,6 +113,37 @@ export default async function PropertyPage({ params }: Props) {
             </section>
 
             <section className="border-b border-brand-line py-6 sm:py-8">
+              <h2 className="text-xl font-semibold text-brand-ink sm:text-2xl">Photos and videos</h2>
+              <div className="-mx-4 mt-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:overflow-visible sm:px-0 sm:pb-0">
+                {property.videos?.map((video) => (
+                  <div key={video} className="w-[72vw] max-w-[260px] shrink-0 snap-start overflow-hidden rounded-[18px] bg-brand-ink shadow-pearl sm:w-auto sm:max-w-none">
+                    <video
+                      className="aspect-square h-full w-full object-cover"
+                      controls
+                      muted
+                      playsInline
+                      preload="metadata"
+                      src={video}
+                    />
+                  </div>
+                ))}
+                {property.images.slice(1).map((image, index) => (
+                  <div key={image} className="relative w-[44vw] min-w-[158px] max-w-[190px] shrink-0 snap-start overflow-hidden rounded-[18px] bg-brand-soft shadow-pearl sm:w-auto sm:max-w-none">
+                    <div className="aspect-square">
+                      <Image
+                        src={image}
+                        alt={`${property.title} photo ${index + 2}`}
+                        fill
+                        sizes="(min-width: 1024px) 28vw, (min-width: 640px) 30vw, 44vw"
+                        className="object-cover"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section className="border-b border-brand-line py-6 sm:py-8">
               <h2 className="text-xl font-semibold text-brand-ink sm:text-2xl">Amenities</h2>
               <div className="mt-4 grid grid-cols-2 gap-3 sm:mt-5 sm:gap-4">
                 {property.amenities.map((amenity) => (
