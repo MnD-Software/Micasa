@@ -142,56 +142,62 @@ export function HomeSections() {
       <PropertyRail id="featured-stays" title={`Popular homes in ${search.location.split(",")[0] || "Nyali"}`} items={availableHomes} />
       <PropertyRail title={`Available next month in ${search.location.split(",")[0] || "Nyali"}`} items={nextMonthHomes} />
 
-      <section className="my-8 grid gap-4 rounded-[32px] border border-white bg-brand-ivory p-5 shadow-pearl ring-1 ring-brand-line/70 sm:grid-cols-[1fr_1fr_1fr] sm:p-6">
-        <div className="flex gap-3">
-          <ShieldCheck className="mt-1 shrink-0 text-brand-success" size={24} aria-hidden />
+      <section className="my-6 -mx-5 flex snap-x gap-3 overflow-x-auto px-5 pb-2 sm:mx-0 sm:grid sm:gap-4 sm:overflow-visible sm:rounded-[24px] sm:border sm:border-white sm:bg-brand-ivory sm:p-5 sm:shadow-pearl sm:ring-1 sm:ring-brand-line/70 lg:grid-cols-3">
+        <div className="w-[76vw] max-w-[300px] shrink-0 snap-start rounded-[20px] border border-brand-line bg-white p-4 shadow-pearl sm:w-auto sm:max-w-none sm:border-0 sm:bg-transparent sm:p-0 sm:shadow-none">
+          <div className="flex gap-3">
+          <ShieldCheck className="mt-0.5 shrink-0 text-brand-success" size={21} aria-hidden />
           <div>
-            <h2 className="font-bold text-brand-ink">Own-property booking platform</h2>
-            <p className="mt-1 text-sm leading-6 text-brand-muted">
+            <h2 className="text-[15px] font-bold leading-5 text-brand-ink sm:text-base">Own-property booking platform</h2>
+            <p className="mt-1.5 text-[13px] leading-5 text-brand-muted sm:text-sm sm:leading-6">
               Guests can search, compare capacity, check availability, choose rooms, and continue with M-Pesa, card-ready checkout, or WhatsApp booking.
             </p>
           </div>
         </div>
-        <div className="flex gap-3">
-          <Building2 className="mt-1 shrink-0 text-brand-strong" size={24} aria-hidden />
+        </div>
+        <div className="w-[76vw] max-w-[300px] shrink-0 snap-start rounded-[20px] border border-brand-line bg-white p-4 shadow-pearl sm:w-auto sm:max-w-none sm:border-0 sm:bg-transparent sm:p-0 sm:shadow-none">
+          <div className="flex gap-3">
+          <Building2 className="mt-0.5 shrink-0 text-brand-strong" size={21} aria-hidden />
           <div>
-            <h2 className="font-bold text-brand-ink">Marketplace expansion ready</h2>
-            <p className="mt-1 text-sm leading-6 text-brand-muted">
+            <h2 className="text-[15px] font-bold leading-5 text-brand-ink sm:text-base">Marketplace expansion ready</h2>
+            <p className="mt-1.5 text-[13px] leading-5 text-brand-muted sm:text-sm sm:leading-6">
               The operating model starts with owned stays and can expand into paid owner listings once the admin chooses to launch marketplace mode.
             </p>
           </div>
         </div>
-        <div className="flex gap-3">
-          <Sparkles className="mt-1 shrink-0 text-brand-gold" size={24} aria-hidden />
+        </div>
+        <div className="w-[76vw] max-w-[300px] shrink-0 snap-start rounded-[20px] border border-brand-line bg-white p-4 shadow-pearl sm:w-auto sm:max-w-none sm:border-0 sm:bg-transparent sm:p-0 sm:shadow-none">
+          <div className="flex gap-3">
+          <Sparkles className="mt-0.5 shrink-0 text-brand-gold" size={21} aria-hidden />
           <div>
-            <h2 className="font-bold text-brand-ink">Coming soon controls</h2>
-            <p className="mt-1 text-sm leading-6 text-brand-muted">
+            <h2 className="text-[15px] font-bold leading-5 text-brand-ink sm:text-base">Coming soon controls</h2>
+            <p className="mt-1.5 text-[13px] leading-5 text-brand-muted sm:text-sm sm:leading-6">
               Public owner onboarding and live payments are labelled coming soon until enabled from the admin side.
             </p>
           </div>
         </div>
+        </div>
       </section>
 
-      <section className="py-7">
+      <section className="py-5 sm:py-7">
         <RailHeader title="Guest favorite destinations" />
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
           {destinations.map((destination) => (
             <a
               key={destination.city}
-              className="block overflow-hidden rounded-[28px] border border-white bg-brand-ivory shadow-pearl ring-1 ring-brand-line/70 transition hover:-translate-y-0.5 hover:shadow-luxe"
+              className="block overflow-hidden rounded-[18px] border border-white bg-brand-ivory shadow-pearl ring-1 ring-brand-line/70 transition hover:-translate-y-0.5 hover:shadow-luxe sm:rounded-[28px]"
               href={createWhatsappHref(`Hello Micasa, I want help finding a stay in ${destination.city}, ${destination.country}.`)}
               rel="noreferrer"
               target="_blank"
             >
               <div
-                className="h-56 bg-cover bg-center"
+                className="aspect-square bg-cover bg-center sm:aspect-auto sm:h-56"
                 style={{ backgroundImage: `url(${destination.image})` }}
                 role="img"
                 aria-label={destination.city}
               />
-              <div className="p-5">
-                <h3 className="text-xl font-bold text-brand-ink">{destination.city}</h3>
-                <p className="text-sm text-brand-muted">
+              <div className="p-3 sm:p-5">
+                <h3 className="line-clamp-1 text-[15px] font-bold leading-5 text-brand-ink sm:text-xl">{destination.city}</h3>
+                <p className="mt-0.5 line-clamp-1 text-[13px] text-brand-muted sm:text-sm">
                   {destination.country} - {destination.properties} homes
                 </p>
               </div>
@@ -202,17 +208,17 @@ export function HomeSections() {
 
       <section id="experiences" className="pb-16 pt-6">
         <RailHeader title="Experiences to add to your stay" />
-        <div className="-mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-4 sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-10">
+        <div className="-mx-5 flex snap-x gap-4 overflow-x-auto px-5 pb-4 sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-10">
           {experiences.map((experience) => (
-            <article key={experience.title} className="w-[76vw] shrink-0 snap-start sm:w-[224px]">
+            <article key={experience.title} className="w-[44vw] min-w-[158px] max-w-[190px] shrink-0 snap-start sm:w-[224px] sm:max-w-none">
               <div
-                className="aspect-[4/3] rounded-[18px] bg-cover bg-center"
+                className="aspect-square rounded-[18px] bg-cover bg-center"
                 style={{ backgroundImage: `url(${experience.image})` }}
                 role="img"
                 aria-label={experience.title}
               />
-              <h3 className="mt-4 font-bold text-brand-ink">{experience.title}</h3>
-              <p className="text-sm text-brand-muted">
+              <h3 className="mt-2 line-clamp-2 text-[14px] font-semibold leading-[18px] text-brand-ink sm:mt-4 sm:text-base sm:leading-5">{experience.title}</h3>
+              <p className="mt-1 line-clamp-2 text-[13px] leading-5 text-brand-muted sm:text-sm">
                 {experience.location}{experience.price > 0 ? ` - from ${formatMoney(experience.price)}` : ""}
               </p>
             </article>

@@ -27,33 +27,33 @@ function AppBanner() {
 
 function ServiceRail() {
   return (
-    <section className="px-5 py-8 lg:px-8">
-      <div className="mb-5 flex items-center justify-between">
-        <h1 className="max-w-[78%] text-3xl font-bold leading-tight text-brand-ink lg:text-4xl">Services in Mombasa</h1>
-        <Link className="grid h-12 w-12 place-items-center rounded-full bg-brand-soft text-brand-ink" href="/services/micasa-private-chef-coastal-dinner">
-          <ArrowRight size={24} aria-hidden />
+    <section className="px-5 py-6 lg:px-8 lg:py-8">
+      <div className="mb-4 flex items-center justify-between">
+        <h1 className="max-w-[78%] text-2xl font-bold leading-tight text-brand-ink sm:text-3xl lg:text-4xl">Services in Mombasa</h1>
+        <Link className="grid h-10 w-10 place-items-center rounded-full bg-brand-soft text-brand-ink sm:h-12 sm:w-12" href="/services/micasa-private-chef-coastal-dinner">
+          <ArrowRight size={22} aria-hidden />
         </Link>
       </div>
-      <div className="-mx-5 flex gap-5 overflow-x-auto px-5 pb-4">
+      <div className="-mx-5 flex gap-4 overflow-x-auto px-5 pb-4 sm:gap-5">
         {marketplaceServices.map((service) => (
-          <Link key={service.slug} className="w-[42vw] min-w-[172px] max-w-[220px] shrink-0 sm:w-[220px]" href={`/services/${service.slug}`}>
+          <Link key={service.slug} className="w-[44vw] min-w-[158px] max-w-[190px] shrink-0 sm:w-[220px] sm:max-w-none" href={`/services/${service.slug}`}>
             <article>
-              <div className="relative aspect-[1/1] overflow-hidden rounded-[22px] bg-brand-soft">
-                <Image src={service.heroImage} alt={service.title} fill sizes="220px" className="object-cover" />
+              <div className="relative aspect-square overflow-hidden rounded-[18px] bg-brand-soft sm:rounded-[22px]">
+                <Image src={service.heroImage} alt={service.title} fill sizes="(min-width: 640px) 220px, 44vw" className="object-cover" />
                 {service.badge ? (
-                  <span className="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1.5 text-xs font-bold text-brand-ink shadow-pearl">
+                  <span className="absolute left-2.5 top-2.5 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-bold text-brand-ink shadow-pearl sm:left-3 sm:top-3 sm:px-3 sm:py-1.5 sm:text-xs">
                     {service.badge}
                   </span>
                 ) : null}
-                <span className="absolute right-3 top-3 text-white drop-shadow-[0_2px_5px_rgba(0,0,0,0.55)]">
-                  <Heart size={31} aria-hidden />
+                <span className="absolute right-2.5 top-2.5 text-white drop-shadow-[0_2px_5px_rgba(0,0,0,0.55)] sm:right-3 sm:top-3">
+                  <Heart size={28} aria-hidden />
                 </span>
               </div>
-              <h2 className="mt-3 line-clamp-2 text-lg font-bold leading-6 text-brand-ink">{service.title}</h2>
-              <p className="mt-1 text-base text-brand-muted">
+              <h2 className="mt-2 line-clamp-2 text-[14px] font-semibold leading-[18px] text-brand-ink sm:mt-3 sm:text-lg sm:font-bold sm:leading-6">{service.title}</h2>
+              <p className="mt-1 line-clamp-1 text-[13px] text-brand-muted sm:text-base">
                 From {formatCurrency(service.startingPrice)} / {service.unit}
               </p>
-              <p className="mt-1 flex items-center gap-1 text-sm text-brand-muted">
+              <p className="mt-1 flex items-center gap-1 text-[13px] text-brand-muted sm:text-sm">
                 <Star size={13} className="fill-brand-muted" aria-hidden />
                 {service.rating.toFixed(1)}
               </p>
@@ -72,8 +72,8 @@ export default function ServicesPage() {
       <AppBanner />
       <main className="pb-28">
         <ServiceRail />
-        <section className="mt-8 bg-brand-soft px-5 py-12 lg:px-8">
-          <h2 className="text-3xl font-bold text-brand-ink">Inspiration for future getaways</h2>
+        <section className="mt-4 bg-brand-soft px-5 py-8 lg:px-8 lg:py-12">
+          <h2 className="text-2xl font-bold text-brand-ink sm:text-3xl">Inspiration for future getaways</h2>
           <p className="mt-3 max-w-2xl text-sm leading-6 text-brand-muted">
             Chef support, transfers, special setups, and guest coordination can be added to selected Micasa stays.
           </p>

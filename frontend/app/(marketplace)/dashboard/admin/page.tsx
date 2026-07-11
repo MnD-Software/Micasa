@@ -96,16 +96,16 @@ function statusTone(status: string) {
 
 function MetricCard({ label, value, Icon, detail }: { label: string; value: string | number; Icon: LucideIcon; detail: string }) {
   return (
-    <Card className="overflow-hidden bg-white p-5">
+    <Card className="overflow-hidden bg-white p-4 sm:p-5">
       <div className="flex items-start justify-between gap-4">
-        <span className="grid h-11 w-11 place-items-center rounded-2xl bg-brand-soft text-brand-strong">
-          <Icon size={22} aria-hidden />
+        <span className="grid h-10 w-10 place-items-center rounded-2xl bg-brand-soft text-brand-strong sm:h-11 sm:w-11">
+          <Icon size={20} aria-hidden />
         </span>
-        <span className="rounded-full bg-brand-ivory px-3 py-1 text-xs font-bold text-brand-muted">Live</span>
+        <span className="rounded-full bg-brand-ivory px-2.5 py-1 text-[11px] font-bold text-brand-muted sm:px-3 sm:text-xs">Live</span>
       </div>
-      <p className="mt-5 text-3xl font-bold text-brand-ink">{value}</p>
-      <p className="mt-1 text-sm font-semibold text-brand-ink">{label}</p>
-      <p className="mt-2 text-xs leading-5 text-brand-muted">{detail}</p>
+      <p className="mt-4 text-2xl font-bold text-brand-ink sm:mt-5 sm:text-3xl">{value}</p>
+      <p className="mt-1 text-[13px] font-semibold text-brand-ink sm:text-sm">{label}</p>
+      <p className="mt-2 line-clamp-2 text-xs leading-5 text-brand-muted">{detail}</p>
     </Card>
   );
 }
@@ -315,7 +315,7 @@ export default function AdminDashboardPage() {
           </section>
         ) : null}
 
-        <section className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <section className="mt-6 grid grid-cols-2 gap-4 xl:grid-cols-4">
           {metrics.map((metric) => (
             <MetricCard key={metric.label} {...metric} />
           ))}
