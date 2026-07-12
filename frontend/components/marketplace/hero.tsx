@@ -5,7 +5,7 @@ import { Building2, ChevronLeft, ChevronRight, ConciergeBell, Globe2, House, Sea
 import { useEffect, useMemo, useState } from "react";
 import { SearchBar } from "@/features/search/search-bar";
 import { usePreferences } from "@/components/marketplace/preferences-provider";
-import { properties } from "@/lib/marketplace-data";
+import { useLiveProperties } from "@/hooks/use-live-properties";
 
 const categoryTabs = [
   { key: "all", Icon: Globe2, active: true },
@@ -17,6 +17,7 @@ const categoryTabs = [
 
 export function Hero() {
   const { t } = usePreferences();
+  const properties = useLiveProperties();
   const carouselSlides = useMemo(
     () =>
       properties.map((property, index) => ({
@@ -24,7 +25,7 @@ export function Hero() {
         images: property.images.slice(0, 5),
         kicker: index === 0 ? "Poolside villa" : index === 1 ? "Family apartment" : index === 2 ? "Ocean view flagship" : "Couples retreat"
       })),
-    []
+    [properties]
   );
   const [activeSlide, setActiveSlide] = useState(0);
   const currentSlide = carouselSlides[activeSlide] ?? carouselSlides[0];

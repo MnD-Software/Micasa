@@ -4,14 +4,12 @@ import Image from "next/image";
 import { ArrowLeft, ArrowRight, ConciergeBell, ShieldCheck, Waves, Wifi } from "lucide-react";
 import { PropertyCard } from "@/components/marketplace/property-card";
 import { TrustMemberStrip } from "@/components/marketplace/trust-member-strip";
-import { destinations, experiences, properties } from "@/lib/marketplace-data";
+import { destinations, experiences } from "@/lib/marketplace-data";
 import { usePreferences } from "@/components/marketplace/preferences-provider";
+import { useLiveProperties } from "@/hooks/use-live-properties";
 import { createWhatsappHref } from "@/lib/whatsapp";
 import { useSearchStore } from "@/store/search-store";
-
-const nextMonthHomes = properties;
-const groupReadyHomes = [...properties].sort((a, b) => b.guests - a.guests);
-const intimateHomes = [...properties].sort((a, b) => a.guests - b.guests);
+import type { Property } from "@/types/marketplace";
 
 function RailHeader({ title }: { title: string }) {
   return (
@@ -50,7 +48,7 @@ function RailHeader({ title }: { title: string }) {
   );
 }
 
-function SeeAllCard({ items }: { items: typeof properties }) {
+function SeeAllCard({ items }: { items: Property[] }) {
   return (
     <a
       className="grid aspect-square w-[44vw] min-w-[158px] max-w-[190px] shrink-0 snap-start place-items-center rounded-[22px] border border-brand-line bg-brand-ink text-white shadow-pearl transition hover:-translate-y-0.5 hover:shadow-luxe sm:w-[218px] sm:max-w-none lg:w-[224px]"
@@ -71,7 +69,7 @@ function SeeAllCard({ items }: { items: typeof properties }) {
   );
 }
 
-function PropertyRail({ title, items, id }: { title: string; items: typeof properties; id?: string }) {
+function PropertyRail({ title, items, id }: { title: string; items: Property[]; id?: string }) {
   return (
     <section id={id} className="py-5 sm:py-6">
       <RailHeader title={title} />
@@ -92,7 +90,11 @@ function PropertyRail({ title, items, id }: { title: string; items: typeof prope
 
 export function HomeSections() {
   const search = useSearchStore();
+  const properties = useLiveProperties();
   const { formatMoney } = usePreferences();
+  const nextMonthHomes = properties;
+  const groupReadyHomes = [...properties].sort((a, b) => b.guests - a.guests);
+  const intimateHomes = [...properties].sort((a, b) => a.guests - b.guests);
   const query = search.location.trim().toLowerCase();
   const filter = search.filter.trim().toLowerCase();
   const searchedHomes = properties.filter((property) => {

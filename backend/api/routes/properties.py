@@ -19,6 +19,14 @@ def list_properties(
     return PropertyRepository(db).list(location=location, featured=featured)
 
 
+@router.get("/slug/{slug}", response_model=PropertyOut)
+def get_property_by_slug(slug: str, db: Session = Depends(get_db)):
+    property = db.query(Property).filter(Property.slug == slug).first()
+    if not property:
+        raise HTTPException(status_code=404, detail="Property not found")
+    return property
+
+
 @router.get("/{property_id}", response_model=PropertyOut)
 def get_property(property_id: int, db: Session = Depends(get_db)):
     property = PropertyRepository(db).get(property_id)

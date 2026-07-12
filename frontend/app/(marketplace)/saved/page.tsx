@@ -7,7 +7,7 @@ import { PropertyCard } from "@/components/marketplace/property-card";
 import { SiteHeader } from "@/components/marketplace/site-header";
 import { Button } from "@/components/ui/button";
 import { useHydrated } from "@/hooks/use-hydrated";
-import { properties } from "@/lib/marketplace-data";
+import { useLiveProperties } from "@/hooks/use-live-properties";
 import { useAuthStore } from "@/store/auth-store";
 import { useSavedStore } from "@/store/saved-store";
 
@@ -16,6 +16,7 @@ export default function SavedPage() {
   const accountKey = useAuthStore((state) => state.accountKey);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const user = useAuthStore((state) => state.user);
+  const properties = useLiveProperties();
   const savedIds = useSavedStore((state) => state.getSavedIds(accountKey));
   const visibleSavedIds = hydrated ? savedIds : [];
   const visibleIsAuthenticated = hydrated && isAuthenticated;

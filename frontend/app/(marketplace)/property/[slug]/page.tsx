@@ -10,7 +10,9 @@ import { PropertyMediaCarousel } from "@/components/marketplace/property-media-c
 import { PropertyReviewSummary } from "@/components/marketplace/property-review-summary";
 import { PropertySleepRooms } from "@/components/marketplace/property-sleep-rooms";
 import { ReviewModule } from "@/components/marketplace/review-module";
+import { mapApiProperty, type ApiProperty } from "@/lib/api-property-mapper";
 import { getPropertyBySlug, properties } from "@/lib/marketplace-data";
+import type { Property } from "@/types/marketplace";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -18,13 +20,36 @@ type Props = {
 
 type TrustSignal = [title: string, text: string, Icon: LucideIcon];
 
+async function getLivePropertyBySlug(slug: string): Promise<Property | null> {
+  const backendUrl =
+    process.env.BACKEND_API_URL ??
+    process.env.NEXT_PUBLIC_API_URL ??
+    (process.env.NODE_ENV === "development" ? "http://localhost:8000" : "");
+
+  if (!backendUrl) {
+    return null;
+  }
+
+  try {
+    const response = await fetch(`${backendUrl.replace(/\/$/, "")}/api/properties/slug/${encodeURIComponent(slug)}`, {
+      cache: "no-store"
+    });
+    if (!response.ok) {
+      return null;
+    }
+    return mapApiProperty((await response.json()) as ApiProperty);
+  } catch {
+    return null;
+  }
+}
+
 export async function generateStaticParams() {
   return properties.map((property) => ({ slug: property.slug }));
 }
 
 export default async function PropertyPage({ params }: Props) {
   const { slug } = await params;
-  const property = getPropertyBySlug(slug);
+  const property = (await getLivePropertyBySlug(slug)) ?? getPropertyBySlug(slug);
 
   if (!property) {
     notFound();
