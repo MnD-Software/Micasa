@@ -39,9 +39,9 @@ export function PropertyCard({ property, compact = false }: { property: Property
       transition={{ duration: 0.45 }}
       className="group"
     >
-      <div className="relative">
+      <div className="relative rounded-[22px] border border-white/90 bg-white/60 p-1 shadow-[0_18px_44px_rgba(18,41,36,0.07)] ring-1 ring-brand-line/60 transition duration-300 group-hover:-translate-y-0.5 group-hover:shadow-lift">
         <Link href={`/property/${property.slug}`} aria-label={`View ${property.title}`}>
-          <div className={["relative overflow-hidden bg-brand-soft transition duration-300 group-hover:shadow-lift", compact ? "aspect-square rounded-[18px]" : "aspect-[4/3] rounded-[18px]"].join(" ")}>
+          <div className={["relative overflow-hidden bg-brand-soft", compact ? "aspect-square rounded-[18px]" : "aspect-[4/3] rounded-[18px]"].join(" ")}>
             <Image
               src={image}
               alt={property.title}
@@ -49,6 +49,7 @@ export function PropertyCard({ property, compact = false }: { property: Property
               sizes={compact ? "(min-width: 1280px) 224px, (min-width: 640px) 218px, 44vw" : "(min-width: 1280px) 20vw, (min-width: 768px) 28vw, 92vw"}
               className="object-cover transition duration-500 group-hover:scale-[1.035]"
             />
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/24 to-transparent" />
           </div>
         </Link>
         {property.images.length > 1 ? (
@@ -97,13 +98,13 @@ export function PropertyCard({ property, compact = false }: { property: Property
           <Heart size={17} aria-hidden className={isSaved ? "fill-brand-strong" : ""} />
         </button>
         {property.featured ? (
-          <span className="absolute left-2.5 top-2.5 rounded-full border border-white/80 bg-white/88 px-2.5 py-1 text-[11px] font-bold text-brand-ink shadow-pearl backdrop-blur">
+          <span className="absolute left-3 top-3 rounded-full border border-white/80 bg-white/90 px-2.5 py-1 text-[11px] font-bold text-brand-ink shadow-pearl backdrop-blur">
             {t("guestFavorite")}
           </span>
         ) : null}
       </div>
       <Link href={`/property/${property.slug}`} aria-label={`View ${property.title}`}>
-        <div className="mt-2 grid gap-0.5 px-0.5">
+        <div className="mt-2 grid gap-0.5 px-1">
           <div className={compact ? "grid gap-1" : "flex items-start justify-between gap-3"}>
             <h3 className={compact ? "line-clamp-2 text-[14px] font-semibold leading-[18px] text-brand-ink sm:text-[15px] sm:leading-5" : "line-clamp-1 text-[15px] font-semibold leading-5 text-brand-ink"}>
               {compact ? `${property.type} in ${property.location.split(",")[0]}` : property.title}
@@ -130,7 +131,7 @@ export function PropertyCard({ property, compact = false }: { property: Property
             <p className="line-clamp-1 text-[13px] leading-5 text-brand-muted">
               <span className="font-semibold text-brand-ink">{formatMoney(totalForTwoNights)}</span>
               {` ${t("forTwoNights")} `}
-              <span aria-hidden>·</span>
+              <span aria-hidden>-</span>
               <Star size={13} className="mx-0.5 inline fill-brand-ink align-[-2px]" aria-hidden />
               <span>{property.rating}</span>
             </p>

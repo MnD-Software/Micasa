@@ -15,29 +15,35 @@ const intimateHomes = [...properties].sort((a, b) => a.guests - b.guests);
 
 function RailHeader({ title }: { title: string }) {
   return (
-    <div className="mb-3 flex items-center justify-between gap-4">
-      <a className="group inline-flex min-w-0 items-center gap-3" href="#featured-stays">
-        <h2 className="truncate text-xl font-bold tracking-normal text-brand-ink sm:text-2xl">
-          {title}
-        </h2>
-        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-white bg-brand-ivory text-brand-ink shadow-pearl transition group-hover:border-brand-line">
-          <ArrowRight size={18} aria-hidden />
+    <div className="mb-3 flex items-end justify-between gap-4">
+      <a className="group min-w-0" href="#featured-stays">
+        <span className="mb-1 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-brand-strong">
+          <span className="h-1.5 w-1.5 rounded-full bg-brand-gold" aria-hidden />
+          Micasa edit
+        </span>
+        <span className="flex min-w-0 items-center gap-3">
+          <h2 className="truncate text-xl font-bold tracking-normal text-brand-ink sm:text-2xl">
+            {title}
+          </h2>
+          <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-white bg-brand-ivory text-brand-ink shadow-pearl transition group-hover:border-brand-line group-hover:bg-brand-strong group-hover:text-white">
+            <ArrowRight size={18} aria-hidden />
+          </span>
         </span>
       </a>
-      <div className="hidden items-center gap-3 sm:flex">
+      <div className="hidden items-center gap-2 sm:flex">
         <button
           aria-label={`Previous ${title}`}
-          className="focus-ring grid h-10 w-10 place-items-center rounded-full border border-white bg-brand-ivory text-brand-muted shadow-pearl"
+          className="focus-ring grid h-9 w-9 place-items-center rounded-full border border-brand-line bg-white/82 text-brand-muted shadow-pearl"
           type="button"
         >
-          <ArrowLeft size={20} aria-hidden />
+          <ArrowLeft size={18} aria-hidden />
         </button>
         <button
           aria-label={`Next ${title}`}
-          className="focus-ring grid h-10 w-10 place-items-center rounded-full border border-white bg-brand-ivory text-brand-ink shadow-pearl"
+          className="focus-ring grid h-9 w-9 place-items-center rounded-full border border-brand-line bg-white/92 text-brand-ink shadow-pearl"
           type="button"
         >
-          <ArrowRight size={20} aria-hidden />
+          <ArrowRight size={18} aria-hidden />
         </button>
       </div>
     </div>
@@ -47,7 +53,7 @@ function RailHeader({ title }: { title: string }) {
 function SeeAllCard({ items }: { items: typeof properties }) {
   return (
     <a
-      className="grid aspect-square w-[44vw] min-w-[158px] max-w-[190px] shrink-0 snap-start place-items-center rounded-[18px] border border-brand-line bg-white shadow-pearl transition hover:-translate-y-0.5 hover:shadow-luxe sm:w-[218px] sm:max-w-none lg:w-[224px]"
+      className="grid aspect-square w-[44vw] min-w-[158px] max-w-[190px] shrink-0 snap-start place-items-center rounded-[22px] border border-brand-line bg-brand-ink text-white shadow-pearl transition hover:-translate-y-0.5 hover:shadow-luxe sm:w-[218px] sm:max-w-none lg:w-[224px]"
       href="#featured-stays"
     >
       <div className="text-center">
@@ -58,7 +64,8 @@ function SeeAllCard({ items }: { items: typeof properties }) {
             </div>
           ))}
         </div>
-        <p className="mt-4 text-base font-bold text-brand-ink">See all</p>
+        <p className="mt-4 text-base font-bold">See all</p>
+        <p className="mt-1 text-xs text-white/62">Open collection</p>
       </div>
     </a>
   );
@@ -99,8 +106,8 @@ export function HomeSections() {
   const flagship = properties[2] ?? properties[0];
 
   return (
-    <main className="mx-auto max-w-[1820px] px-5 pb-28 pt-5 sm:px-6 sm:py-5 lg:px-10">
-      <section id="services" className="my-5 hidden gap-4 overflow-hidden rounded-[24px] border border-white bg-brand-ink p-3 text-white shadow-luxe ring-1 ring-brand-line/70 sm:grid lg:grid-cols-[1.05fr_0.95fr]">
+    <main className="mx-auto max-w-[1820px] px-5 pb-28 pt-4 sm:px-6 sm:py-5 lg:px-10">
+      <section id="services" className="my-5 hidden gap-4 overflow-hidden rounded-[24px] border border-white bg-[#12302c] p-3 text-white shadow-luxe ring-1 ring-brand-line/70 sm:grid lg:grid-cols-[1.05fr_0.95fr]">
         <div className="relative min-h-[260px] overflow-hidden rounded-[20px] sm:min-h-[320px]">
           <Image
             src={flagship.images[0]}
@@ -120,14 +127,14 @@ export function HomeSections() {
         </div>
         <div className="grid content-between gap-4 p-2 sm:p-4">
           <div>
-            <p className="inline-flex rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-white/78 backdrop-blur">
-              Micasa stay OS
+            <p className="inline-flex rounded-full border border-brand-gold/35 bg-brand-gold/12 px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-brand-gold backdrop-blur">
+              Coastal stay desk
             </p>
             <h2 className="mt-4 text-2xl font-bold leading-tight sm:text-4xl">
-              A polished booking layer for coastal comfort.
+              Stays selected for rhythm, space, and support.
             </h2>
             <p className="mt-4 text-sm leading-7 text-white/70">
-              The catalogue now separates the luxury villa, family apartment, sea-view apartment, and one-bedroom stay so guests can quickly choose by group size, rate, and vibe.
+              Browse compact rails, save the right homes, then sign in when you are ready to reserve or request help.
             </p>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">

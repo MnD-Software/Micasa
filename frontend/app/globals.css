@@ -16,8 +16,8 @@ body {
 
 :root {
   color-scheme: light;
-  background: #fbfaf8;
-  color: #222222;
+  background: #f8faf6;
+  color: #17211f;
 }
 
 * {
@@ -37,10 +37,8 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   background:
-    radial-gradient(circle at 18% 8%, rgba(255, 180, 0, 0.11) 0, transparent 25rem),
-    radial-gradient(circle at 84% 3%, rgba(0, 166, 153, 0.09) 0, transparent 27rem),
-    radial-gradient(circle at 50% -10%, rgba(255, 255, 255, 0.98) 0, rgba(255, 255, 255, 0.76) 34rem, transparent 52rem),
-    linear-gradient(180deg, #ffffff 0%, #fbfaf8 42%, #ffffff 100%);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 246, 0.94) 38%, #ffffff 100%),
+    linear-gradient(90deg, rgba(0, 127, 118, 0.045), rgba(216, 155, 40, 0.04));
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   scrollbar-width: none;
 }
@@ -64,8 +62,8 @@ textarea {
 }
 
 ::selection {
-  background: #ffb4bd;
-  color: #222222;
+  background: #b8efe8;
+  color: #17211f;
 }
 
 body::before {
@@ -75,11 +73,10 @@ body::before {
   pointer-events: none;
   z-index: -1;
   background-image:
-    linear-gradient(rgba(34, 34, 34, 0.015) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(34, 34, 34, 0.012) 1px, transparent 1px),
-    radial-gradient(circle at 70% 20%, rgba(255, 180, 0, 0.08), transparent 24rem);
-  background-size: 80px 80px, 80px 80px, auto;
-  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.32), transparent 62%);
+    linear-gradient(rgba(23, 33, 31, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(23, 33, 31, 0.014) 1px, transparent 1px);
+  background-size: 72px 72px, 72px 72px;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.22), transparent 58%);
 }
 
 .focus-ring {
@@ -88,5 +85,5 @@ body::before {
 }
 
 .focus-ring:focus-visible {
-  outline-color: #ff385c;
+  outline-color: #007f76;
 }
