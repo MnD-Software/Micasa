@@ -33,10 +33,21 @@ class PropertyCreate(PropertyBase):
 
 class PropertyUpdate(BaseModel):
     title: str | None = None
+    slug: str | None = None
     description: str | None = None
+    property_type: str | None = None
+    bedrooms: int | None = Field(default=None, ge=0)
+    bathrooms: int | None = Field(default=None, ge=0)
+    guests: int | None = Field(default=None, ge=1)
     status: str | None = None
     price_per_night: float | None = None
+    cleaning_fee: float | None = Field(default=None, ge=0)
+    service_fee: float | None = Field(default=None, ge=0)
+    location: str | None = None
+    latitude: float | None = None
+    longitude: float | None = None
     featured: bool | None = None
+    image_urls: list[str] | None = None
 
 
 class PropertyOut(PropertyBase):

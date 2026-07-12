@@ -107,32 +107,32 @@ Total estimate: ${formatMoney(totals.total)}`;
 
   return (
     <>
-    <aside className="hidden w-full max-w-full overflow-hidden rounded-[20px] border border-white bg-brand-ivory p-4 shadow-pearl ring-1 ring-brand-line/70 lg:sticky lg:top-28 lg:block lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto lg:rounded-[22px] lg:p-5 lg:shadow-luxe">
-      <div className="flex items-start justify-between gap-3">
+    <aside className="hidden w-full max-w-[460px] rounded-[24px] border border-brand-line bg-brand-ivory p-5 shadow-luxe ring-1 ring-white/80 lg:sticky lg:top-28 lg:block lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto">
+      <div className="flex min-w-0 items-start justify-between gap-3">
         <p className="text-brand-ink">
           <span className="text-xl font-semibold sm:text-2xl">{formatMoney(property.pricePerNight)}</span>
           <span className="text-sm text-brand-muted"> {t("night")}</span>
         </p>
-        <p className="text-sm font-semibold text-brand-ink">{property.rating} · {property.reviews} reviews</p>
+        <p className="shrink-0 whitespace-nowrap text-sm font-semibold text-brand-ink">{property.rating} - {property.reviews} reviews</p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="mt-4 grid gap-3 sm:mt-5">
         <div className="grid grid-cols-2 overflow-hidden rounded-2xl border border-brand-line">
           <label className="min-w-0 border-r border-brand-line p-3">
             <span className="block text-[11px] font-bold uppercase text-brand-ink sm:text-xs">{t("checkIn")}</span>
-            <Input {...register("checkIn")} type="date" className="h-auto rounded-none border-0 p-0" />
+            <Input {...register("checkIn")} type="date" className="h-auto min-w-0 rounded-none border-0 p-0 text-sm" />
           </label>
           <label className="min-w-0 p-3">
             <span className="block text-[11px] font-bold uppercase text-brand-ink sm:text-xs">{t("checkOut")}</span>
-            <Input {...register("checkOut")} type="date" className="h-auto rounded-none border-0 p-0" />
+            <Input {...register("checkOut")} type="date" className="h-auto min-w-0 rounded-none border-0 p-0 text-sm" />
           </label>
           <label className="min-w-0 border-t border-brand-line p-3">
             <span className="block text-[11px] font-bold uppercase text-brand-ink sm:text-xs">{t("guests")}</span>
-            <Input {...register("guests")} type="number" min={1} className="h-auto rounded-none border-0 p-0" />
+            <Input {...register("guests")} type="number" min={1} className="h-auto min-w-0 rounded-none border-0 p-0 text-sm" />
           </label>
           <label className="min-w-0 border-l border-t border-brand-line p-3">
-            <span className="block text-[11px] font-bold uppercase text-brand-ink sm:text-xs">{t("bedroomsNeeded")}</span>
-            <Input {...register("bedrooms")} type="number" min={1} max={property.bedrooms} className="h-auto rounded-none border-0 p-0" />
+            <span className="block truncate text-[11px] font-bold uppercase text-brand-ink sm:text-xs">Bedrooms</span>
+            <Input {...register("bedrooms")} type="number" min={1} max={property.bedrooms} className="h-auto min-w-0 rounded-none border-0 p-0 text-sm" />
           </label>
         </div>
 
@@ -186,14 +186,14 @@ Total estimate: ${formatMoney(totals.total)}`;
               <span className="truncate">{t("card")}</span>
             </label>
           </div>
-          <Input {...register("paymentContact")} placeholder="M-Pesa phone or card email" />
-          <p className="break-words text-xs leading-5 text-brand-muted">
-            M-Pesa PayBill: <span className="font-bold text-brand-ink">{paybill || "add PayBill in .env/admin"}</span>.
-            Account: <span className="font-bold text-brand-ink">{mpesaAccountName}</span>. Card collection is ready for launch when payment keys are enabled.
+          <Input {...register("paymentContact")} className="min-w-0" placeholder="M-Pesa phone or card email" />
+          <p className="max-w-full break-words text-xs leading-5 text-brand-muted">
+            M-Pesa PayBill: <span className="font-bold text-brand-ink">{paybill || "provided after confirmation"}</span>.
+            Account: <span className="font-bold text-brand-ink">{mpesaAccountName}</span>. Secure card checkout is available for eligible bookings.
           </p>
         </fieldset>
 
-        <Input {...register("coupon")} placeholder="Coupon code" />
+        <Input {...register("coupon")} className="min-w-0" placeholder="Coupon code" />
         <Button type="submit" size="lg" className="min-h-12 w-full px-4 sm:min-h-14">
           <BadgeCheck size={18} aria-hidden />
           {t("reserveConfirm")}
@@ -230,7 +230,7 @@ Total estimate: ${formatMoney(totals.total)}`;
             Instant confirmation prepared
           </p>
           <p className="mt-2 text-brand-muted">
-            Confirmation {confirmation.code} is ready for {property.title}. {formatMoney(confirmation.total)} by {confirmation.paymentMethod === "mpesa" ? "M-Pesa PayBill" : "card"} is queued for admin launch.
+            Confirmation {confirmation.code} is ready for {property.title}. We will confirm {formatMoney(confirmation.total)} by {confirmation.paymentMethod === "mpesa" ? "M-Pesa" : "card"} before the stay is finalized.
           </p>
           <p className="mt-3 flex items-center gap-2 font-semibold text-brand-ink">
             <MessageCircle size={16} aria-hidden />

@@ -55,8 +55,15 @@ def update_property(
         raise HTTPException(status_code=404, detail="Property not found")
     if property.owner_id != user.id and user.role != "admin":
         raise HTTPException(status_code=403, detail="Insufficient permissions")
-    for key, value in payload.model_dump(exclude_unset=True).items():
+    values = payload.model_dump(exclude_unset=True)
+    image_urls = values.pop("image_urls", None)
+    for key, value in values.items():
         setattr(property, key, value)
+    if image_urls is not None:
+        property.images.clear()
+        db.flush()
+        for order, url in enumerate(image_urls):
+            db.add(PropertyImage(property_id=property.id, image_url=url, display_order=order))
     db.commit()
     db.refresh(property)
     return property

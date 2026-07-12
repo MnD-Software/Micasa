@@ -91,7 +91,7 @@ export default async function PropertyPage({ params }: Props) {
           ))}
         </nav>
 
-        <div className="mt-7 grid gap-8 sm:mt-10 lg:grid-cols-[1fr_380px] lg:items-start lg:gap-10">
+        <div className="mt-7 grid gap-8 sm:mt-10 lg:grid-cols-[minmax(0,1fr)_minmax(430px,460px)] lg:items-start lg:gap-10">
           <div>
             <section className="border-b border-brand-line pb-8">
               <div className="flex items-center justify-between gap-4">
@@ -183,8 +183,7 @@ export default async function PropertyPage({ params }: Props) {
                 <MapPinned className="mx-auto text-brand-strong" size={36} aria-hidden />
                 <p className="mt-3 font-semibold text-brand-ink">{property.location}</p>
                 <p className="mt-2 max-w-md text-sm text-brand-muted">
-                  Map abstraction is ready for Google Maps or Mapbox using stored coordinates:
-                  {` ${property.coordinates.lat}, ${property.coordinates.lng}`}.
+                  The stay is in a convenient Micasa-served area. Exact arrival details are shared after booking confirmation.
                 </p>
               </div>
             </section>
