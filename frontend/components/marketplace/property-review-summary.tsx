@@ -27,7 +27,7 @@ export function PropertyReviewSummary({ property }: { property: Property }) {
   }, [defaultExperience, property.id]);
 
   return (
-    <section id="reviews" className="content-visibility-auto border-b border-brand-line py-8 [contain-intrinsic-size:560px] sm:py-10">
+    <section id="reviews" className="content-visibility-auto overflow-hidden border-b border-brand-line py-8 [contain-intrinsic-size:560px] sm:py-10">
       <div className="mx-auto max-w-3xl text-center">
         <div className="flex items-center justify-center gap-4">
           <Star className="hidden fill-brand-ink text-brand-ink sm:block" size={34} aria-hidden />
@@ -40,8 +40,8 @@ export function PropertyReviewSummary({ property }: { property: Property }) {
         </p>
       </div>
 
-      <div className="-mx-4 mt-8 flex gap-5 overflow-x-auto px-4 pb-2 sm:mx-0 sm:px-0 lg:grid lg:grid-cols-7 lg:overflow-visible">
-        <div className="min-w-[180px] lg:min-w-0">
+      <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-7 lg:gap-5">
+        <div className="col-span-2 rounded-2xl border border-brand-line bg-white p-4 shadow-pearl sm:col-span-1 lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none">
           <h3 className="font-semibold text-brand-ink">Overall rating</h3>
           <div className="mt-3 grid gap-1.5">
             {[5, 4, 3, 2, 1].map((score) => (
@@ -58,10 +58,10 @@ export function PropertyReviewSummary({ property }: { property: Property }) {
         {experience.reviewCategories.map((category, index) => {
           const Icon = categoryIcons[index % categoryIcons.length];
           return (
-            <div key={category.label} className="min-w-[150px] border-l border-brand-line pl-5 lg:min-w-0">
+            <div key={category.label} className="min-w-0 rounded-2xl border border-brand-line bg-white p-4 shadow-pearl lg:rounded-none lg:border-y-0 lg:border-r-0 lg:bg-transparent lg:pl-5 lg:shadow-none">
               <h3 className="font-semibold text-brand-ink">{category.label}</h3>
-              <p className="mt-2 text-2xl font-bold text-brand-ink">{category.score.toFixed(1)}</p>
-              <Icon className="mt-7 text-brand-ink" size={30} aria-hidden />
+              <p className="mt-2 text-2xl font-bold text-brand-ink sm:text-3xl">{category.score.toFixed(1)}</p>
+              <Icon className="mt-5 text-brand-ink sm:mt-7" size={28} aria-hidden />
             </div>
           );
         })}

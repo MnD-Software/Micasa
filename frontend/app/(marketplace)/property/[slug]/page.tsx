@@ -60,7 +60,7 @@ export default async function PropertyPage({ params }: Props) {
   return (
     <>
       <SiteHeader />
-      <main className="mx-auto max-w-[1480px] overflow-x-hidden px-4 pb-44 pt-5 sm:px-6 sm:py-6 lg:px-8">
+      <main className="mx-auto max-w-[1480px] overflow-x-hidden px-4 pb-56 pt-5 sm:px-6 sm:py-6 lg:px-8">
         <div className="mb-4 flex flex-col gap-3 sm:mb-5 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
             <h1 className="break-words text-2xl font-bold leading-tight text-brand-ink sm:text-4xl">{property.title}</h1>

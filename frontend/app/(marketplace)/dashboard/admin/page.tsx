@@ -24,6 +24,7 @@ import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { defaultPublicSiteSettings, type PublicSiteSettings } from "@/hooks/use-public-site-settings";
 import { formatCurrency } from "@/lib/utils";
 
 const API_URL = "/api/backend";
@@ -283,6 +284,9 @@ export default function AdminDashboardPage() {
   const [createForm, setCreateForm] = useState<PropertyForm>(emptyForm);
   const [editorMessage, setEditorMessage] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [publicSettings, setPublicSettings] = useState<PublicSiteSettings>(defaultPublicSiteSettings);
+  const [settingsMessage, setSettingsMessage] = useState("");
+  const [isSavingSettings, setIsSavingSettings] = useState(false);
 
   const selectedProperty = properties.find((property) => property.id === selectedId) ?? properties[0];
 
@@ -320,12 +324,27 @@ export default function AdminDashboardPage() {
     }
   }, [token]);
 
+  const loadPublicSettings = useCallback(async () => {
+    try {
+      const data = await apiRequest<PublicSiteSettings>("/api/site-settings/public");
+      setPublicSettings({
+        nav_badges: {
+          ...defaultPublicSiteSettings.nav_badges,
+          ...(data.nav_badges ?? {})
+        }
+      });
+    } catch {
+      setPublicSettings(defaultPublicSiteSettings);
+    }
+  }, []);
+
   useEffect(() => {
     const storedToken = window.localStorage.getItem(adminTokenKey) ?? "";
     setToken(storedToken);
     void loadProperties();
     void loadBookings(storedToken);
-  }, [loadBookings, loadProperties]);
+    void loadPublicSettings();
+  }, [loadBookings, loadProperties, loadPublicSettings]);
 
   useEffect(() => {
     if (selectedProperty) {
@@ -411,6 +430,28 @@ export default function AdminDashboardPage() {
       setEditorMessage(requestError instanceof Error ? requestError.message : "Unable to create listing.");
     } finally {
       setIsSaving(false);
+    }
+  }
+
+  async function savePublicSettings(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!token) {
+      setSettingsMessage("Sign in as admin before changing public badges.");
+      return;
+    }
+    setIsSavingSettings(true);
+    setSettingsMessage("");
+    try {
+      const data = await apiRequest<PublicSiteSettings>("/api/site-settings/public", token, {
+        method: "PUT",
+        body: JSON.stringify(publicSettings)
+      });
+      setPublicSettings(data);
+      setSettingsMessage("Public badge settings saved.");
+    } catch (requestError) {
+      setSettingsMessage(requestError instanceof Error ? requestError.message : "Unable to save badge settings.");
+    } finally {
+      setIsSavingSettings(false);
     }
   }
 
@@ -519,6 +560,42 @@ export default function AdminDashboardPage() {
               <BarChart bookings={bookings} />
               <PackageChart properties={properties} />
             </section>
+
+            <Card className="mt-5 border-0 bg-white p-5 shadow-[0_14px_42px_rgba(15,23,42,0.07)]">
+              <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                <div>
+                  <h2 className="text-lg font-bold text-slate-950">Public navigation badges</h2>
+                  <p className="mt-1 max-w-2xl text-sm leading-6 text-slate-500">
+                    Turn these on only when the admin team has launched something new for guests.
+                  </p>
+                </div>
+                <form className="grid gap-3 sm:grid-cols-[1fr_1fr_auto]" onSubmit={savePublicSettings}>
+                  {(["experiences", "services"] as const).map((key) => (
+                    <label key={key} className="flex min-h-12 items-center justify-between gap-4 rounded-2xl border border-slate-200 px-4 text-sm font-semibold capitalize text-slate-900">
+                      {key}
+                      <input
+                        type="checkbox"
+                        checked={publicSettings.nav_badges[key]}
+                        onChange={(event) =>
+                          setPublicSettings({
+                            nav_badges: {
+                              ...publicSettings.nav_badges,
+                              [key]: event.target.checked
+                            }
+                          })
+                        }
+                        className="h-5 w-5 accent-teal-700"
+                      />
+                    </label>
+                  ))}
+                  <Button type="submit" disabled={isSavingSettings}>
+                    {isSavingSettings ? <Loader2 className="animate-spin" size={18} aria-hidden /> : <Save size={18} aria-hidden />}
+                    Save badges
+                  </Button>
+                </form>
+              </div>
+              {settingsMessage ? <p className="mt-3 text-sm font-semibold text-slate-600">{settingsMessage}</p> : null}
+            </Card>
 
             <section id="inventory" className="mt-5 grid gap-5 xl:grid-cols-[0.85fr_1.15fr]">
               <Card className="border-0 bg-white p-5 shadow-[0_14px_42px_rgba(15,23,42,0.07)]">

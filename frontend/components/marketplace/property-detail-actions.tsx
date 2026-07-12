@@ -4,6 +4,7 @@ import { Copy, Facebook, Heart, Mail, MessageCircle, MoreHorizontal, Share2, X }
 import Image from "next/image";
 import { useState } from "react";
 import { useHydrated } from "@/hooks/use-hydrated";
+import { createWhatsappHref } from "@/lib/whatsapp";
 import { useAuthStore } from "@/store/auth-store";
 import { useSavedStore } from "@/store/saved-store";
 import type { Property } from "@/types/marketplace";
@@ -24,13 +25,51 @@ export function PropertyDetailActions({ property }: { property: Property }) {
     void navigator.clipboard?.writeText(window.location.href);
   }
 
+  function shareUrl() {
+    return typeof window === "undefined" ? "" : window.location.href;
+  }
+
+  function shareText() {
+    return `Check out ${property.title} on Micasa: ${shareUrl()}`;
+  }
+
+  function openShare(url: string) {
+    window.open(url, "_blank", "noopener,noreferrer");
+    setShareOpen(false);
+  }
+
+  function shareWhatsApp() {
+    openShare(createWhatsappHref(shareText()));
+  }
+
+  function shareEmail() {
+    openShare(`mailto:?subject=${encodeURIComponent(property.title)}&body=${encodeURIComponent(shareText())}`);
+  }
+
+  function shareSms() {
+    openShare(`sms:?&body=${encodeURIComponent(shareText())}`);
+  }
+
+  function shareFacebook() {
+    openShare(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl())}`);
+  }
+
+  async function shareMoreOptions() {
+    if (navigator.share) {
+      await navigator.share({ title: property.title, text: property.description, url: shareUrl() });
+      setShareOpen(false);
+      return;
+    }
+    copyLink();
+  }
+
   const shareOptions = [
     ["Copy Link", Copy, copyLink],
-    ["Email", Mail, undefined],
-    ["Messages", MessageCircle, undefined],
-    ["WhatsApp", MessageCircle, undefined],
-    ["Facebook", Facebook, undefined],
-    ["More options", MoreHorizontal, undefined]
+    ["Email", Mail, shareEmail],
+    ["Messages", MessageCircle, shareSms],
+    ["WhatsApp", MessageCircle, shareWhatsApp],
+    ["Facebook", Facebook, shareFacebook],
+    ["More options", MoreHorizontal, shareMoreOptions]
   ] as const;
 
   return (

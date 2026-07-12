@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { currencies, languages, usePreferences } from "@/components/marketplace/preferences-provider";
 import { FloatingWhatsAppButton } from "@/components/marketplace/whatsapp-button";
 import { useHydrated } from "@/hooks/use-hydrated";
+import { usePublicSiteSettings } from "@/hooks/use-public-site-settings";
 import { useSearchStore } from "@/store/search-store";
 import { useAuthStore } from "@/store/auth-store";
 import { useSavedStore } from "@/store/saved-store";
@@ -19,10 +20,10 @@ const links = [
   { href: "/services", key: "services" }
 ] as const;
 
-const mobileTabs = [
-  { href: "/#featured-stays", label: "Homes", Icon: House, badge: null },
-  { href: "/experiences", label: "Experiences", Icon: Sparkles, badge: "NEW" },
-  { href: "/services", label: "Services", Icon: ConciergeBell, badge: "NEW" }
+const mobileTabDefinitions = [
+  { href: "/#featured-stays", label: "Homes", Icon: House, key: "homes" },
+  { href: "/experiences", label: "Experiences", Icon: Sparkles, key: "experiences" },
+  { href: "/services", label: "Services", Icon: ConciergeBell, key: "services" }
 ] as const;
 
 const suggestions = [
@@ -49,6 +50,7 @@ export function SiteHeader() {
   const [mobileLocation, setMobileLocation] = useState("Nyali, Mombasa");
   const hydrated = useHydrated();
   const pathname = usePathname();
+  const publicSettings = usePublicSiteSettings();
   const { currency, language, setCurrency, setLanguage, t } = usePreferences();
   const accountKey = useAuthStore((state) => state.accountKey);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -59,6 +61,10 @@ export function SiteHeader() {
   const visibleSavedCount = hydrated ? savedCount : 0;
   const visibleIsAuthenticated = hydrated && isAuthenticated;
   const visibleUser = hydrated ? user : null;
+  const mobileTabs = mobileTabDefinitions.map((item) => ({
+    ...item,
+    badge: item.key === "experiences" || item.key === "services" ? publicSettings.nav_badges[item.key] ? "NEW" : null : null
+  }));
 
   useEffect(() => {
     const update = () => setIsScrolled(window.scrollY > 28);
