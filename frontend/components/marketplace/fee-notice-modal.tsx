@@ -1,6 +1,6 @@
 "use client";
 
-import { X } from "lucide-react";
+import { BadgeCheck, Tag, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export function FeeNoticeModal() {
@@ -39,9 +39,10 @@ export function FeeNoticeModal() {
         >
           <X size={24} aria-hidden />
         </button>
-        <div className="mx-auto mt-9 grid h-20 w-20 rotate-[-8deg] place-items-center rounded-[22px] bg-gradient-to-br from-brand-strong to-brand shadow-lift sm:mt-14 sm:h-24 sm:w-24 sm:rounded-[24px]">
-          <span className="text-2xl font-black sm:text-3xl" aria-hidden>
-            KSh
+        <div className="mx-auto mt-9 grid h-20 w-20 rotate-[-8deg] place-items-center rounded-[22px] bg-gradient-to-br from-brand-strong to-brand text-white shadow-lift sm:mt-14 sm:h-24 sm:w-24 sm:rounded-[24px]">
+          <span className="relative grid h-12 w-12 place-items-center rounded-2xl bg-white/18" aria-hidden>
+            <Tag size={31} />
+            <BadgeCheck className="absolute -right-2 -top-2 rounded-full bg-white text-brand-strong" size={18} />
           </span>
         </div>
         <h2 id="fee-notice-title" className="mx-auto mt-8 max-w-md text-2xl font-bold leading-tight text-brand-ink sm:mt-12 sm:text-4xl">

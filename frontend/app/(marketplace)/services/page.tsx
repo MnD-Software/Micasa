@@ -1,4 +1,4 @@
-import { ArrowRight, Heart, Star, X } from "lucide-react";
+import { ArrowRight, Heart, MessageCircle, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { MobileTabBar } from "@/components/marketplace/mobile-tab-bar";
@@ -7,19 +7,18 @@ import { formatCurrency } from "@/lib/utils";
 import { marketplaceServices } from "@/lib/service-data";
 import { createWhatsappHref } from "@/lib/whatsapp";
 
-function AppBanner() {
+function SupportStrip() {
   return (
-    <section className="flex items-center gap-3 border-b border-brand-line bg-white px-5 py-4 lg:hidden">
-      <button aria-label="Dismiss app banner" className="text-brand-muted" type="button">
-        <X size={20} aria-hidden />
-      </button>
-      <div className="grid h-14 w-14 place-items-center rounded-2xl bg-brand-strong text-xl font-bold text-white">M</div>
-      <div className="min-w-0 flex-1">
-        <p className="font-bold text-brand-ink">Get Micasa help</p>
-        <p className="truncate text-sm text-brand-muted">Fastest way to confirm service add-ons</p>
+    <section className="flex items-center gap-3 border-b border-brand-line bg-white px-5 py-3 lg:hidden">
+      <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-brand-soft text-brand-strong">
+        <MessageCircle size={22} aria-hidden />
       </div>
-      <a className="rounded-full bg-[#2f8f5b] px-5 py-2.5 text-sm font-bold text-white" href={createWhatsappHref("Hello Micasa, I want help booking a service.")} rel="noreferrer" target="_blank">
-        Use app
+      <div className="min-w-0 flex-1">
+        <p className="font-bold text-brand-ink">Need help choosing?</p>
+        <p className="truncate text-sm text-brand-muted">Confirm add-ons with the local team</p>
+      </div>
+      <a className="rounded-full bg-brand-strong px-4 py-2.5 text-sm font-bold text-white" href={createWhatsappHref("Hello Micasa, I want help booking a service.")} rel="noreferrer" target="_blank">
+        Chat
       </a>
     </section>
   );
@@ -69,7 +68,7 @@ export default function ServicesPage() {
   return (
     <>
       <SiteHeader />
-      <AppBanner />
+      <SupportStrip />
       <main className="pb-28">
         <ServiceRail />
         <section className="mt-4 bg-brand-soft px-5 py-8 lg:px-8 lg:py-12">

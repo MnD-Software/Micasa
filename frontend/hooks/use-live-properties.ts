@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { publicPropertiesFromApi, type ApiProperty } from "@/lib/api-property-mapper";
+import { mergedPublicPropertiesFromApi, type ApiProperty } from "@/lib/api-property-mapper";
 import { properties as fallbackProperties } from "@/lib/marketplace-data";
 import type { Property } from "@/types/marketplace";
 
@@ -18,8 +18,8 @@ export function useLiveProperties() {
           return;
         }
         const data = (await response.json()) as ApiProperty[];
-        const liveProperties = publicPropertiesFromApi(data);
-        if (!cancelled && liveProperties.length > 0) {
+        const liveProperties = mergedPublicPropertiesFromApi(data);
+        if (!cancelled) {
           setProperties(liveProperties);
         }
       } catch {

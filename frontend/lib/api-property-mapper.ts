@@ -76,3 +76,12 @@ export function publicPropertiesFromApi(properties: ApiProperty[]) {
     .filter((property) => ["active", "published"].includes(property.status.toLowerCase()))
     .map(mapApiProperty);
 }
+
+export function mergedPublicPropertiesFromApi(properties: ApiProperty[]) {
+  const liveProperties = publicPropertiesFromApi(properties);
+  const liveBySlug = new Map(liveProperties.map((property) => [property.slug, property]));
+  const merged = fallbackProperties.map((property) => liveBySlug.get(property.slug) ?? property);
+  const fallbackSlugs = new Set(fallbackProperties.map((property) => property.slug));
+  const addedLiveProperties = liveProperties.filter((property) => !fallbackSlugs.has(property.slug));
+  return [...merged, ...addedLiveProperties];
+}

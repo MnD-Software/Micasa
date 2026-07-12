@@ -17,10 +17,6 @@ function RailHeader({ title }: { title: string }) {
   return (
     <div className="mb-3 flex items-end justify-between gap-4">
       <Link className="group min-w-0" href="/stays">
-        <span className="mb-1 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-brand-strong">
-          <span className="h-1.5 w-1.5 rounded-full bg-brand-gold" aria-hidden />
-          Micasa stays
-        </span>
         <span className="flex min-w-0 items-center gap-3">
           <h2 className="truncate text-xl font-bold tracking-normal text-brand-ink sm:text-2xl">
             {title}

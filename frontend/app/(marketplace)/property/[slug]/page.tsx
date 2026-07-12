@@ -78,7 +78,7 @@ export default async function PropertyPage({ params }: Props) {
               <div>
                 <p className="inline-flex items-center gap-2 rounded-full border border-brand-gold/25 bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-brand-strong shadow-pearl">
                   <Sparkles size={15} aria-hidden />
-                  Micasa selected stay
+                  Verified coastal stay
                 </p>
                 <p className="mt-4 text-sm font-semibold text-brand-muted sm:mt-5">{property.type} in {property.location}</p>
                 <h2 className="mt-2 text-3xl font-bold leading-tight text-brand-ink sm:text-5xl">Guest favorite coastal stay</h2>
