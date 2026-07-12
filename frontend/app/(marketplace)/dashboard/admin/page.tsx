@@ -30,6 +30,12 @@ import { formatCurrency } from "@/lib/utils";
 const API_URL = "/api/backend";
 const adminTokenKey = "micasa-admin-token";
 
+class ApiRequestError extends Error {
+  constructor(public status: number) {
+    super(`Request failed with ${status}`);
+  }
+}
+
 type ApiPropertyImage = {
   id: number;
   image_url: string;
@@ -115,7 +121,7 @@ async function apiRequest<T>(path: string, token?: string, init?: RequestInit) {
   });
 
   if (!response.ok) {
-    throw new Error(`Request failed with ${response.status}`);
+    throw new ApiRequestError(response.status);
   }
 
   if (response.status === 204) {
@@ -318,6 +324,13 @@ export default function AdminDashboardPage() {
       setBookingState("ready");
     } catch (requestError) {
       setBookings([]);
+      if (requestError instanceof ApiRequestError && requestError.status === 401) {
+        window.localStorage.removeItem(adminTokenKey);
+        setToken("");
+        setBookingState("idle");
+        setAuthError("Admin session expired. Sign in again to view bookings and edit protected records.");
+        return;
+      }
       setBookingState("error");
       setAuthError(requestError instanceof Error ? requestError.message : "Unable to load bookings");
     }

@@ -9,6 +9,12 @@ import { formatCurrency } from "@/lib/utils";
 const API_URL = "/api/backend";
 const adminTokenKey = "micasa-admin-token";
 
+class ApiRequestError extends Error {
+  constructor(public status: number) {
+    super(`Request failed with ${status}`);
+  }
+}
+
 type ApiProperty = {
   id: number;
   title: string;
@@ -42,7 +48,7 @@ async function apiRequest<T>(path: string, token?: string) {
     cache: "no-store"
   });
   if (!response.ok) {
-    throw new Error(`Request failed with ${response.status}`);
+    throw new ApiRequestError(response.status);
   }
   return response.json() as Promise<T>;
 }
@@ -81,7 +87,17 @@ export default function AdminModulePage() {
         const nextProperties = await apiRequest<ApiProperty[]>("/api/properties");
         setProperties(nextProperties);
         if (token) {
-          setBookings(await apiRequest<ApiBooking[]>("/api/bookings", token));
+          try {
+            setBookings(await apiRequest<ApiBooking[]>("/api/bookings", token));
+          } catch (bookingError) {
+            if (bookingError instanceof ApiRequestError && bookingError.status === 401) {
+              window.localStorage.removeItem(adminTokenKey);
+              setBookings([]);
+              setError("Admin session expired. Sign in again from the admin dashboard to view protected booking data.");
+              return;
+            }
+            throw bookingError;
+          }
         }
       } catch (requestError) {
         setError(requestError instanceof Error ? requestError.message : "Unable to load module data");

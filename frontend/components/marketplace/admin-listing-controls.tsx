@@ -88,6 +88,10 @@ export function AdminListingControls() {
       });
 
       if (!response.ok) {
+        if (response.status === 401) {
+          window.localStorage.removeItem(adminTokenKey);
+          throw new Error("Admin session expired. Sign in again before creating listings.");
+        }
         throw new Error(`Create listing failed with ${response.status}`);
       }
       event.currentTarget.reset();
@@ -124,6 +128,10 @@ export function AdminListingControls() {
         })
       });
       if (!response.ok) {
+        if (response.status === 401) {
+          window.localStorage.removeItem(adminTokenKey);
+          throw new Error("Admin session expired. Sign in again before adding reviews.");
+        }
         throw new Error(`Create review failed with ${response.status}`);
       }
       event.currentTarget.reset();
