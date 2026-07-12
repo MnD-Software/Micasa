@@ -48,6 +48,9 @@ export function SiteHeader() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileLocation, setMobileLocation] = useState("Nyali, Mombasa");
+  const [mobileCheckIn, setMobileCheckIn] = useState("2026-08-15");
+  const [mobileCheckOut, setMobileCheckOut] = useState("2026-08-19");
+  const [mobileGuests, setMobileGuests] = useState(2);
   const hydrated = useHydrated();
   const pathname = usePathname();
   const publicSettings = usePublicSiteSettings();
@@ -75,7 +78,12 @@ export function SiteHeader() {
 
   function submitMobileSearch(location = mobileLocation) {
     const target = location.trim() || "Nyali, Mombasa";
-    setSearch({ location: target });
+    setSearch({
+      location: target,
+      checkIn: mobileCheckIn,
+      checkOut: mobileCheckOut,
+      guests: mobileGuests
+    });
     setSearchOpen(false);
     if (pathname !== "/") {
       window.location.href = "/#featured-stays";
@@ -346,14 +354,40 @@ export function SiteHeader() {
           </section>
 
           <div className="mt-5 grid gap-4">
-            <button className="flex min-h-20 items-center justify-between rounded-3xl bg-white px-6 text-left text-lg font-bold shadow-pearl" type="button">
-              <span className="text-brand-muted">When</span>
-              <span className="text-brand-ink">Add dates</span>
-            </button>
-            <button className="flex min-h-20 items-center justify-between rounded-3xl bg-white px-6 text-left text-lg font-bold shadow-pearl" type="button">
+            <div className="grid gap-3 rounded-3xl bg-white px-6 py-5 shadow-pearl">
+              <span className="text-lg font-bold text-brand-muted">When</span>
+              <div className="grid grid-cols-2 gap-3">
+                <label className="grid gap-1 text-xs font-bold uppercase text-brand-ink">
+                  Check in
+                  <input
+                    className="min-w-0 rounded-2xl border border-brand-line px-3 py-3 text-sm font-semibold outline-none"
+                    onChange={(event) => setMobileCheckIn(event.target.value)}
+                    type="date"
+                    value={mobileCheckIn}
+                  />
+                </label>
+                <label className="grid gap-1 text-xs font-bold uppercase text-brand-ink">
+                  Check out
+                  <input
+                    className="min-w-0 rounded-2xl border border-brand-line px-3 py-3 text-sm font-semibold outline-none"
+                    onChange={(event) => setMobileCheckOut(event.target.value)}
+                    type="date"
+                    value={mobileCheckOut}
+                  />
+                </label>
+              </div>
+            </div>
+            <label className="flex min-h-20 items-center justify-between gap-4 rounded-3xl bg-white px-6 text-left text-lg font-bold shadow-pearl">
               <span className="text-brand-muted">Who</span>
-              <span className="text-brand-ink">Add guests</span>
-            </button>
+              <input
+                className="w-28 rounded-2xl border border-brand-line px-4 py-3 text-right text-brand-ink outline-none"
+                min={1}
+                max={16}
+                onChange={(event) => setMobileGuests(Number(event.target.value) || 1)}
+                type="number"
+                value={mobileGuests}
+              />
+            </label>
           </div>
 
           <div className="mt-9 flex items-center justify-between">

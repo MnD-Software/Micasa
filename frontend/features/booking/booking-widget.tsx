@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { BadgeCheck, BedDouble, Calculator, CreditCard, MessageCircle, ShieldCheck, Smartphone } from "lucide-react";
+import { BadgeCheck, BedDouble, Calculator, CreditCard, MessageCircle, ShieldCheck, Smartphone, X } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -33,6 +33,7 @@ export function BookingWidget({ property }: { property: Property }) {
   const paybill = process.env.NEXT_PUBLIC_MPESA_PAYBILL?.trim();
   const mpesaAccountName = process.env.NEXT_PUBLIC_MPESA_ACCOUNT_NAME?.trim() || "MICASA";
   const [availabilityChecked, setAvailabilityChecked] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [confirmation, setConfirmation] = useState<{
     code: string;
     paymentMethod: "mpesa" | "card";
@@ -280,17 +281,117 @@ Total estimate: ${formatMoney(totals.total)}`;
         </div>
         <button
           className="focus-ring min-h-12 shrink-0 rounded-full bg-brand-strong px-6 text-sm font-bold text-white shadow-lift"
-          onClick={() => {
-            if (requireAccount()) {
-              setAvailabilityChecked(true);
-            }
-          }}
+          onClick={() => setMobileOpen(true)}
           type="button"
         >
           Reserve
         </button>
       </div>
     </div>
+    {mobileOpen ? (
+      <div className="fixed inset-0 z-[70] bg-black/45 lg:hidden">
+        <div className="absolute inset-x-0 bottom-0 max-h-[88vh] overflow-y-auto rounded-t-[30px] bg-brand-ivory p-4 shadow-luxe">
+          <div className="mb-4 flex items-start justify-between gap-3">
+            <div>
+              <p className="text-xl font-bold text-brand-ink">{formatMoney(property.pricePerNight)} <span className="text-sm font-normal text-brand-muted">{t("night")}</span></p>
+              <p className="mt-1 text-sm font-semibold text-brand-muted">{property.rating} - {property.reviews} reviews</p>
+            </div>
+            <button
+              aria-label="Close booking"
+              className="focus-ring grid h-11 w-11 place-items-center rounded-full bg-white text-brand-ink shadow-pearl"
+              onClick={() => setMobileOpen(false)}
+              type="button"
+            >
+              <X size={22} aria-hidden />
+            </button>
+          </div>
+
+          <form onSubmit={handleSubmit(onSubmit)} className="grid gap-3 pb-3">
+            <div className="grid grid-cols-2 overflow-hidden rounded-2xl border border-brand-line bg-white">
+              <label className="min-w-0 border-r border-brand-line p-3">
+                <span className="block text-[11px] font-bold uppercase text-brand-ink">{t("checkIn")}</span>
+                <Input {...register("checkIn")} type="date" className="h-auto min-w-0 rounded-none border-0 p-0 text-sm" />
+              </label>
+              <label className="min-w-0 p-3">
+                <span className="block text-[11px] font-bold uppercase text-brand-ink">{t("checkOut")}</span>
+                <Input {...register("checkOut")} type="date" className="h-auto min-w-0 rounded-none border-0 p-0 text-sm" />
+              </label>
+              <label className="min-w-0 border-t border-brand-line p-3">
+                <span className="block text-[11px] font-bold uppercase text-brand-ink">{t("guests")}</span>
+                <Input {...register("guests")} type="number" min={1} className="h-auto min-w-0 rounded-none border-0 p-0 text-sm" />
+              </label>
+              <label className="min-w-0 border-l border-t border-brand-line p-3">
+                <span className="block text-[11px] font-bold uppercase text-brand-ink">Bedrooms</span>
+                <Input {...register("bedrooms")} type="number" min={1} max={property.bedrooms} className="h-auto min-w-0 rounded-none border-0 p-0 text-sm" />
+              </label>
+            </div>
+
+            <button
+              className="focus-ring flex min-h-12 items-center justify-center gap-2 rounded-full border border-brand-line bg-white px-4 text-sm font-bold text-brand-ink shadow-pearl"
+              onClick={() => setAvailabilityChecked(true)}
+              type="button"
+            >
+              <Calculator size={17} aria-hidden />
+              {t("checkAvailability")}
+            </button>
+
+            {availabilityChecked ? (
+              <div className={["rounded-2xl border bg-white p-4 text-sm", isAvailable ? "border-brand-success/30 text-brand-ink" : "border-brand-error/30 text-brand-error"].join(" ")}>
+                {isAvailable ? (
+                  <>
+                    <p className="flex items-center gap-2 font-bold">
+                      <BadgeCheck size={18} className="text-brand-success" aria-hidden />
+                      {t("availableFor")} {values.guests} {t("guests")} and {totals.selectedBedrooms} {t("bedrooms")}
+                    </p>
+                    <p className="mt-2 text-brand-muted">{formatMoney(totals.total)} for {totals.nights} nights.</p>
+                  </>
+                ) : (
+                  <p>This property allows up to {property.guests} guests and {property.bedrooms} bedrooms.</p>
+                )}
+              </div>
+            ) : null}
+
+            <fieldset className="grid gap-2">
+              <legend className="mb-1 text-xs font-bold uppercase text-brand-ink">{t("payWith")}</legend>
+              <div className="grid grid-cols-2 gap-2">
+                <label className="flex min-w-0 cursor-pointer items-center gap-2 rounded-2xl border border-brand-line bg-white p-3 text-sm font-semibold text-brand-ink">
+                  <input {...register("paymentMethod")} type="radio" value="mpesa" className="accent-brand-strong" />
+                  <Smartphone size={17} aria-hidden className="shrink-0" />
+                  <span className="truncate">{t("mpesa")}</span>
+                </label>
+                <label className="flex min-w-0 cursor-pointer items-center gap-2 rounded-2xl border border-brand-line bg-white p-3 text-sm font-semibold text-brand-ink">
+                  <input {...register("paymentMethod")} type="radio" value="card" className="accent-brand-strong" />
+                  <CreditCard size={17} aria-hidden className="shrink-0" />
+                  <span className="truncate">{t("card")}</span>
+                </label>
+              </div>
+              <Input {...register("paymentContact")} className="min-w-0" placeholder="M-Pesa phone or card email" />
+            </fieldset>
+
+            <Input {...register("coupon")} className="min-w-0" placeholder="Coupon code" />
+            <Button type="submit" size="lg" className="min-h-14 w-full">
+              <BadgeCheck size={18} aria-hidden />
+              {t("reserveConfirm")}
+            </Button>
+            <a
+              className="focus-ring inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-full bg-brand-success px-4 text-sm font-bold text-white"
+              href={whatsappHref}
+              onClick={(event) => {
+                if (!isAuthenticated) {
+                  event.preventDefault();
+                  loginForBooking();
+                }
+              }}
+              rel="noreferrer"
+              target="_blank"
+            >
+              <MessageCircle size={18} aria-hidden />
+              {t("bookWhatsapp")}
+            </a>
+          </form>
+        </div>
+      </div>
+    ) : null}
     </>
   );
 }
