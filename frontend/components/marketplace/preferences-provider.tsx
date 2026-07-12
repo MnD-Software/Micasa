@@ -147,7 +147,7 @@ type PreferencesContextValue = {
 
 const PreferencesContext = createContext<PreferencesContextValue | null>(null);
 
-export const currencies: CurrencyCode[] = ["KES", "USD", "GBP", "EUR"];
+export const currencies: CurrencyCode[] = ["KES"];
 export const languages: Array<{ code: LanguageCode; label: string }> = [
   { code: "en", label: "English" },
   { code: "sw", label: "Kiswahili" }
@@ -158,12 +158,10 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<LanguageCode>("en");
 
   useEffect(() => {
-    const storedCurrency = window.localStorage.getItem("micasa-currency") as CurrencyCode | null;
     const storedLanguage = window.localStorage.getItem("micasa-language") as LanguageCode | null;
 
-    if (storedCurrency && currencies.includes(storedCurrency)) {
-      setCurrencyState(storedCurrency);
-    }
+    setCurrencyState("KES");
+    window.localStorage.setItem("micasa-currency", "KES");
     if (storedLanguage && languages.some((item) => item.code === storedLanguage)) {
       setLanguageState(storedLanguage);
     }
@@ -176,9 +174,9 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
     return {
       currency,
       language,
-      setCurrency: (nextCurrency) => {
-        setCurrencyState(nextCurrency);
-        window.localStorage.setItem("micasa-currency", nextCurrency);
+      setCurrency: () => {
+        setCurrencyState("KES");
+        window.localStorage.setItem("micasa-currency", "KES");
       },
       setLanguage: (nextLanguage) => {
         setLanguageState(nextLanguage);
@@ -186,7 +184,7 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
       },
       t: (key) => copy[language][key] ?? copy.en[key],
       convertFromKes,
-      formatMoney: (valueKes) => formatCurrency(convertFromKes(valueKes), currency, locale)
+      formatMoney: (valueKes) => formatCurrency(valueKes, "KES", locale)
     };
   }, [currency, language]);
 
@@ -200,4 +198,3 @@ export function usePreferences() {
   }
   return context;
 }
-

@@ -108,7 +108,7 @@ export function ReviewModule({
             {average.toFixed(1)} - {baseReviewCount + reviews.length} review{baseReviewCount + reviews.length === 1 ? "" : "s"}
           </p>
         </div>
-        <p className="text-sm text-brand-muted">Rate your stay at {propertyTitle}</p>
+        <p className="max-w-full break-words text-sm text-brand-muted">Rate your stay at {propertyTitle}</p>
       </div>
 
       <div className="mt-5 rounded-[22px] border border-brand-line bg-white p-4 shadow-pearl">
@@ -117,7 +117,7 @@ export function ReviewModule({
           <Stars value={rating} onChange={setRating} />
         </div>
         <textarea
-          className="focus-ring mt-4 min-h-24 w-full resize-none rounded-2xl border border-brand-line bg-brand-ivory p-3 text-sm text-brand-ink outline-none placeholder:text-brand-muted"
+          className="focus-ring mt-4 min-h-24 w-full resize-none rounded-2xl border border-brand-line bg-brand-ivory p-3 text-base text-brand-ink outline-none placeholder:text-brand-muted sm:text-sm"
           onChange={(event) => setReviewText(event.target.value)}
           placeholder="Share what stood out about this stay"
           value={reviewText}
@@ -133,11 +133,11 @@ export function ReviewModule({
         {reviews.length ? reviews.map((review, index) => (
           <article key={`${review.author}-${index}`} className="rounded-[20px] border border-brand-line bg-white/72 p-4 shadow-pearl sm:rounded-[24px] sm:p-5">
             <Stars value={review.rating} />
-            <p className="mt-3 text-sm leading-6 text-brand-ink">{review.text}</p>
+            <p className="mt-3 break-words text-sm leading-6 text-brand-ink">{review.text}</p>
             <p className="mt-4 text-sm font-semibold text-brand-muted">{review.author}</p>
           </article>
         )) : (
-          <div className="rounded-[20px] border border-dashed border-brand-line bg-white/60 p-4 text-sm leading-6 text-brand-muted sm:rounded-[24px] sm:p-5">
+          <div className="break-words rounded-[20px] border border-dashed border-brand-line bg-white/60 p-4 text-sm leading-6 text-brand-muted sm:rounded-[24px] sm:p-5">
             No written guest reviews have been added on this device yet.
           </div>
         )}

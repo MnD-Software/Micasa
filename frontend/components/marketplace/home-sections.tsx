@@ -1,12 +1,14 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowLeft, ArrowRight, ConciergeBell, ShieldCheck, Waves, Wifi } from "lucide-react";
 import { PropertyCard } from "@/components/marketplace/property-card";
 import { TrustMemberStrip } from "@/components/marketplace/trust-member-strip";
 import { destinations, experiences } from "@/lib/marketplace-data";
 import { usePreferences } from "@/components/marketplace/preferences-provider";
 import { useLiveProperties } from "@/hooks/use-live-properties";
+import { filterProperties } from "@/lib/property-filters";
 import { createWhatsappHref } from "@/lib/whatsapp";
 import { useSearchStore } from "@/store/search-store";
 import type { Property } from "@/types/marketplace";
@@ -14,10 +16,10 @@ import type { Property } from "@/types/marketplace";
 function RailHeader({ title }: { title: string }) {
   return (
     <div className="mb-3 flex items-end justify-between gap-4">
-      <a className="group min-w-0" href="#featured-stays">
+      <Link className="group min-w-0" href="/stays">
         <span className="mb-1 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-brand-strong">
           <span className="h-1.5 w-1.5 rounded-full bg-brand-gold" aria-hidden />
-          Micasa edit
+          Micasa stays
         </span>
         <span className="flex min-w-0 items-center gap-3">
           <h2 className="truncate text-xl font-bold tracking-normal text-brand-ink sm:text-2xl">
@@ -27,7 +29,7 @@ function RailHeader({ title }: { title: string }) {
             <ArrowRight size={18} aria-hidden />
           </span>
         </span>
-      </a>
+      </Link>
       <div className="hidden items-center gap-2 sm:flex">
         <button
           aria-label={`Previous ${title}`}
@@ -50,9 +52,9 @@ function RailHeader({ title }: { title: string }) {
 
 function SeeAllCard({ items }: { items: Property[] }) {
   return (
-    <a
+    <Link
       className="grid aspect-square w-[44vw] min-w-[158px] max-w-[190px] shrink-0 snap-start place-items-center rounded-[22px] border border-brand-line bg-brand-ink text-white shadow-pearl transition hover:-translate-y-0.5 hover:shadow-luxe sm:w-[218px] sm:max-w-none lg:w-[224px]"
-      href="#featured-stays"
+      href="/stays"
     >
       <div className="text-center">
         <div className="mx-auto grid w-24 grid-cols-2 gap-1">
@@ -63,9 +65,9 @@ function SeeAllCard({ items }: { items: Property[] }) {
           ))}
         </div>
         <p className="mt-4 text-base font-bold">See all</p>
-        <p className="mt-1 text-xs text-white/62">Open collection</p>
+        <p className="mt-1 text-xs text-white/62">List view</p>
       </div>
-    </a>
+    </Link>
   );
 }
 
@@ -95,15 +97,7 @@ export function HomeSections() {
   const nextMonthHomes = properties;
   const groupReadyHomes = [...properties].sort((a, b) => b.guests - a.guests);
   const intimateHomes = [...properties].sort((a, b) => a.guests - b.guests);
-  const query = search.location.trim().toLowerCase();
-  const filter = search.filter.trim().toLowerCase();
-  const searchedHomes = properties.filter((property) => {
-    const haystack = `${property.title} ${property.location} ${property.category} ${property.type}`.toLowerCase();
-    const amenityStack = property.amenities.join(" ").toLowerCase();
-    const matchesLocation = !query || haystack.includes(query.split(",")[0]);
-    const matchesFilter = !filter || haystack.includes(filter) || amenityStack.includes(filter);
-    return property.guests >= search.guests && matchesLocation && matchesFilter;
-  });
+  const searchedHomes = filterProperties(properties, search);
   const availableHomes = searchedHomes.length > 0 ? searchedHomes : properties.filter((property) => property.guests >= search.guests);
   const flagship = properties[2] ?? properties[0];
 

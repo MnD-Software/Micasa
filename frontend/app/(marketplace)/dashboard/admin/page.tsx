@@ -186,7 +186,6 @@ function MetricCard({ label, value, detail, Icon }: { label: string; value: stri
         <span className="grid h-10 w-10 place-items-center rounded-xl bg-slate-900 text-white">
           <Icon size={19} aria-hidden />
         </span>
-        <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-bold text-slate-500">Live</span>
       </div>
       <p className="mt-5 text-2xl font-bold text-slate-950 sm:text-3xl">{value}</p>
       <p className="mt-1 text-sm font-semibold text-slate-800">{label}</p>
@@ -472,9 +471,9 @@ export default function AdminDashboardPage() {
   ] as const;
 
   return (
-    <main className="min-h-screen bg-slate-100 text-slate-950">
-      <div className="grid min-h-screen lg:grid-cols-[280px_1fr]">
-        <aside className="hidden border-r border-slate-200 bg-slate-950 px-5 py-6 text-white lg:block">
+    <main className="h-screen overflow-hidden bg-slate-100 text-slate-950">
+      <div className="grid h-screen lg:grid-cols-[280px_1fr]">
+        <aside className="hidden h-screen overflow-y-auto border-r border-slate-200 bg-slate-950 px-5 py-6 text-white lg:block">
           <div className="flex items-center gap-3">
             <span className="grid h-11 w-11 place-items-center rounded-2xl bg-teal-500 font-bold">M</span>
             <div>
@@ -484,13 +483,13 @@ export default function AdminDashboardPage() {
           </div>
           <nav className="mt-8 grid gap-2 text-sm font-semibold">
             {[
-              [LayoutDashboard, "Overview"],
-              [Building2, "Inventory"],
-              [Package, "Packages"],
-              [ClipboardList, "Bookings"],
-              [ImageIcon, "Content"]
-            ].map(([Icon, label]) => (
-              <a key={String(label)} href={`#${String(label).toLowerCase()}`} className="flex items-center gap-3 rounded-2xl px-3 py-3 text-white/72 transition hover:bg-white/10 hover:text-white">
+              [LayoutDashboard, "Overview", "/dashboard/admin"],
+              [Building2, "Inventory", "/dashboard/admin/inventory"],
+              [Package, "Packages", "/dashboard/admin/packages"],
+              [ClipboardList, "Bookings", "/dashboard/admin/bookings"],
+              [ImageIcon, "Content", "/dashboard/admin/content"]
+            ].map(([Icon, label, href]) => (
+              <a key={String(label)} href={String(href)} className="flex items-center gap-3 rounded-2xl px-3 py-3 text-white/72 transition hover:bg-white/10 hover:text-white">
                 <Icon size={18} aria-hidden />
                 {String(label)}
               </a>
@@ -498,13 +497,26 @@ export default function AdminDashboardPage() {
           </nav>
         </aside>
 
-        <section className="min-w-0">
+        <section className="h-screen min-w-0 overflow-y-auto">
           <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/92 px-4 py-4 backdrop-blur-xl sm:px-6 lg:px-8">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div>
                 <p className="text-xs font-bold uppercase tracking-[0.16em] text-teal-700">Operations console</p>
                 <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">Dashboard</h1>
               </div>
+              <nav className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 lg:hidden">
+                {[
+                  ["Overview", "/dashboard/admin"],
+                  ["Inventory", "/dashboard/admin/inventory"],
+                  ["Packages", "/dashboard/admin/packages"],
+                  ["Bookings", "/dashboard/admin/bookings"],
+                  ["Content", "/dashboard/admin/content"]
+                ].map(([label, href]) => (
+                  <a key={label} href={href} className="shrink-0 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-800 shadow-sm">
+                    {label}
+                  </a>
+                ))}
+              </nav>
               <div className="flex flex-wrap items-center gap-3">
                 <Button type="button" variant="secondary" onClick={() => { void loadProperties(); void loadBookings(); }}>
                   <RefreshCw size={17} aria-hidden />
@@ -659,7 +671,7 @@ export default function AdminDashboardPage() {
                   <Input value={editor.price_per_night} onChange={(event) => setEditor({ ...editor, price_per_night: event.target.value })} type="number" min={1} placeholder="Nightly rate" required />
                   <Input value={editor.cleaning_fee} onChange={(event) => setEditor({ ...editor, cleaning_fee: event.target.value })} type="number" min={0} placeholder="Cleaning fee" />
                   <Input value={editor.service_fee} onChange={(event) => setEditor({ ...editor, service_fee: event.target.value })} type="number" min={0} placeholder="Service fee" />
-                  <select value={editor.status} onChange={(event) => setEditor({ ...editor, status: event.target.value })} className="h-12 rounded-full border border-slate-200 bg-white px-4 text-sm font-semibold outline-none">
+                  <select value={editor.status} onChange={(event) => setEditor({ ...editor, status: event.target.value })} className="h-12 rounded-full border border-slate-200 bg-white px-4 text-base font-semibold outline-none sm:text-sm">
                     <option value="published">Published</option>
                     <option value="draft">Draft</option>
                     <option value="inactive">Inactive</option>
@@ -668,8 +680,8 @@ export default function AdminDashboardPage() {
                     <input type="checkbox" checked={editor.featured} onChange={(event) => setEditor({ ...editor, featured: event.target.checked })} className="accent-teal-700" />
                     Featured collection
                   </label>
-                  <textarea value={editor.description} onChange={(event) => setEditor({ ...editor, description: event.target.value })} className="min-h-28 rounded-2xl border border-slate-200 p-4 text-sm outline-none md:col-span-2" placeholder="Guest-facing description" required />
-                  <textarea value={editor.image_urls} onChange={(event) => setEditor({ ...editor, image_urls: event.target.value })} className="min-h-28 rounded-2xl border border-slate-200 p-4 text-sm outline-none md:col-span-2" placeholder="One public image URL per line" />
+                  <textarea value={editor.description} onChange={(event) => setEditor({ ...editor, description: event.target.value })} className="min-h-28 rounded-2xl border border-slate-200 p-4 text-base outline-none sm:text-sm md:col-span-2" placeholder="Guest-facing description" required />
+                  <textarea value={editor.image_urls} onChange={(event) => setEditor({ ...editor, image_urls: event.target.value })} className="min-h-28 rounded-2xl border border-slate-200 p-4 text-base outline-none sm:text-sm md:col-span-2" placeholder="One public image URL per line" />
                   <Button type="submit" disabled={isSaving || !selectedProperty} className="md:col-span-2">
                     {isSaving ? <Loader2 className="animate-spin" size={18} aria-hidden /> : <Save size={18} aria-hidden />}
                     Save listing
@@ -692,8 +704,8 @@ export default function AdminDashboardPage() {
                   <Input value={createForm.bathrooms} onChange={(event) => setCreateForm({ ...createForm, bathrooms: event.target.value })} type="number" min={0} placeholder="Bathrooms" required />
                   <Input value={createForm.guests} onChange={(event) => setCreateForm({ ...createForm, guests: event.target.value })} type="number" min={1} placeholder="Guests" required />
                   <Input value={createForm.price_per_night} onChange={(event) => setCreateForm({ ...createForm, price_per_night: event.target.value })} type="number" min={1} placeholder="Nightly rate" required />
-                  <textarea value={createForm.description} onChange={(event) => setCreateForm({ ...createForm, description: event.target.value })} className="min-h-28 rounded-2xl border border-slate-200 p-4 text-sm outline-none md:col-span-2" placeholder="Guest-facing description" required />
-                  <textarea value={createForm.image_urls} onChange={(event) => setCreateForm({ ...createForm, image_urls: event.target.value })} className="min-h-28 rounded-2xl border border-slate-200 p-4 text-sm outline-none md:col-span-2" placeholder="One public image URL per line" />
+                  <textarea value={createForm.description} onChange={(event) => setCreateForm({ ...createForm, description: event.target.value })} className="min-h-28 rounded-2xl border border-slate-200 p-4 text-base outline-none sm:text-sm md:col-span-2" placeholder="Guest-facing description" required />
+                  <textarea value={createForm.image_urls} onChange={(event) => setCreateForm({ ...createForm, image_urls: event.target.value })} className="min-h-28 rounded-2xl border border-slate-200 p-4 text-base outline-none sm:text-sm md:col-span-2" placeholder="One public image URL per line" />
                   <Button type="submit" disabled={isSaving} className="md:col-span-2">Create listing</Button>
                 </form>
               </Card>

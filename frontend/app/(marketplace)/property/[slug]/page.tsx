@@ -117,7 +117,7 @@ export default async function PropertyPage({ params }: Props) {
         </nav>
 
         <div className="mt-7 grid gap-8 sm:mt-10 lg:grid-cols-[minmax(0,1fr)_minmax(430px,460px)] lg:items-start lg:gap-10">
-          <div>
+          <div className="min-w-0 overflow-hidden">
             <section className="border-b border-brand-line pb-8">
               <div className="flex items-center justify-between gap-4">
                 <div className="min-w-0">
@@ -146,14 +146,14 @@ export default async function PropertyPage({ params }: Props) {
                   <Icon className="mt-1 text-brand-strong" size={21} aria-hidden />
                   <div className="min-w-0">
                     <h3 className="text-[15px] font-semibold text-brand-ink sm:text-base">{title}</h3>
-                    <p className="text-sm leading-6 text-brand-muted">{text}</p>
+                    <p className="break-words text-sm leading-6 text-brand-muted">{text}</p>
                   </div>
                 </div>
               ))}
             </section>
 
             <section className="content-visibility-auto border-b border-brand-line py-6 [contain-intrinsic-size:560px] sm:py-8">
-              <p className="text-sm leading-7 text-brand-ink sm:text-base sm:leading-8">{property.description}</p>
+              <p className="break-words text-sm leading-7 text-brand-ink sm:text-base sm:leading-8">{property.description}</p>
             </section>
 
             <section id="photos" className="content-visibility-auto border-b border-brand-line py-6 [contain-intrinsic-size:520px] sm:py-8">
@@ -193,7 +193,7 @@ export default async function PropertyPage({ params }: Props) {
               <h2 className="text-xl font-semibold text-brand-ink sm:text-2xl">Amenities</h2>
               <div className="mt-4 grid grid-cols-1 gap-3 sm:mt-5 sm:grid-cols-2 sm:gap-4">
                 {property.amenities.map((amenity) => (
-                  <div key={amenity} className="rounded-2xl border border-brand-line bg-white/72 p-3 text-[13px] font-medium leading-5 text-brand-ink shadow-pearl sm:p-4 sm:text-sm">
+                  <div key={amenity} className="break-words rounded-2xl border border-brand-line bg-white/72 p-3 text-[13px] font-medium leading-5 text-brand-ink shadow-pearl sm:p-4 sm:text-sm">
                     {amenity}
                   </div>
                 ))}
@@ -223,7 +223,7 @@ export default async function PropertyPage({ params }: Props) {
           <BookingWidget property={property} />
         </div>
 
-        <section className="content-visibility-auto py-8 [contain-intrinsic-size:420px] sm:py-12">
+        <section className="content-visibility-auto overflow-hidden py-8 [contain-intrinsic-size:420px] sm:py-12">
           <h2 className="mb-4 text-xl font-semibold text-brand-ink sm:mb-6 sm:text-2xl">Similar Micasa stays</h2>
           <div className="grid grid-cols-2 gap-x-4 gap-y-7 md:grid-cols-3 md:gap-7">
             {similar.map((item) => (

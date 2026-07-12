@@ -40,8 +40,8 @@ export function FeeNoticeModal() {
           <X size={24} aria-hidden />
         </button>
         <div className="mx-auto mt-9 grid h-20 w-20 rotate-[-8deg] place-items-center rounded-[22px] bg-gradient-to-br from-brand-strong to-brand shadow-lift sm:mt-14 sm:h-24 sm:w-24 sm:rounded-[24px]">
-          <span className="text-4xl sm:text-5xl" aria-hidden>
-            $
+          <span className="text-2xl font-black sm:text-3xl" aria-hidden>
+            KSh
           </span>
         </div>
         <h2 id="fee-notice-title" className="mx-auto mt-8 max-w-md text-2xl font-bold leading-tight text-brand-ink sm:mt-12 sm:text-4xl">

@@ -10,6 +10,7 @@ import { currencies, languages, usePreferences } from "@/components/marketplace/
 import { FloatingWhatsAppButton } from "@/components/marketplace/whatsapp-button";
 import { useHydrated } from "@/hooks/use-hydrated";
 import { usePublicSiteSettings } from "@/hooks/use-public-site-settings";
+import { stayFilterOptions } from "@/lib/property-filters";
 import { useSearchStore } from "@/store/search-store";
 import { useAuthStore } from "@/store/auth-store";
 import { useSavedStore } from "@/store/saved-store";
@@ -30,18 +31,6 @@ const suggestions = [
   ["Nearby", "Find stays around Nyali"],
   ["Nyali, Mombasa", "Beach, malls, pool stays"],
   ["Mombasa, Kenya", "For coastal family trips"]
-] as const;
-
-const filterOptions = [
-  ["", "Filters"],
-  ["Fast Wi-Fi", "Wifi"],
-  ["Parking", "Free parking"],
-  ["Self check-in", "Self check-in"],
-  ["bathrooms", "1+ bathrooms"],
-  ["Air conditioning", "Air conditioning"],
-  ["Smart TV", "TV"],
-  ["Swimming pool", "Pool"],
-  ["Beach", "Beach access"]
 ] as const;
 
 export function SiteHeader() {
@@ -100,7 +89,7 @@ export function SiteHeader() {
       <select
         id={`${idPrefix}-currency-select`}
         aria-label="Currency"
-        className="h-10 rounded-full bg-transparent px-2 text-sm font-bold text-brand-ink outline-none"
+        className="h-10 rounded-full bg-transparent px-2 text-base font-bold text-brand-ink outline-none sm:text-sm"
         onChange={(event) => setCurrency(event.target.value as typeof currency)}
         value={currency}
       >
@@ -117,7 +106,7 @@ export function SiteHeader() {
       <select
         id={`${idPrefix}-language-select`}
         aria-label="Language"
-        className="h-10 rounded-full bg-transparent px-2 text-sm font-bold text-brand-ink outline-none"
+        className="h-10 rounded-full bg-transparent px-2 text-base font-bold text-brand-ink outline-none sm:text-sm"
         onChange={(event) => setLanguage(event.target.value as typeof language)}
         value={language}
       >
@@ -229,21 +218,21 @@ export function SiteHeader() {
 
       <div className="border-t border-brand-line/70">
         <div className="mx-auto flex max-w-[1120px] gap-2 overflow-x-auto px-4 py-3 sm:px-6 lg:px-10">
-          {filterOptions.map(([value, label], index) => {
+          {stayFilterOptions.map(([value, label], index) => {
             const active = activeFilter === value || (index === 0 && !activeFilter);
             return (
-              <button
+              <a
                 key={label}
+                href={value ? `/stays?filter=${encodeURIComponent(value)}` : "/stays"}
                 className={cn(
                   "focus-ring inline-flex h-10 shrink-0 items-center gap-2 rounded-full border px-4 text-sm font-semibold transition",
                   active ? "border-brand-ink bg-white text-brand-ink shadow-pearl" : "border-brand-line bg-white/72 text-brand-muted hover:border-brand-ink hover:text-brand-ink"
                 )}
                 onClick={() => setSearch({ filter: value })}
-                type="button"
               >
                 {index === 0 ? <SlidersHorizontal size={16} aria-hidden /> : null}
                 {label}
-              </button>
+              </a>
             );
           })}
         </div>

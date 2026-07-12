@@ -310,19 +310,19 @@ Total estimate: ${formatMoney(totals.total)}`;
             <div className="grid grid-cols-2 overflow-hidden rounded-2xl border border-brand-line bg-white">
               <label className="min-w-0 border-r border-brand-line p-3">
                 <span className="block text-[11px] font-bold uppercase text-brand-ink">{t("checkIn")}</span>
-                <Input {...register("checkIn")} type="date" className="h-auto min-w-0 rounded-none border-0 p-0 text-sm" />
+                <Input {...register("checkIn")} type="date" className="h-auto min-w-0 rounded-none border-0 p-0 text-base" />
               </label>
               <label className="min-w-0 p-3">
                 <span className="block text-[11px] font-bold uppercase text-brand-ink">{t("checkOut")}</span>
-                <Input {...register("checkOut")} type="date" className="h-auto min-w-0 rounded-none border-0 p-0 text-sm" />
+                <Input {...register("checkOut")} type="date" className="h-auto min-w-0 rounded-none border-0 p-0 text-base" />
               </label>
               <label className="min-w-0 border-t border-brand-line p-3">
                 <span className="block text-[11px] font-bold uppercase text-brand-ink">{t("guests")}</span>
-                <Input {...register("guests")} type="number" min={1} className="h-auto min-w-0 rounded-none border-0 p-0 text-sm" />
+                <Input {...register("guests")} type="number" min={1} className="h-auto min-w-0 rounded-none border-0 p-0 text-base" />
               </label>
               <label className="min-w-0 border-l border-t border-brand-line p-3">
                 <span className="block text-[11px] font-bold uppercase text-brand-ink">Bedrooms</span>
-                <Input {...register("bedrooms")} type="number" min={1} max={property.bedrooms} className="h-auto min-w-0 rounded-none border-0 p-0 text-sm" />
+                <Input {...register("bedrooms")} type="number" min={1} max={property.bedrooms} className="h-auto min-w-0 rounded-none border-0 p-0 text-base" />
               </label>
             </div>
 

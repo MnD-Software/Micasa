@@ -171,7 +171,7 @@ export function AdminListingControls() {
           <Input name="price_per_night" type="number" min={1} placeholder="Price per night" required />
           <Input name="cleaning_fee" type="number" min={0} placeholder="Cleaning fee" defaultValue={0} />
           <Input name="service_fee" type="number" min={0} placeholder="Service fee" defaultValue={0} />
-          <select name="status" className="h-12 rounded-full border border-brand-line bg-white px-4 text-sm font-medium text-brand-ink outline-none">
+          <select name="status" className="h-12 rounded-full border border-brand-line bg-white px-4 text-base font-medium text-brand-ink outline-none sm:text-sm">
             <option value="published">Published</option>
             <option value="draft">Draft</option>
           </select>
@@ -179,8 +179,8 @@ export function AdminListingControls() {
             <input name="featured" type="checkbox" className="accent-brand-strong" />
             Featured
           </label>
-          <textarea name="description" className="min-h-28 rounded-2xl border border-brand-line p-4 text-sm outline-none md:col-span-2" placeholder="Description" required />
-          <textarea name="image_urls" className="min-h-28 rounded-2xl border border-brand-line p-4 text-sm outline-none md:col-span-2" placeholder="One image URL per line" />
+          <textarea name="description" className="min-h-28 rounded-2xl border border-brand-line p-4 text-base outline-none sm:text-sm md:col-span-2" placeholder="Description" required />
+          <textarea name="image_urls" className="min-h-28 rounded-2xl border border-brand-line p-4 text-base outline-none sm:text-sm md:col-span-2" placeholder="One image URL per line" />
           <Button type="submit" disabled={listingState === "saving"} className="md:col-span-2">
             {listingState === "saving" ? <Loader2 className="animate-spin" size={18} aria-hidden /> : <Plus size={18} aria-hidden />}
             Create listing
@@ -195,7 +195,7 @@ export function AdminListingControls() {
           <form className="mt-5 grid gap-3" onSubmit={createReview}>
             <Input name="property_id" type="number" min={1} placeholder="Backend property ID" required />
             <Input name="rating" type="number" min={1} max={5} placeholder="Rating 1-5" required />
-            <textarea name="comment" className="min-h-24 rounded-2xl border border-brand-line p-4 text-sm outline-none" placeholder="Review comment" required />
+            <textarea name="comment" className="min-h-24 rounded-2xl border border-brand-line p-4 text-base outline-none sm:text-sm" placeholder="Review comment" required />
             <Button type="submit" disabled={reviewState === "saving"}>
               {reviewState === "saving" ? <Loader2 className="animate-spin" size={18} aria-hidden /> : <Star size={18} aria-hidden />}
               Add review
@@ -208,7 +208,7 @@ export function AdminListingControls() {
           <h2 className="text-xl font-bold text-brand-ink">Detail page controls</h2>
           <p className="mt-1 text-sm text-brand-muted">Controls the guest-favorite breakdown, chips, and sleep carousel for the current frontend listings.</p>
           <select
-            className="mt-4 h-12 w-full rounded-full border border-brand-line bg-white px-4 text-sm font-medium text-brand-ink outline-none"
+            className="mt-4 h-12 w-full rounded-full border border-brand-line bg-white px-4 text-base font-medium text-brand-ink outline-none sm:text-sm"
             onChange={(event) => loadDefaultsFor(event.target.value)}
             value={selectedPropertyId}
           >
@@ -216,9 +216,9 @@ export function AdminListingControls() {
               <option key={property.id} value={property.id}>{property.title}</option>
             ))}
           </select>
-          <textarea className="mt-3 min-h-28 w-full rounded-2xl border border-brand-line p-4 text-sm outline-none" value={categoryLines} onChange={(event) => setCategoryLines(event.target.value)} />
-          <textarea className="mt-3 min-h-20 w-full rounded-2xl border border-brand-line p-4 text-sm outline-none" value={tagLine} onChange={(event) => setTagLine(event.target.value)} />
-          <textarea className="mt-3 min-h-28 w-full rounded-2xl border border-brand-line p-4 text-sm outline-none" value={sleepLines} onChange={(event) => setSleepLines(event.target.value)} />
+          <textarea className="mt-3 min-h-28 w-full rounded-2xl border border-brand-line p-4 text-base outline-none sm:text-sm" value={categoryLines} onChange={(event) => setCategoryLines(event.target.value)} />
+          <textarea className="mt-3 min-h-20 w-full rounded-2xl border border-brand-line p-4 text-base outline-none sm:text-sm" value={tagLine} onChange={(event) => setTagLine(event.target.value)} />
+          <textarea className="mt-3 min-h-28 w-full rounded-2xl border border-brand-line p-4 text-base outline-none sm:text-sm" value={sleepLines} onChange={(event) => setSleepLines(event.target.value)} />
           <Button type="button" className="mt-3 w-full" onClick={saveExperience}>
             <Save size={18} aria-hidden />
             Save detail controls

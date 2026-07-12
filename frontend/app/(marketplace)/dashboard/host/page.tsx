@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 const stats: Array<[label: string, value: string, Icon: LucideIcon]> = [
   ["Active listings", "8", Home],
   ["Occupancy", "82%", Percent],
-  ["Monthly revenue", "$42.8k", ChartNoAxesCombined],
+  ["Monthly revenue", "KSh 5.5M", ChartNoAxesCombined],
   ["Guest threads", "19", Inbox]
 ];
 
