@@ -298,6 +298,7 @@ export default function AdminModulePage() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [selectedSlug, setSelectedSlug] = useState(storefrontProperties[0]?.slug ?? "");
   const properties = useMemo(() => mergeAdminProperties(apiProperties), [apiProperties]);
   const selectedProperty = properties.find((property) => property.slug === selectedSlug) ?? properties[0];
@@ -393,6 +394,53 @@ export default function AdminModulePage() {
       }
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function uploadImages(files: FileList | null) {
+    if (!files?.length) {
+      return;
+    }
+    if (!token) {
+      setMessage("Sign in from Overview before uploading images.");
+      return;
+    }
+
+    setUploading(true);
+    setMessage("");
+    try {
+      const uploadedUrls: string[] = [];
+      for (const file of Array.from(files)) {
+        const body = new FormData();
+        body.append("file", file);
+        const response = await fetch(`${API_URL}/api/uploads`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+          body
+        });
+        if (!response.ok) {
+          if (response.status === 401) {
+            window.localStorage.removeItem(adminTokenKey);
+            setToken("");
+            throw new Error("Admin session expired. Sign in from Overview and try again.");
+          }
+          const errorBody = await response.json().catch(() => null) as { detail?: string } | null;
+          throw new Error(errorBody?.detail ?? `Image upload failed with ${response.status}`);
+        }
+        const result = await response.json() as { url: string };
+        uploadedUrls.push(result.url);
+      }
+      setDraft((current) => ({
+        ...current,
+        image_urls: [current.image_urls.trim(), ...uploadedUrls].filter(Boolean).join("\n")
+      }));
+      setMessage(`${uploadedUrls.length} image${uploadedUrls.length === 1 ? "" : "s"} uploaded. Save content to attach them to this listing.`);
+    } catch (requestError) {
+      setMessage(requestError instanceof Error ? requestError.message : "Unable to upload image.");
+    } finally {
+      setUploading(false);
     }
   }
 
@@ -551,6 +599,26 @@ export default function AdminModulePage() {
                     </label>
                     <label className="grid gap-1.5 text-sm font-semibold text-slate-700 md:col-span-2">
                       Images shown on storefront cards and detail pages
+                      <span className="flex flex-col gap-2 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4 text-sm font-semibold text-slate-700 sm:flex-row sm:items-center sm:justify-between">
+                        <span className="text-slate-500">Upload from your computer, then save the listing.</span>
+                        <span className="relative inline-flex">
+                          <input
+                            accept="image/*"
+                            className="absolute inset-0 cursor-pointer opacity-0"
+                            disabled={uploading}
+                            multiple
+                            onChange={(event) => {
+                              void uploadImages(event.target.files);
+                              event.target.value = "";
+                            }}
+                            type="file"
+                          />
+                          <span className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-slate-950 px-4 text-sm font-bold text-white">
+                            {uploading ? <Loader2 className="animate-spin" size={17} aria-hidden /> : <UploadCloud size={17} aria-hidden />}
+                            {uploading ? "Uploading" : "Choose images"}
+                          </span>
+                        </span>
+                      </span>
                       <textarea className="min-h-40 rounded-2xl border border-slate-200 p-4 text-base outline-none sm:text-sm" value={draft.image_urls} onChange={(event) => setDraft({ ...draft, image_urls: event.target.value })} />
                     </label>
                     <Button className="md:col-span-2" disabled={saving} type="submit">

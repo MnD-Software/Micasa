@@ -1,4 +1,5 @@
 from fastapi.testclient import TestClient
+from backend.core.config import get_settings
 from backend.db.session import Base, engine
 from backend.main import app
 
@@ -62,3 +63,26 @@ def test_host_can_create_property_and_guest_can_book():
     )
     assert booking.status_code == 201
     assert booking.json()["total_amount"] == 590
+
+
+def test_host_can_upload_listing_image(tmp_path):
+    settings = get_settings()
+    previous_upload_dir = settings.upload_dir
+    settings.upload_dir = str(tmp_path)
+    try:
+        host_headers = auth_headers("upload-host@example.com", "host")
+        image_bytes = b"\xff\xd8\xff\xe0micasa-test-image"
+        upload = client.post(
+            "/api/uploads",
+            headers=host_headers,
+            files={"file": ("room.jpg", image_bytes, "image/jpeg")}
+        )
+        assert upload.status_code == 201
+        body = upload.json()
+        assert body["url"].startswith("/api/backend/api/uploads/")
+
+        download = client.get(body["backend_url"])
+        assert download.status_code == 200
+        assert download.content == image_bytes
+    finally:
+        settings.upload_dir = previous_upload_dir

@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     admin_initial_email: str = ""
     admin_initial_password: str = ""
     admin_initial_name: str = "Micasa Admin"
+    upload_dir: str = "uploads"
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 

@@ -34,11 +34,11 @@ async function proxyRequest(request: NextRequest, context: { params: Promise<{ p
   const response = await fetch(targetUrl, {
     method: request.method,
     headers,
-    body: ["GET", "HEAD"].includes(request.method) ? undefined : await request.text(),
+    body: ["GET", "HEAD"].includes(request.method) ? undefined : await request.arrayBuffer(),
     cache: "no-store"
   });
 
-  const body = await response.text();
+  const body = await response.arrayBuffer();
   return new NextResponse(body, {
     status: response.status,
     headers: {
