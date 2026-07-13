@@ -36,13 +36,6 @@ type BookingResponse = {
   payment_status: string;
 };
 
-const fallbackPropertyIdsBySlug: Record<string, number> = {
-  "nyali-4br-villa-near-beach": 1,
-  "nyali-3br-apartment-lift-pool": 2,
-  "nyali-4br-sea-view-apartment": 3,
-  "nyali-spacious-one-bedroom-apartment": 4
-};
-
 function propertyIdFromString(id: string) {
   const match = id.match(/^api-(\d+)$/);
   return match ? Number(match[1]) : null;
@@ -112,12 +105,12 @@ export function BookingWidget({ property }: { property: Property }) {
 
   async function resolveBackendPropertyId() {
     if (property.apiId) {
-      return property.apiId;
+      return { id: property.apiId };
     }
 
     const parsedId = propertyIdFromString(property.id);
     if (parsedId) {
-      return parsedId;
+      return { id: parsedId };
     }
 
     try {
@@ -126,13 +119,18 @@ export function BookingWidget({ property }: { property: Property }) {
       });
       if (response.ok) {
         const data = (await response.json()) as { id: number };
-        return data.id;
+        return { id: data.id };
       }
+      if (response.status === 503) {
+        return { error: "Booking service is offline or not configured. Please use WhatsApp booking for now." };
+      }
+      if (response.status === 404) {
+        return { error: "This listing is not published in the booking system yet. Please use WhatsApp booking for now." };
+      }
+      return { error: `Booking service returned ${response.status}. Please use WhatsApp booking for now.` };
     } catch {
-      // Fall back to the bundled catalogue mapping below.
+      return { error: "Booking service is offline. Please use WhatsApp booking for now." };
     }
-
-    return fallbackPropertyIdsBySlug[property.slug] ?? null;
   }
 
   async function onSubmit(data: BookingValues) {
@@ -146,9 +144,9 @@ export function BookingWidget({ property }: { property: Property }) {
       return;
     }
 
-    const backendPropertyId = await resolveBackendPropertyId();
-    if (!backendPropertyId) {
-      setBookingError("This listing is not connected to the booking system yet. Please book through WhatsApp or ask admin to publish the listing.");
+    const backendProperty = await resolveBackendPropertyId();
+    if (!backendProperty.id) {
+      setBookingError(backendProperty.error ?? "This listing is not connected to the booking system yet. Please use WhatsApp booking for now.");
       return;
     }
 
@@ -161,7 +159,7 @@ export function BookingWidget({ property }: { property: Property }) {
           Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
-          property_id: backendPropertyId,
+          property_id: backendProperty.id,
           check_in: data.checkIn,
           check_out: data.checkOut,
           coupon: data.coupon?.trim() || null
@@ -176,12 +174,15 @@ export function BookingWidget({ property }: { property: Property }) {
         if (response.status === 503) {
           throw new Error("Booking service is not configured or is offline. Try WhatsApp booking for now.");
         }
+        if (response.status === 404) {
+          throw new Error("This stay is not available in the booking system yet. Try WhatsApp booking for now.");
+        }
         throw new Error(`Booking could not be created. Server returned ${response.status}.`);
       }
 
       const booking = (await response.json()) as BookingResponse;
       const code = `MS-${String(booking.id).padStart(6, "0")}`;
-      const event = new CustomEvent("micasa-booking", { detail: { ...data, propertyId: backendPropertyId, total: Number(booking.total_amount), code } });
+      const event = new CustomEvent("micasa-booking", { detail: { ...data, propertyId: backendProperty.id, total: Number(booking.total_amount), code } });
       window.dispatchEvent(event);
       setConfirmation({
         code,
