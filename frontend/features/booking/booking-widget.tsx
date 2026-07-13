@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { BadgeCheck, BedDouble, Calculator, CreditCard, MessageCircle, ShieldCheck, Smartphone, X } from "lucide-react";
+import { BadgeCheck, BedDouble, Calculator, CreditCard, Loader2, MessageCircle, ShieldCheck, Smartphone, X } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -26,18 +26,45 @@ const bookingSchema = z.object({
 
 type BookingValues = z.infer<typeof bookingSchema>;
 
+type BookingResponse = {
+  id: number;
+  property_id: number;
+  check_in: string;
+  check_out: string;
+  total_amount: number;
+  booking_status: string;
+  payment_status: string;
+};
+
+const fallbackPropertyIdsBySlug: Record<string, number> = {
+  "nyali-4br-villa-near-beach": 1,
+  "nyali-3br-apartment-lift-pool": 2,
+  "nyali-4br-sea-view-apartment": 3,
+  "nyali-spacious-one-bedroom-apartment": 4
+};
+
+function propertyIdFromString(id: string) {
+  const match = id.match(/^api-(\d+)$/);
+  return match ? Number(match[1]) : null;
+}
+
 export function BookingWidget({ property }: { property: Property }) {
   const { formatMoney, t } = usePreferences();
   const hydrated = useHydrated();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const token = useAuthStore((state) => state.token);
   const paybill = process.env.NEXT_PUBLIC_MPESA_PAYBILL?.trim();
   const mpesaAccountName = process.env.NEXT_PUBLIC_MPESA_ACCOUNT_NAME?.trim() || "MICASA";
   const [availabilityChecked, setAvailabilityChecked] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isSubmittingBooking, setIsSubmittingBooking] = useState(false);
+  const [bookingError, setBookingError] = useState("");
   const [confirmation, setConfirmation] = useState<{
     code: string;
+    bookingId: number;
     paymentMethod: "mpesa" | "card";
     total: number;
+    status: string;
   } | null>(null);
 
   const { register, watch, handleSubmit } = useForm<BookingValues>({
@@ -76,14 +103,41 @@ export function BookingWidget({ property }: { property: Property }) {
   }
 
   function requireAccount() {
-    if (hydrated && isAuthenticated) {
+    if (hydrated && isAuthenticated && token) {
       return true;
     }
     loginForBooking();
     return false;
   }
 
-  function onSubmit(data: BookingValues) {
+  async function resolveBackendPropertyId() {
+    if (property.apiId) {
+      return property.apiId;
+    }
+
+    const parsedId = propertyIdFromString(property.id);
+    if (parsedId) {
+      return parsedId;
+    }
+
+    try {
+      const response = await fetch(`/api/backend/api/properties/slug/${encodeURIComponent(property.slug)}`, {
+        cache: "no-store"
+      });
+      if (response.ok) {
+        const data = (await response.json()) as { id: number };
+        return data.id;
+      }
+    } catch {
+      // Fall back to the bundled catalogue mapping below.
+    }
+
+    return fallbackPropertyIdsBySlug[property.slug] ?? null;
+  }
+
+  async function onSubmit(data: BookingValues) {
+    setBookingError("");
+    setConfirmation(null);
     if (!requireAccount()) {
       return;
     }
@@ -91,10 +145,56 @@ export function BookingWidget({ property }: { property: Property }) {
     if (!isAvailable) {
       return;
     }
-    const code = `MS-${Date.now().toString().slice(-6)}`;
-    const event = new CustomEvent("micasa-booking", { detail: { ...data, propertyId: property.id, total: totals.total, code } });
-    window.dispatchEvent(event);
-    setConfirmation({ code, paymentMethod: data.paymentMethod, total: totals.total });
+
+    const backendPropertyId = await resolveBackendPropertyId();
+    if (!backendPropertyId) {
+      setBookingError("This listing is not connected to the booking system yet. Please book through WhatsApp or ask admin to publish the listing.");
+      return;
+    }
+
+    setIsSubmittingBooking(true);
+    try {
+      const response = await fetch("/api/backend/api/bookings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          property_id: backendPropertyId,
+          check_in: data.checkIn,
+          check_out: data.checkOut,
+          coupon: data.coupon?.trim() || null
+        })
+      });
+
+      if (!response.ok) {
+        if (response.status === 401 || response.status === 403) {
+          loginForBooking();
+          return;
+        }
+        if (response.status === 503) {
+          throw new Error("Booking service is not configured or is offline. Try WhatsApp booking for now.");
+        }
+        throw new Error(`Booking could not be created. Server returned ${response.status}.`);
+      }
+
+      const booking = (await response.json()) as BookingResponse;
+      const code = `MS-${String(booking.id).padStart(6, "0")}`;
+      const event = new CustomEvent("micasa-booking", { detail: { ...data, propertyId: backendPropertyId, total: Number(booking.total_amount), code } });
+      window.dispatchEvent(event);
+      setConfirmation({
+        code,
+        bookingId: booking.id,
+        paymentMethod: data.paymentMethod,
+        total: Number(booking.total_amount),
+        status: booking.booking_status
+      });
+    } catch (requestError) {
+      setBookingError(requestError instanceof Error ? requestError.message : "Booking could not be created. Please try WhatsApp booking.");
+    } finally {
+      setIsSubmittingBooking(false);
+    }
   }
 
   const whatsappMessage =
@@ -195,10 +295,15 @@ Total estimate: ${formatMoney(totals.total)}`;
         </fieldset>
 
         <Input {...register("coupon")} className="min-w-0" placeholder="Coupon code" />
-        <Button type="submit" size="lg" className="min-h-12 w-full px-4 sm:min-h-14">
-          <BadgeCheck size={18} aria-hidden />
-          {t("reserveConfirm")}
+        <Button type="submit" size="lg" className="min-h-12 w-full px-4 sm:min-h-14" disabled={isSubmittingBooking}>
+          {isSubmittingBooking ? <Loader2 className="animate-spin" size={18} aria-hidden /> : <BadgeCheck size={18} aria-hidden />}
+          {isSubmittingBooking ? "Creating booking..." : t("reserveConfirm")}
         </Button>
+        {bookingError ? (
+          <p className="rounded-2xl border border-brand-error/20 bg-white p-3 text-sm font-semibold text-brand-error">
+            {bookingError}
+          </p>
+        ) : null}
         <a
           className={[
             "focus-ring inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-4 text-sm font-bold transition",
@@ -231,7 +336,7 @@ Total estimate: ${formatMoney(totals.total)}`;
             Instant confirmation prepared
           </p>
           <p className="mt-2 text-brand-muted">
-            Confirmation {confirmation.code} is ready for {property.title}. We will confirm {formatMoney(confirmation.total)} by {confirmation.paymentMethod === "mpesa" ? "M-Pesa" : "card"} before the stay is finalized.
+            Booking {confirmation.code} is now {confirmation.status}. We will confirm {formatMoney(confirmation.total)} by {confirmation.paymentMethod === "mpesa" ? "M-Pesa" : "card"} before the stay is finalized.
           </p>
           <p className="mt-3 flex items-center gap-2 font-semibold text-brand-ink">
             <MessageCircle size={16} aria-hidden />
@@ -369,10 +474,26 @@ Total estimate: ${formatMoney(totals.total)}`;
             </fieldset>
 
             <Input {...register("coupon")} className="min-w-0" placeholder="Coupon code" />
-            <Button type="submit" size="lg" className="min-h-14 w-full">
-              <BadgeCheck size={18} aria-hidden />
-              {t("reserveConfirm")}
+            <Button type="submit" size="lg" className="min-h-14 w-full" disabled={isSubmittingBooking}>
+              {isSubmittingBooking ? <Loader2 className="animate-spin" size={18} aria-hidden /> : <BadgeCheck size={18} aria-hidden />}
+              {isSubmittingBooking ? "Creating booking..." : t("reserveConfirm")}
             </Button>
+            {bookingError ? (
+              <p className="rounded-2xl border border-brand-error/20 bg-white p-3 text-sm font-semibold text-brand-error">
+                {bookingError}
+              </p>
+            ) : null}
+            {confirmation ? (
+              <div className="rounded-2xl border border-brand-success/30 bg-white p-4 text-sm shadow-pearl">
+                <p className="flex items-center gap-2 font-bold text-brand-ink">
+                  <BadgeCheck size={18} className="text-brand-success" aria-hidden />
+                  Booking {confirmation.code} created
+                </p>
+                <p className="mt-2 text-brand-muted">
+                  Status: {confirmation.status}. Total: {formatMoney(confirmation.total)}.
+                </p>
+              </div>
+            ) : null}
             <a
               className="focus-ring inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-full bg-brand-success px-4 text-sm font-bold text-white"
               href={whatsappHref}

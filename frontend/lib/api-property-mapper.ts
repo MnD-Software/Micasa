@@ -45,6 +45,7 @@ export function mapApiProperty(property: ApiProperty): Property {
 
   return {
     id: `api-${property.id}`,
+    apiId: property.id,
     slug: property.slug,
     title: property.title,
     location: property.location,

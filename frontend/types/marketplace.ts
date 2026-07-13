@@ -1,5 +1,6 @@
 export type Property = {
   id: string;
+  apiId?: number;
   slug: string;
   title: string;
   location: string;
