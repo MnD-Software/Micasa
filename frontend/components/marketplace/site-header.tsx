@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ConciergeBell, Globe2, Heart, House, Search, SlidersHorizontal, Sparkles, UserRound, X } from "lucide-react";
+import { ConciergeBell, Heart, House, Search, SlidersHorizontal, Sparkles, UserRound, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -138,7 +138,7 @@ export function SiteHeader() {
 
         <div className="hidden min-w-0 items-center justify-center gap-6 lg:flex">
           <Link
-            className="focus-ring flex h-12 min-w-[360px] max-w-xl items-center justify-between rounded-full border border-brand-line bg-white px-5 text-sm font-semibold text-brand-ink shadow-pearl transition hover:shadow-lift"
+            className="focus-ring flex h-12 min-w-[360px] max-w-xl items-center justify-between rounded-2xl border border-brand-line bg-white px-4 text-sm font-semibold text-brand-ink shadow-pearl transition hover:shadow-lift"
             href="/#featured-stays"
           >
             <span>Nyali</span>
@@ -146,7 +146,7 @@ export function SiteHeader() {
             <span>Any week</span>
             <span className="h-5 w-px bg-brand-line" aria-hidden />
             <span className="text-brand-muted">Add guests</span>
-            <span className="grid h-8 w-8 place-items-center rounded-full bg-brand-strong text-white">
+            <span className="grid h-8 w-8 place-items-center rounded-xl bg-brand-strong text-white">
               <Search size={16} aria-hidden />
             </span>
           </Link>
@@ -172,7 +172,7 @@ export function SiteHeader() {
           </Link>
           <Link
             aria-label={`${visibleSavedCount} saved homes`}
-            className="focus-ring relative grid h-11 w-11 place-items-center rounded-full border border-white bg-brand-ivory text-brand-ink shadow-pearl transition hover:border-brand-line"
+            className="focus-ring relative grid h-11 w-11 place-items-center rounded-2xl border border-white bg-white text-brand-ink shadow-pearl transition hover:border-brand-line"
             href="/saved"
           >
             <Heart size={19} aria-hidden />
@@ -187,7 +187,7 @@ export function SiteHeader() {
           </div>
           <Link
             aria-label={visibleIsAuthenticated ? "Open guest dashboard" : "Log in"}
-            className="focus-ring grid h-12 w-12 place-items-center rounded-full border border-white bg-brand-ivory text-brand-ink shadow-pearl transition hover:border-brand-line"
+            className="focus-ring grid h-12 w-12 place-items-center rounded-2xl border border-white bg-white text-brand-ink shadow-pearl transition hover:border-brand-line"
             href={visibleIsAuthenticated ? "/dashboard/guest" : "/login"}
           >
             {visibleUser?.fullName ? (

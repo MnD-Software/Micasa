@@ -35,50 +35,51 @@ export function SearchBar() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="grid rounded-full border border-white bg-brand-frost p-2 shadow-luxe ring-1 ring-brand-line/70 backdrop-blur-xl md:grid-cols-[1.2fr_1.35fr_0.8fr_auto]"
+      className="grid gap-2 rounded-3xl border border-brand-line bg-brand-frost p-2 shadow-pearl"
     >
-      <label className="group flex min-h-16 items-center rounded-full px-8 transition hover:bg-white hover:shadow-pearl">
+      <label className="group flex min-h-14 items-center rounded-2xl bg-brand-soft px-4 transition hover:bg-white hover:shadow-pearl">
         <span className="min-w-0 flex-1">
-          <span className="block text-sm font-bold text-brand-ink">{t("where")}</span>
+          <span className="block text-xs font-bold uppercase text-brand-muted">{t("where")}</span>
           <Input
             {...register("location")}
-            className="h-auto border-0 bg-transparent p-0 text-base focus-visible:outline-none"
+            className="h-auto border-0 bg-transparent p-0 text-base font-semibold text-brand-ink focus-visible:outline-none"
             placeholder={t("searchDestinations")}
           />
         </span>
       </label>
-      <label className="flex min-h-16 items-center border-l border-brand-line px-8 transition hover:bg-white hover:shadow-pearl">
+      <label className="flex min-h-14 items-center rounded-2xl bg-brand-soft px-4 transition hover:bg-white hover:shadow-pearl">
         <span className="flex-1">
-          <span className="block text-sm font-bold text-brand-ink">{t("dates")}</span>
-          <span className="grid grid-cols-2 gap-2">
+          <span className="block text-xs font-bold uppercase text-brand-muted">{t("dates")}</span>
+          <span className="grid gap-2 sm:grid-cols-2">
             <Input
               {...register("checkIn")}
               aria-label="Check-in date"
               type="date"
-              className="h-auto border-0 bg-transparent p-0 text-sm focus-visible:outline-none"
+              className="h-auto min-w-0 border-0 bg-transparent p-0 text-sm font-semibold focus-visible:outline-none"
             />
             <Input
               {...register("checkOut")}
               aria-label="Check-out date"
               type="date"
-              className="h-auto border-0 bg-transparent p-0 text-sm focus-visible:outline-none"
+              className="h-auto min-w-0 border-0 bg-transparent p-0 text-sm font-semibold focus-visible:outline-none"
             />
           </span>
         </span>
       </label>
-      <label className="flex min-h-16 items-center border-l border-brand-line px-8 transition hover:bg-white hover:shadow-pearl">
+      <label className="flex min-h-14 items-center rounded-2xl bg-brand-soft px-4 transition hover:bg-white hover:shadow-pearl">
         <span className="flex-1">
-          <span className="block text-sm font-bold text-brand-ink">{t("who")}</span>
+          <span className="block text-xs font-bold uppercase text-brand-muted">{t("who")}</span>
           <Input
             {...register("guests")}
             type="number"
             min={1}
-            className="h-auto border-0 bg-transparent p-0 text-base focus-visible:outline-none"
+            className="h-auto border-0 bg-transparent p-0 text-base font-semibold focus-visible:outline-none"
           />
         </span>
       </label>
-      <Button size="lg" className="m-1 h-14 w-14 px-0" aria-label="Search stays">
-        <Search size={22} aria-hidden />
+      <Button size="lg" className="h-14 rounded-2xl bg-brand-strong px-4 hover:bg-brand-ink" aria-label="Search stays">
+        <Search size={20} aria-hidden />
+        <span className="ml-2">Search</span>
       </Button>
     </form>
   );

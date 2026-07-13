@@ -87,3 +87,15 @@ body::before {
 .focus-ring:focus-visible {
   outline-color: #007f76;
 }
+
+.home-hero-shell {
+  width: calc(100vw - 2rem);
+  max-width: calc(100vw - 2rem);
+}
+
+@media (min-width: 640px) {
+  .home-hero-shell {
+    width: 100%;
+    max-width: none;
+  }
+}
